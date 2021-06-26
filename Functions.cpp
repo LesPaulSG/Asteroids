@@ -16,6 +16,15 @@ void RotateVector(sf::Vector2f& vec, float angle){
 }
 
 void RotateUnitVector(sf::Vector2f& vec, float angle){
+	std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
 	vec.x = sin(angle);
 	vec.y = -cos(angle);
+	std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
+}
+
+void PassScreenBorder(sf::Vector2f& vec) {
+	if (vec.x >= 1920)	vec.x = 0.1;
+	if (vec.x <= 0)		vec.x = 1919.9;
+	if (vec.y >= 1080)	vec.y = 0.1;
+	if (vec.y <= 0)		vec.y = 1079.9;
 }

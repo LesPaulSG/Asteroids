@@ -22,6 +22,7 @@ public:
 	const sf::CircleShape& GetBody() const;
 	const sf::Vector2f& GetPosition() const;
 	const sf::Vector2f& GetForwardVector() const;
+	float GetRotation() const;
 
 	void SetDir(MoveDir nDir);
 

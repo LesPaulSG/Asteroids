@@ -1,17 +1,14 @@
 #include "Wall.h"
 
-Wall::Wall(sf::Vector2f A, sf::Vector2f B, bool destructable) 
-	:	destructable(destructable),
-		alive(true),
+Wall::Wall(sf::Vector2f A, sf::Vector2f B) 
+	:	alive(true),
 		line(A, B) {
 	vector = line.midPoint;
 	CalculateRotation();
 	body.setPosition(line.pointA);
 	body.setSize(sf::Vector2f(5, line.lenght));
-	UpdateColor();
+	body.setFillColor(sf::Color::White);
 }
-
-bool Wall::GetDestructable() const {return destructable;}
 
 bool Wall::GetAlive() const {return alive;}
 
@@ -31,17 +28,4 @@ void Wall::CalculateRotation() {
 		angle *= -1.f;
 	}
 	body.setRotation(angle);
-}
-
-void Wall::Transform() {
-	destructable = !destructable;
-	UpdateColor();
-}
-
-void Wall::UpdateColor(){
-	if (destructable) {
-		body.setFillColor(sf::Color::Yellow);
-	} else {
-		body.setFillColor(sf::Color::Green);
-	}
 }

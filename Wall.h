@@ -3,7 +3,6 @@
 
 class Wall {
 private:
-	bool destructable;
 	bool alive;
 	sf::Vector2f vector;
 	sf::RectangleShape body;
@@ -11,10 +10,9 @@ private:
 	double rotation;
 
 public:
-	Wall(sf::Vector2f A, sf::Vector2f B, bool);
+	Wall(sf::Vector2f A, sf::Vector2f B);
 	~Wall() = default;
 
-	bool GetDestructable() const;
 	bool GetAlive() const;
 	const sf::RectangleShape& GetBody() const;
 	const Line& GetLine() const;
@@ -22,6 +20,4 @@ public:
 
 	void Destroy();
 	void CalculateRotation();
-	void Transform();
-	void UpdateColor();
 };

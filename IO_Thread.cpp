@@ -31,13 +31,13 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 			} else if (evt.type == sf::Event::MouseButtonReleased) {
 				if (evt.mouseButton.button == sf::Mouse::Left) {
 					LmbReleasedPos = sf::Mouse::getPosition();
-					sf::Vector2f direction = (sf::Vector2f)LmbReleasedPos - bm.GetPlayer().GetPosition();
-					Task task{ TaskType::ADD_BULLET, PackagedTask{bm.GetPlayer().GetPosition(), direction, 10, 10} };
+					sf::Vector2f direction = (sf::Vector2f)LmbReleasedPos;// -bm.GetPlayer().GetPosition();
+					Task task{ TaskType::ADD_BULLET, PackagedTask{bm.GetPlayer().GetPosition(), bm.GetPlayer().GetRotation(), 1000, 10} };
 					bm.AddTask(task);
 				} else if (evt.mouseButton.button == sf::Mouse::Right) {
 					RmbReleasedPos = sf::Mouse::getPosition();
-					Task task{ TaskType::ADD_WALL, PackagedTask{sf::Vector2f(RmbStartPos), sf::Vector2f(RmbReleasedPos), true} };
-					bm.AddTask(task);
+					//Task task{ TaskType::ADD_WALL, PackagedTask{sf::Vector2f(RmbStartPos), sf::Vector2f(RmbReleasedPos)} };
+					//bm.AddTask(task);
 				}
 			}
 		}

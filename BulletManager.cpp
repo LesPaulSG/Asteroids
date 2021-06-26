@@ -27,9 +27,9 @@ void BulletManager::AddWall(Wall&& wall) {
 	}
 }
 
-void BulletManager::CreateWall(const sf::Vector2f& start, const sf::Vector2f& end, bool destructable) {
+void BulletManager::CreateWall(const sf::Vector2f& start, const sf::Vector2f& end) {
 	if (Line(start, end).lenght > 10) {										//check lengtn of wall for visible value	TODO add static method for lenght
-		AddWall(Wall(start, end, destructable));
+		AddWall(Wall(start, end));
 	}
 }
 
@@ -39,15 +39,15 @@ void BulletManager::Update(float time) {
 	if (!tasks.empty()) {
 		std::lock_guard lg(bmMutex);
 		while (!tasks.empty()) {
-			auto current_task = tasks.front();
+			auto cTask = tasks.front();
 			tasks.pop();
-			switch (current_task.type)
+			switch (cTask.type)
 			{
 			case TaskType::ADD_BULLET:
-				Fire(std::move(current_task.pt.ab.pos), std::move(current_task.pt.ab.dir), current_task.pt.ab.speed, current_task.pt.ab.lifeTime);
+				Fire(std::move(cTask.pt.ab.pos), cTask.pt.ab.dir, cTask.pt.ab.speed, cTask.pt.ab.lifeTime);
 				break;
 			case TaskType::ADD_WALL:
-				CreateWall(std::move(current_task.pt.aw.pos), std::move(current_task.pt.aw.dir), current_task.pt.aw.destructable);
+				CreateWall(std::move(cTask.pt.aw.pos), std::move(cTask.pt.aw.dir));
 				break;
 			default:
 				break;
@@ -75,14 +75,8 @@ void BulletManager::Update(float time) {
 	}
 }
 
-void BulletManager::Fire(const sf::Vector2f& pos, const sf::Vector2f& dir, float speed, float lifeTime) {
+void BulletManager::Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime) {
 	if (bullets.size() < BULLETS_MAX_CAPACITY) {
-		bullets.push_back(Bullet(pos, dir, std::min(speed, 10.f), lifeTime));
-	}
-}
-
-void BulletManager::WallTrancform() {
-	for (auto& iter : walls) {
-		iter.Transform();
+		bullets.push_back(Bullet(pos, dir, std::max(speed, 10.f), lifeTime));
 	}
 }

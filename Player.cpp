@@ -54,7 +54,8 @@ void Player::Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2
 void Player::Update(float time, std::vector<Wall>& walls) {
 	const sf::Vector2f oldPos = pos;
 	if (Move(time)) {
-		CheckCollision(time, oldPos, walls);
+		//CheckCollision(time, oldPos, walls);
+		PassScreenBorder(pos);
 		body.setPosition(pos);
 	}
 	//CheckCollision(oldPos, walls);
@@ -117,6 +118,10 @@ const sf::CircleShape& Player::GetBody() const {return body;}
 const sf::Vector2f& Player::GetPosition() const {return pos;}
 
 const sf::Vector2f& Player::GetForwardVector() const {return forwardVector;}
+
+float Player::GetRotation() const{
+	return rotation;
+}
 
 void Player::SetDir(MoveDir nDir){
 	dir = nDir;

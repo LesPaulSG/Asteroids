@@ -15,12 +15,11 @@ enum class TaskType {
 struct AddWall {//: public PackagedTask {
 	sf::Vector2f pos;
 	sf::Vector2f dir;
-	bool destructable;
 };
 
 struct AddBullet {//: public PackagedTask {
 	sf::Vector2f pos;
-	sf::Vector2f dir;
+	float dir;
 	float speed;
 	float lifeTime;
 };
@@ -60,8 +59,7 @@ public:
 
 	void AddTask(Task& pt);
 	void AddWall(Wall&& wall);
-	void CreateWall(const sf::Vector2f& start, const sf::Vector2f& end, bool destructable = true);
+	void CreateWall(const sf::Vector2f& start, const sf::Vector2f& end);
 	void Update(float time);
-	void Fire(const sf::Vector2f& pos, const sf::Vector2f& dir, float speed, float lifeTime);
-	void WallTrancform();
+	void Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime);
 };
