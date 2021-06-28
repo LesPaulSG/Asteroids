@@ -29,3 +29,12 @@ void Wall::CalculateRotation() {
 	}
 	body.setRotation(angle);
 }
+
+void Wall::SetCustomOrigin(sf::Vector2f newOrig){
+	body.setOrigin(newOrig.x, newOrig.y);
+}
+
+void Wall::Move(sf::Vector2f dest){
+	body.setPosition(dest);
+	std::cout << body.getPosition().x << ' ' << body.getPosition().y << std::endl;
+}

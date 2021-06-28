@@ -1,5 +1,5 @@
 #pragma once
-#include "Wall.h"
+#include "Polygon.h"
 
 class Bullet {
 private:

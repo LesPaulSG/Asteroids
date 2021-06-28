@@ -14,7 +14,6 @@ Bullet::Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime)
 	double angle = acos(this->dir.y / VectorsModule(this->dir));
 	dir *= -(180.f / 3.141528f);
 	body.setRotation(dir);
-	body.setOrigin(sf::Vector2f(body.getOrigin().x + 10.f, body.getOrigin().y + 10.f));
 	body.setFillColor(sf::Color::Red);
 }
 

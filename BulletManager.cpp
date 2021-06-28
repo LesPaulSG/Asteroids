@@ -73,6 +73,11 @@ void BulletManager::Update(float time) {
 	for (auto iter = bullets.begin(); iter != bullets.end(); ++iter) {
 		iter->Update(time, walls);
 	}
+	for (auto iter = walls.begin(); iter != walls.end(); ++iter) {
+		float x = iter->GetBody().getPosition().x + (10 * time);
+		float y = iter->GetBody().getPosition().y + (10 * time);
+		iter->Move(sf::Vector2f(x, y));
+	}
 }
 
 void BulletManager::Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime) {

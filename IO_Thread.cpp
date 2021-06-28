@@ -4,11 +4,11 @@ sf::Vector2i LmbStartPos,    RmbStartPos;			//mouse positions for firing
 sf::Vector2i LmbReleasedPos, RmbReleasedPos;		//and creating walls
 
 void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
-	//sf::Font font;									//text obj for UI
-	//font.loadFromFile("OpenSans-Bold.ttf");			//
-	//sf::Text ui("", font, 16);						//
-	//ui.setPosition(5.f, 5.f);							//
-	//ui.setFillColor(sf::Color::Red);				//
+	sf::Font font;									//text obj for UI
+	font.loadFromFile("OpenSans-Bold.ttf");			//
+	sf::Text ui("", font, 16);						//
+	ui.setPosition(5.f, 5.f);							//
+	ui.setFillColor(sf::Color::Red);				//
 
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "BulletManager", sf::Style::Fullscreen);
 	window.setVerticalSyncEnabled(true);
@@ -17,6 +17,9 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	auto clock = std::chrono::high_resolution_clock::now();
 
 	sf::Event evt;
+
+	//POLYGON TEST
+	Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(0, 200), sf::Vector2f(-100, -100), sf::Vector2f(100, -100) });
 
 	while (true) {
 		while (window.pollEvent(evt)) {
@@ -42,7 +45,11 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 			}
 		}
 
+		p.Move(bm.GetPlayer().GetPosition());
+
 		window.clear();
+
+		p.Draw(window);
 
 		{
 			std::lock_guard guard(bm.GetBmMutex());
@@ -55,6 +62,7 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 		}
 		window.draw(bm.GetPlayer().GetBody());
 
+		//crushing on the startup
 		/*ui.setString("bullest:  " + std::to_string(bm.GetBullets().size())	//bullets quantity
 					+ "\nwalls:     " + std::to_string(bm.GetWalls().size())//walls quantity
 					+ "\nfps:         " + std::to_string(1.f / time.count())//GUI FPS
