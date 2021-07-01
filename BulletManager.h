@@ -38,6 +38,7 @@ class BulletManager {
 private:
 	std::vector<Bullet> bullets;
 	std::vector<Wall> walls;
+	std::vector<Asteroid> asteroids;
 
 	std::queue<Task> tasks;
 
@@ -62,4 +63,6 @@ public:
 	void CreateWall(const sf::Vector2f& start, const sf::Vector2f& end);
 	void Update(float time);
 	void Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime);
+	void SpawnAsteroid(float deltaTime, int stage = 3);
+	void Draw(sf::RenderWindow& w);
 };

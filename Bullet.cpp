@@ -4,7 +4,7 @@
 
 Bullet::Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime)
 	: pos(std::move(pos)),
-	speed(50),
+	speed(150),
 	time(0.f),
 	lifeTime(lifeTime),
 	alive(true) {
@@ -21,26 +21,30 @@ const sf::RectangleShape& Bullet::GetBody() const {return body;}
 
 bool Bullet::GetAlive() const {return alive;}
 
-void Bullet::CheckCollision(std::vector<Wall>& walls, const sf::Vector2f& oldPos) {
+void Bullet::CheckCollision(std::vector<Asteroid>& asteroids, const sf::Vector2f& oldPos) {
 	sf::Vector2f iPoint(0.f, 0.f);
 	Line offset(oldPos, pos);
-	for (auto& iter : walls){
-		if (iter.GetAlive()) {
+	for (auto& iter : asteroids){
+		if (Line(pos, iter.GetPos()).lenght <= iter.GetRadius()) {
+			iter.Destroy();
+		}
+		//old collision detectcion
+		/*if (iter.GetAlive()) {
 			if (offset.Intersection(iter.GetLine(), iPoint)) {
 				alive = false;
 				iter.Destroy();
 				return;
 			}
-		}
+		}*/
 	}
 }
 
-void Bullet::Update(float t, std::vector<Wall>& walls) {
+void Bullet::Update(float t, std::vector<Asteroid>& asteroids) {
 	sf::Vector2f oldPos = pos;			//position before update
 	pos += dir *speed* t;				//new position
 	PassScreenBorder(pos);
 	body.setPosition(pos);
-	CheckCollision(walls, oldPos);
+	CheckCollision(asteroids, oldPos);
 
 	speed -= t/30.f;					//braking over time
 	time  += t;

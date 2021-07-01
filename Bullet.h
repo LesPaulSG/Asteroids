@@ -1,5 +1,5 @@
 #pragma once
-#include "Polygon.h"
+#include "Asteroid.h"
 
 class Bullet {
 private:
@@ -18,7 +18,7 @@ public:
 	Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime);
 	~Bullet() = default;
 
-	void CheckCollision(std::vector<Wall>& walls, const sf::Vector2f& oldPos);
-	void Update(float t, std::vector<Wall>& walls);
+	void CheckCollision(std::vector<Asteroid>& asteroids, const sf::Vector2f& oldPos);
+	void Update(float t, std::vector<Asteroid>& asteroids);
 	void LifeCheck();
 };

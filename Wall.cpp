@@ -36,5 +36,5 @@ void Wall::SetCustomOrigin(sf::Vector2f newOrig){
 
 void Wall::Move(sf::Vector2f dest){
 	body.setPosition(dest);
-	std::cout << body.getPosition().x << ' ' << body.getPosition().y << std::endl;
+	//std::cout << body.getPosition().x << ' ' << body.getPosition().y << std::endl;
 }

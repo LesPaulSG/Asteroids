@@ -51,7 +51,7 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 
 		p.Draw(window);
 
-		{
+		/*{
 			std::lock_guard guard(bm.GetBmMutex());
 			for (auto& iter : bm.GetWalls()){
 				window.draw(iter.GetBody());
@@ -60,7 +60,8 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 				window.draw(iter.GetBody());
 			}
 		}
-		window.draw(bm.GetPlayer().GetBody());
+		window.draw(bm.GetPlayer().GetBody());*/
+		bm.Draw(window);
 
 		//crushing on the startup
 		/*ui.setString("bullest:  " + std::to_string(bm.GetBullets().size())	//bullets quantity

@@ -16,10 +16,10 @@ void RotateVector(sf::Vector2f& vec, float angle){
 }
 
 void RotateUnitVector(sf::Vector2f& vec, float angle){
-	std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
+	//std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
 	vec.x = sin(angle);
 	vec.y = -cos(angle);
-	std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
+	//std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
 }
 
 void PassScreenBorder(sf::Vector2f& vec) {
