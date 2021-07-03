@@ -19,7 +19,8 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Event evt;
 
 	//POLYGON TEST
-	Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(0, 200), sf::Vector2f(-100, -100), sf::Vector2f(100, -100) });
+	//Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(0, 20), sf::Vector2f(-10, -10), sf::Vector2f(10, -10) });
+	Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(10, -10), sf::Vector2f(0, 20), sf::Vector2f(-10, -10) });
 
 	while (true) {
 		while (window.pollEvent(evt)) {

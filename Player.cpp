@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(sf::Vector2f pos, float cRotation) : pos(std::move(pos)), rotation(0.f), speed(100.f), radius(10.f) {
+Player::Player(sf::Vector2f pos, float cRotation) : pos(std::move(pos)), rotation(0.f), speed(100.f), radius(1.f) {
 	forwardVector = sf::Vector2f(0.f, -1.f);
 	rightVector   = sf::Vector2f(1.f, 0.f);
 

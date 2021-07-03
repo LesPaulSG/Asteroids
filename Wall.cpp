@@ -6,7 +6,7 @@ Wall::Wall(sf::Vector2f A, sf::Vector2f B)
 	vector = line.midPoint;
 	CalculateRotation();
 	body.setPosition(line.pointA);
-	body.setSize(sf::Vector2f(5, line.lenght));
+	body.setSize(sf::Vector2f(1, line.lenght));
 	body.setFillColor(sf::Color::White);
 }
 
