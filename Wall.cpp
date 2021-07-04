@@ -8,6 +8,7 @@ Wall::Wall(sf::Vector2f A, sf::Vector2f B)
 	body.setPosition(line.pointA);
 	body.setSize(sf::Vector2f(1, line.lenght));
 	body.setFillColor(sf::Color::White);
+	std::cout << rotation << std::endl;
 }
 
 bool Wall::GetAlive() const {return alive;}
@@ -37,4 +38,18 @@ void Wall::SetCustomOrigin(sf::Vector2f newOrig){
 void Wall::Move(sf::Vector2f dest){
 	body.setPosition(dest);
 	//std::cout << body.getPosition().x << ' ' << body.getPosition().y << std::endl;
+}
+
+void Wall::RotateAround(const sf::Vector2f& anchor, float angle){
+	RotateVectorAround(line.pointA, anchor, angle);
+	RotateVectorAround(line.pointB, anchor, angle);
+	vector.x = line.pointB.x - line.pointA.x;
+	vector.y = line.pointB.y - line.pointA.y;
+	CalculateRotation();
+	//body.setRotation(rotation * (-180.f / 3.141528f));
+	std::cout << rotation << std::endl;
+	sf::Vector2f sdfghEDRH = line.pointA;
+	std::cout << sdfghEDRH.x << ' ' << sdfghEDRH.y << std::endl;
+	body.setPosition(sdfghEDRH);
+
 }

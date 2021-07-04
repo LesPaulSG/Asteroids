@@ -17,6 +17,8 @@ float VectorsModule(const sf::Vector2f& vec);
 
 void RotateVector(sf::Vector2f& vec, float angle);
 
+void RotateVectorAround(sf::Vector2f& vec, const sf::Vector2f& anchor, float angle);
+
 void RotateUnitVector(sf::Vector2f& vec, float angle);
 
 void PassScreenBorder(sf::Vector2f& vec);

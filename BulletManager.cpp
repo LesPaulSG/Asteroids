@@ -1,6 +1,5 @@
 #include <cmath>
 #include <iostream>
-#include <random>
 
 #include "BulletManager.h"
 
@@ -84,7 +83,7 @@ void BulletManager::Update(float time) {
 
 	SpawnAsteroid(time);
 	for (auto& iter : asteroids) {
-		iter.Move(time);
+		iter.Move(time, asteroids);
 	}
 	for (auto iter = bullets.begin(); iter != bullets.end(); ++iter) {
 		iter->Update(time, asteroids);

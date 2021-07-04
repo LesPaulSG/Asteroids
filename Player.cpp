@@ -1,6 +1,11 @@
 #include "Player.h"
 
-Player::Player(sf::Vector2f pos, float cRotation) : pos(std::move(pos)), rotation(0.f), speed(100.f), radius(1.f) {
+Player::Player(sf::Vector2f pos, float cRotation) 
+	: pos(std::move(pos)),
+	rotation(0.f),
+	speed(100.f),
+	rotSpeed(10.f),
+	radius(1.f) {
 	forwardVector = sf::Vector2f(0.f, -1.f);
 	rightVector   = sf::Vector2f(1.f, 0.f);
 
@@ -100,11 +105,13 @@ bool Player::Move(float time){
 		return true;
 		break;
 	case RGH:
-		pos += rightVector * time * speed;
+		//pos += rightVector * time * speed;
+		Rotate(rotation + rotSpeed * time);
 		return true;
 		break;
 	case LFT:
-		pos -= rightVector * time * speed;
+		//pos -= rightVector * time * speed;
+		Rotate(rotation - rotSpeed * time);
 		return true;
 		break;
 	default:

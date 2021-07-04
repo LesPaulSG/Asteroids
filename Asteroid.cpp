@@ -8,9 +8,24 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 	alive(true) {
 	radius = stage * 15;
 	body.setFillColor(sf::Color::Red);
-	body.setRadius(radius);
-	body.setOrigin(sf::Vector2f(body.getRadius() / 2, body.getRadius() / 2));
-	std::cout << "ya_rodilsyia " << stage << ' ' << pos.x << ' ' << pos.y << std::endl;
+	body.setRadius(1);
+	body.setOrigin(sf::Vector2f(radius / 2, radius / 2));
+	//std::cout << "ya_rodilsyia " << stage << ' ' << pos.x << ' ' << pos.y << std::endl;
+	std::random_device rd;
+	std::mt19937_64 gen(rd());
+	std::uniform_int_distribution<int> dist(10*stage, 15*stage);
+	std::uniform_int_distribution<int> rot(0, 360);
+	std::vector<sf::Vector2f> points;
+	points.reserve(8);
+	float prevAngle = 0;
+	for (int i = 0; i < 8; ++i) {
+		float angle = rot(gen);
+		sf::Vector2f p(dist(gen), 0);
+		RotateVector(p, prevAngle + angle);
+		prevAngle += angle;
+		points.push_back(p);
+	}
+	//pBody = Polygon(pos, points);
 }
 
 Asteroid::~Asteroid(){
@@ -19,16 +34,30 @@ Asteroid::~Asteroid(){
 	}
 }
 
-void Asteroid::Move(float time){
+void Asteroid::Move(float time, std::vector<Asteroid>& asteroids){
 	sf::Vector2f oldPos = pos;			//position before update
-	pos += dir * speed * time;				//new position
+	pos += dir * speed * time;			//new position
+	CheckCollision(asteroids);
 	PassScreenBorder(pos);
 	body.setPosition(pos);
-	//check collision
+	pBody.Move(pos);
 }
 
 void Asteroid::CheckCollision(std::vector<Asteroid>& asteroids){
+	static float radSum = 0, dist = 0;
+	for (auto& iter : asteroids) {
+		if (&iter != this) {
+			radSum = radius + iter.GetRadius();
+			dist = Line(pos, iter.GetPos()).lenght;
+			if (radSum >= dist) {
+				//std::cout << "collide " << radSum << ' ' << dist << std::endl;
+			}
+		}
+	}
+}
 
+void Asteroid::UpdateDirection(sf::Vector2f newDir){
+	dir = newDir;
 }
 
 void Asteroid::Draw(sf::RenderWindow& w){

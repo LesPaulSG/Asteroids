@@ -9,14 +9,15 @@ private:
 	float radius;
 	int stage;
 	sf::CircleShape body;
-	//Polygon body;
+	Polygon pBody;
 	bool alive;
 public:
 	Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_ = 3);
 	~Asteroid();
 
-	void Move(float time);
+	void Move(float time, std::vector<Asteroid>& asteroids);
 	void CheckCollision(std::vector<Asteroid>& asteroids);
+	void UpdateDirection(sf::Vector2f newDir);
 	void Draw(sf::RenderWindow& w);
 	void Destroy();
 

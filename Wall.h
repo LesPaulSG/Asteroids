@@ -22,4 +22,5 @@ public:
 	void CalculateRotation();
 	void SetCustomOrigin(sf::Vector2f newOrig);
 	void Move(sf::Vector2f dest);
+	void RotateAround(const sf::Vector2f& anchor, float angle);
 };

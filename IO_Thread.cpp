@@ -21,6 +21,7 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	//POLYGON TEST
 	//Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(0, 20), sf::Vector2f(-10, -10), sf::Vector2f(10, -10) });
 	Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(10, -10), sf::Vector2f(0, 20), sf::Vector2f(-10, -10) });
+	Wall w(sf::Vector2f(1000, 400), sf::Vector2f(1000, 600));
 
 	while (true) {
 		while (window.pollEvent(evt)) {
@@ -47,10 +48,13 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 		}
 
 		p.Move(bm.GetPlayer().GetPosition());
+		p.Rotate(0.0005f);
+		w.RotateAround(sf::Vector2f(1000, 400), 0.000001f);
 
 		window.clear();
 
 		p.Draw(window);
+		window.draw(w.GetBody());
 
 		/*{
 			std::lock_guard guard(bm.GetBmMutex());
@@ -98,7 +102,7 @@ void CheckEvent(sf::Event& event, BulletManager& bm, float t){
 	case sf::Event::MouseButtonReleased:
 		break;
 	case sf::Event::MouseMoved:
-		bm.GetPlayer().Rotate(std::move(sf::Vector2f(sf::Mouse::getPosition())));
+		//bm.GetPlayer().Rotate(std::move(sf::Vector2f(sf::Mouse::getPosition())));
 		break;
 	default:
 		break;

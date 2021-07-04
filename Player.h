@@ -10,6 +10,7 @@ private:
 	sf::Vector2f rightVector;
 	float rotation;
 	float speed;
+	float rotSpeed;
 	float radius;
 	MoveDir dir;
 
