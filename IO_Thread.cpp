@@ -3,6 +3,8 @@
 sf::Vector2i LmbStartPos,    RmbStartPos;			//mouse positions for firing
 sf::Vector2i LmbReleasedPos, RmbReleasedPos;		//and creating walls
 
+//Polygon pT(sf::Vector2f(1000, 300), { sf::Vector2f(0, 20), sf::Vector2f(-10, -10), sf::Vector2f(10, -10) });
+
 void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Font font;									//text obj for UI
 	font.loadFromFile("OpenSans-Bold.ttf");			//
@@ -19,9 +21,9 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Event evt;
 
 	//POLYGON TEST
-	//Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(0, 20), sf::Vector2f(-10, -10), sf::Vector2f(10, -10) });
-	Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(10, -10), sf::Vector2f(0, 20), sf::Vector2f(-10, -10) });
-	Wall w(sf::Vector2f(1000, 400), sf::Vector2f(1000, 600));
+	
+	//Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(10, -10), sf::Vector2f(0, 20), sf::Vector2f(-10, -10) });
+	//Wall w(sf::Vector2f(1000, 400), sf::Vector2f(1000, 600));
 
 	while (true) {
 		while (window.pollEvent(evt)) {
@@ -47,14 +49,20 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 			}
 		}
 
-		p.Move(bm.GetPlayer().GetPosition());
-		p.Rotate(0.0005f);
-		w.RotateAround(sf::Vector2f(1000, 400), 0.000001f);
+		//p.Move(bm.GetPlayer().GetPosition());
+		//p.Rotate(bm.GetPlayer().GetRotation());
+		//p.Move(bm.GetPlayer().GetPosition());
+		//w.RotateAround(sf::Vector2f(1000, 400), 0.000001f);
+		//pT.Rotate(0.00005f);
+		/*for (auto& iter : pT.getEdges()) {
+			iter.RotateAround(sf::Vector2f(1000, 300), 0.00005f);
+		}*/
 
 		window.clear();
 
-		p.Draw(window);
-		window.draw(w.GetBody());
+		//p.Draw(window);
+		//pT.Draw(window);
+		//window.draw(w.GetBody());
 
 		/*{
 			std::lock_guard guard(bm.GetBmMutex());
@@ -98,6 +106,10 @@ void CheckEvent(sf::Event& event, BulletManager& bm, float t){
 		bm.GetPlayer().SetDir(STP);
 		break;
 	case sf::Event::MouseButtonPressed:
+		//for (auto& iter : pT.getEdges()) {
+			//iter.RotateAround(sf::Vector2f(1000, 300), -0.000001f);
+		//}
+		//pT.Move(sf::Vector2f(1000, 400));
 		break;
 	case sf::Event::MouseButtonReleased:
 		break;

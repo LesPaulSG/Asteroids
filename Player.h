@@ -1,5 +1,5 @@
 #pragma once
-#include "Wall.h"
+#include "Asteroid.h"
 
 enum MoveDir{ STP, FWD, BWD, RGH, LFT };
 
@@ -14,18 +14,19 @@ private:
 	float radius;
 	MoveDir dir;
 
-	sf::CircleShape body;
+	Polygon body;
 
 public:
 	Player(sf::Vector2f pos, float rotation);
 	~Player() = default;
 
-	const sf::CircleShape& GetBody() const;
+	//const sf::CircleShape& GetBody() const;
 	const sf::Vector2f& GetPosition() const;
 	const sf::Vector2f& GetForwardVector() const;
 	float GetRotation() const;
 
 	void SetDir(MoveDir nDir);
+	void Draw(sf::RenderWindow& w);
 
 	void CheckCollision(float time, const sf::Vector2f& oldPos, std::vector<Wall>& walls);
 	void Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2f& oldPos, const Wall& wall);

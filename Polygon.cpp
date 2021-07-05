@@ -6,7 +6,8 @@ Polygon::Polygon()
 }
 
 Polygon::Polygon(sf::Vector2f pos_, std::vector<sf::Vector2f> points)
-	: pos(pos_) {
+	: pos(pos_),
+	rotation(0) {
 	int pointsNum = points.size();
 	edges.reserve(pointsNum);
 	offsets.reserve(pointsNum);
@@ -15,17 +16,17 @@ Polygon::Polygon(sf::Vector2f pos_, std::vector<sf::Vector2f> points)
 		radius = (radius < point.x) ? point.x : radius;
 		radius = (radius < point.y) ? point.y : radius;
 	}
-	std::cout << "------------------------------------------------------------\n";
+	//std::cout << "------------------------------------------------------------\n";
 	for (int i = 0; i < pointsNum - 1; ++i) {
-		std::cout << points.at(i).x << ' ' << points.at(i).y << std::endl;
-		std::cout << points.at(i + 1).x << ' ' << points.at(i + 1).y << std::endl;
+		//std::cout << points.at(i).x << ' ' << points.at(i).y << std::endl;
+		//std::cout << points.at(i + 1).x << ' ' << points.at(i + 1).y << std::endl;
 		edges.push_back(Wall(points.at(i), points.at(i + 1)));
 	}
-	std::cout << points.at(0).x << ' ' << points.at(0).y << std::endl;
-	std::cout << points.at(points.size() - 1).x << ' ' << points.at(points.size() - 1).y << std::endl;
-	std::cout << "------------------------------------------------------------\n";
+	//std::cout << points.at(0).x << ' ' << points.at(0).y << std::endl;
+	//std::cout << points.at(points.size() - 1).x << ' ' << points.at(points.size() - 1).y << std::endl;
+	//std::cout << "------------------------------------------------------------\n";
 
-	edges.push_back(Wall(points.at(0), points.at(pointsNum - 1)));
+	edges.push_back(Wall(points.at(pointsNum - 1), points.at(0)));
 
 	/*std::cout << "LINE 1 POINT A " << edges[0].GetLine().pointA.x << "\t" << edges[0].GetLine().pointA.y << std::endl;
 	std::cout << "LINE 1 POINT B " << edges[0].GetLine().pointB.x << "\t" << edges[0].GetLine().pointB.y << std::endl;
@@ -39,6 +40,9 @@ Polygon::Polygon(sf::Vector2f pos_, std::vector<sf::Vector2f> points)
 		//edge.SetCustomOrigin(edge.GetBody().getPosition()*2.f);
 		//std::cout << edge.GetBody().getOrigin().x << ' ' << edge.GetBody().getOrigin().y << std::endl;
 		offsets.push_back(edge.GetLine().pointB);
+		edge.SetPos(pos);// -edge.GetLine().pointB);
+		//std::cout << "___" << edge.GetLine().pointA.x << ' ' << edge.GetLine().pointA.y << std::endl;
+		//std::cout << "___" << edge.GetLine().pointB.x << ' ' << edge.GetLine().pointB.y << std::endl;
 	}
 	//Move(pos);
 }
@@ -46,6 +50,8 @@ Polygon::Polygon(sf::Vector2f pos_, std::vector<sf::Vector2f> points)
 void Polygon::Draw(sf::RenderWindow& w) const{
 	for (auto edge : edges) {
 		w.draw(edge.GetBody());
+		//std::cout << "_d__" << edge.GetLine().pointA.x << ' ' << edge.GetLine().pointA.y << std::endl;
+		//std::cout << "_d__" << edge.GetLine().pointB.x << ' ' << edge.GetLine().pointB.y << std::endl;
 	}
 }
 
@@ -56,7 +62,9 @@ void Polygon::Move(sf::Vector2f dest){
 	for (auto& edge : edges) {
 		//std::cout << edge.GetBody().getPosition().x << ' ' << edge.GetBody().getPosition().y << std::endl;
 		//edge.Move(pos - edge.GetBody().getOrigin());
-		edge.Move(pos - edge.GetLine().pointB);
+		edge.Move(diff);// -edge.GetLine().pointB);
+		//std::cout << "_m__" << edge.GetLine().pointA.x << ' ' << edge.GetLine().pointA.y << std::endl;
+		//std::cout << "_m__" << edge.GetLine().pointB.x << ' ' << edge.GetLine().pointB.y << std::endl;
 	}
 	/*edges[0].Move(pos + sf::Vector2f(-10, 10));
 	edges[1].Move(pos + sf::Vector2f(10, 10));
@@ -64,7 +72,13 @@ void Polygon::Move(sf::Vector2f dest){
 }
 
 void Polygon::Rotate(float angle){
+	//float delta = angle - rotation;
 	for (auto& edge : edges) {
-		edge.RotateAround(pos, 0.000001f);
+		edge.RotateAround(pos, angle);
+		//edge.Move(edge.GetLine().pointB + pos);
 	}
+}
+
+std::vector<Wall>& Polygon::getEdges() {
+	return edges;
 }

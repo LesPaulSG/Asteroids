@@ -3,7 +3,7 @@
 
 #include "BulletManager.h"
 
-BulletManager::BulletManager() : player(sf::Vector2f(960, 540), 0) {
+BulletManager::BulletManager() : player(sf::Vector2f(960, 540), 1.57) {
 	bullets.reserve(BULLETS_MAX_CAPACITY);
 	walls.reserve(WALLS_MAX_CAPACITY);
 	asteroids.reserve(ASTEROIDS_MAX_QUANTITY);
@@ -147,5 +147,5 @@ void BulletManager::Draw(sf::RenderWindow& w){
 	for (auto& iter : asteroids) {
 		iter.Draw(w);
 	}
-	w.draw(player.GetBody());
+	player.Draw(w);
 }

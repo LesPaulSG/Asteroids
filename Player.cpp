@@ -4,17 +4,19 @@ Player::Player(sf::Vector2f pos, float cRotation)
 	: pos(std::move(pos)),
 	rotation(0.f),
 	speed(100.f),
-	rotSpeed(10.f),
-	radius(1.f) {
+	rotSpeed(1.f),
+	radius(1.f),
+	body(pos, { sf::Vector2f(0, -20), sf::Vector2f(10, 10), sf::Vector2f(-10, 10) }) {
 	forwardVector = sf::Vector2f(0.f, -1.f);
 	rightVector   = sf::Vector2f(1.f, 0.f);
 
 	Rotate(cRotation);
+	//body.Rotate(rotation);
 
-	body.setPosition(pos);
-	body.setOrigin(sf::Vector2f(body.getOrigin().x + radius, body.getOrigin().y + radius));
-	body.setRadius(radius);
-	body.setFillColor(sf::Color::Blue);
+	//body.setPosition(pos);
+	//body.setOrigin(sf::Vector2f(body.getOrigin().x + radius, body.getOrigin().y + radius));
+	//body.setRadius(radius);
+	//body.setFillColor(sf::Color::Blue);
 }
 
 void Player::CheckCollision(float time, const sf::Vector2f& oldPos, std::vector<Wall>& walls){
@@ -61,7 +63,7 @@ void Player::Update(float time, std::vector<Wall>& walls) {
 	if (Move(time)) {
 		//CheckCollision(time, oldPos, walls);
 		PassScreenBorder(pos);
-		body.setPosition(pos);
+		body.Move(pos);
 	}
 	//CheckCollision(oldPos, walls);
 }
@@ -93,6 +95,7 @@ void Player::Rotate(const sf::Vector2f& mousePos){
 }
 
 bool Player::Move(float time){
+	float oldRot = rotation;
 	switch (dir){
 	case STP:
 		return false;
@@ -107,11 +110,13 @@ bool Player::Move(float time){
 	case RGH:
 		//pos += rightVector * time * speed;
 		Rotate(rotation + rotSpeed * time);
+		body.Rotate(oldRot - rotation);
 		return true;
 		break;
 	case LFT:
 		//pos -= rightVector * time * speed;
 		Rotate(rotation - rotSpeed * time);
+		body.Rotate(oldRot - rotation);
 		return true;
 		break;
 	default:
@@ -120,7 +125,7 @@ bool Player::Move(float time){
 	}
 }
 
-const sf::CircleShape& Player::GetBody() const {return body;}
+//const sf::CircleShape& Player::GetBody() const {return body;}
 
 const sf::Vector2f& Player::GetPosition() const {return pos;}
 
@@ -132,4 +137,8 @@ float Player::GetRotation() const{
 
 void Player::SetDir(MoveDir nDir){
 	dir = nDir;
+}
+
+void Player::Draw(sf::RenderWindow& w){
+	body.Draw(w);
 }

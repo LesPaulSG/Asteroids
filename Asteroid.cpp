@@ -9,23 +9,25 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 	radius = stage * 15;
 	body.setFillColor(sf::Color::Red);
 	body.setRadius(1);
-	body.setOrigin(sf::Vector2f(radius / 2, radius / 2));
+	//body.setOrigin(sf::Vector2f(radius / 2, radius / 2));
 	//std::cout << "ya_rodilsyia " << stage << ' ' << pos.x << ' ' << pos.y << std::endl;
 	std::random_device rd;
 	std::mt19937_64 gen(rd());
 	std::uniform_int_distribution<int> dist(10*stage, 15*stage);
-	std::uniform_int_distribution<int> rot(0, 360);
+	std::uniform_int_distribution<int> rot(0, 1.57);
 	std::vector<sf::Vector2f> points;
-	points.reserve(8);
+	points.reserve(3*stage);
 	float prevAngle = 0;
-	for (int i = 0; i < 8; ++i) {
-		float angle = rot(gen);
+	for (int i = 0; i < 3 * stage; ++i) {
 		sf::Vector2f p(dist(gen), 0);
-		RotateVector(p, prevAngle + angle);
-		prevAngle += angle;
 		points.push_back(p);
 	}
-	//pBody = Polygon(pos, points);
+	for (int i = 1; i < 3 * stage; ++i) {
+		float angle = rot(gen);
+		RotateVector(points[i], prevAngle + angle);
+		prevAngle += angle;
+	}
+	pBody = Polygon(pos, points);
 }
 
 Asteroid::~Asteroid(){
@@ -62,6 +64,7 @@ void Asteroid::UpdateDirection(sf::Vector2f newDir){
 
 void Asteroid::Draw(sf::RenderWindow& w){
 	w.draw(body);
+	pBody.Draw(w);
 }
 
 void Asteroid::Destroy(){
