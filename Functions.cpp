@@ -5,13 +5,7 @@
 std::vector<sf::SoundBuffer> buffers;
 std::vector<sf::Sound> sounds;
 
-//sf::SoundBuffer b;
-//sf::Sound s;
 void LoadSounds() {
-	//sf::SoundBuffer b;
-	//sf::Sound s;
-	//FIRE
-	//b.loadFromFile("sounds/fire.wav");
 	buffers.push_back(sf::SoundBuffer());
 	buffers.push_back(sf::SoundBuffer());
 	buffers.push_back(sf::SoundBuffer());
@@ -47,68 +41,15 @@ void LoadSounds() {
 	sounds[5].setBuffer(buffers[5]);
 	sounds[6].setBuffer(buffers[6]);
 	sounds[7].setBuffer(buffers[7]);
-
-	//THRUST
-	//b.loadFromFile("sounds/thrust.wav");
-	/*buffers.push_back(b);
-	//BANG_S
-	b.loadFromFile("sounds/bangSmall.wav");
-	buffers.push_back(b);
-	//BANG_M
-	b.loadFromFile("sounds/bangMedium.wav");
-	buffers.push_back(b);
-	//BANG_L
-	b.loadFromFile("sounds/bangLarge.wav");
-	buffers.push_back(b);
-	//SOUC_S
-	b.loadFromFile("sounds/saucerSmall.wav");
-	buffers.push_back(b);
-	//SOUS_B
-	b.loadFromFile("sounds/saucerBig.wav");
-	buffers.push_back(b);
-	//EXTRA
-	b.loadFromFile("sounds/extraShip.wav");
-	buffers.push_back(b);*/
-
-	//for (auto& iter : buffers) {
-		//s.setBuffer(b);
-		//sounds.push_back(s);
-	//}
 }
 
 void PlaySound(Sound ss) {
 	sounds[(int)ss].play();
-	///switch (s)
-	//{
-	//case Sound::FIRE:
-	/*sf::SoundBuffer bT;
-	bT.loadFromFile("sounds/fire.wav");
-	sf::Sound sT;
-	sT.setBuffer(bT);
-	sT.play();*/
-	/*	break;
-	case Sound::THRUST:
-		sounds[1].play();
-		break;
-	case Sound::BANG_S:
-		sounds[2].play();
-		break;
-	case Sound::BANG_M:
-		sounds[3].play();
-		break;
-	case Sound::BANG_L:
-		sounds[4].play();
-		break;
-	case Sound::SOUC_S:
-		sounds[5].play();
-		break;
-	case Sound::SOUS_B:
-		sounds[6].play();
-		break;
-	case Sound::EXTRA:
-		sounds[7].play();
-		break;
-	}*/
+}
+
+void LoopSound(Sound ss) {
+	sounds[(int)ss].setLoop(true);
+	PlaySound(ss);
 }
 
 bool isPointInRange(float x, float a, float b) {

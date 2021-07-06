@@ -23,11 +23,13 @@ const std::vector<sf::Vector2f> STARSHIP_PATTERN{
 	sf::Vector2f(-6, 6),
 	sf::Vector2f(-10, 10) };
 
-enum class Sound{ FIRE, THRUST, BANG_S, BANG_M, BANG_L, SOUC_S, SOUS_B, EXTRA };
+enum class Sound{ FIRE, THRUST, BANG_S, BANG_M, BANG_L, SOUC_S, SOUC_B, EXTRA };
 
 void LoadSounds();
 
-void PlaySound(Sound s);
+void PlaySound(Sound ss);
+
+void LoopSound(Sound ss);
 
 bool isPointInRange(float x, float a, float b);
 

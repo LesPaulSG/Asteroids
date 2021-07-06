@@ -20,7 +20,7 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 		lives.push_back(Polygon(sf::Vector2f(30 * i + 30, 70), STARSHIP_PATTERN));
 	}
 
-	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "BulletManager", sf::Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Fullscreen);
 	window.setVerticalSyncEnabled(true);
 	window.setMouseCursorVisible(false);
 
