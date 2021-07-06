@@ -8,8 +8,7 @@ private:
 	float speed;
 	float radius;
 	int stage;
-	sf::CircleShape body;
-	Polygon pBody;
+	Polygon body;
 	bool alive;
 public:
 	Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_ = 3);

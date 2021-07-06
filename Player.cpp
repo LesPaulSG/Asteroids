@@ -4,19 +4,13 @@ Player::Player(sf::Vector2f pos, float cRotation)
 	: pos(std::move(pos)),
 	rotation(0.f),
 	speed(100.f),
-	rotSpeed(1.f),
+	rotSpeed(0.000001f),
 	radius(1.f),
-	body(pos, { sf::Vector2f(0, -20), sf::Vector2f(10, 10), sf::Vector2f(-10, 10) }) {
+	body(pos, { sf::Vector2f(0, -20), sf::Vector2f(10, 10), sf::Vector2f(0, 5), sf::Vector2f(-10, 10) }) {
 	forwardVector = sf::Vector2f(0.f, -1.f);
 	rightVector   = sf::Vector2f(1.f, 0.f);
 
 	Rotate(cRotation);
-	//body.Rotate(rotation);
-
-	//body.setPosition(pos);
-	//body.setOrigin(sf::Vector2f(body.getOrigin().x + radius, body.getOrigin().y + radius));
-	//body.setRadius(radius);
-	//body.setFillColor(sf::Color::Blue);
 }
 
 void Player::CheckCollision(float time, const sf::Vector2f& oldPos, std::vector<Wall>& walls){
@@ -69,6 +63,13 @@ void Player::Update(float time, std::vector<Wall>& walls) {
 }
 
 void Player::Rotate(float angle){
+	std::cout << angle << std::endl;
+	if (angle > 6.28319) {
+		angle = 0;
+	}
+	else if (angle < 0) {
+		angle = 6.28319;
+	}
 	rotation = angle - 1.5708f;
 
 	float fxNew = sin(rotation);
@@ -83,7 +84,7 @@ void Player::Rotate(float angle){
 	rightVector.y = ryNew;
 }
 
-void Player::Rotate(const sf::Vector2f& mousePos){
+/*void Player::Rotate(const sf::Vector2f& mousePos){
 	static Line horizontalLine(sf::Vector2f(0, 0), sf::Vector2f(1920, 0));
 	Line posToMouse(pos, mousePos);
 	float angle = horizontalLine.AngleOfIntersec(posToMouse);
@@ -92,7 +93,7 @@ void Player::Rotate(const sf::Vector2f& mousePos){
 		angle += 3.14159f;
 	}
 	Rotate(angle);
-}
+}*/
 
 bool Player::Move(float time){
 	float oldRot = rotation;
@@ -110,13 +111,13 @@ bool Player::Move(float time){
 	case RGH:
 		//pos += rightVector * time * speed;
 		Rotate(rotation + rotSpeed * time);
-		body.Rotate(oldRot - rotation);
+		body.Rotate(rotation);
 		return true;
 		break;
 	case LFT:
 		//pos -= rightVector * time * speed;
 		Rotate(rotation - rotSpeed * time);
-		body.Rotate(oldRot - rotation);
+		body.Rotate(rotation);
 		return true;
 		break;
 	default:

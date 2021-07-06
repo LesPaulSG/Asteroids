@@ -10,14 +10,11 @@ Bullet::Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime)
 	alive(true) {
 	RotateUnitVector(this->dir, dir);
 	body.setPosition(pos);
-	body.setSize(sf::Vector2f(1, 10));
-	double angle = acos(this->dir.y / VectorsModule(this->dir));
-	dir *= -(180.f / 3.141528f);
-	body.setRotation(dir);
-	body.setFillColor(sf::Color::Red);
+	body.setRadius(1);
+	body.setFillColor(sf::Color::White);
 }
 
-const sf::RectangleShape& Bullet::GetBody() const {return body;}
+const sf::CircleShape& Bullet::GetBody() const {return body;}
 
 bool Bullet::GetAlive() const {return alive;}
 

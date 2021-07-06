@@ -38,12 +38,12 @@ void Wall::SetCustomOrigin(sf::Vector2f newOrig){
 }
 
 void Wall::SetPos(sf::Vector2f pos){
-	std::cout << "_w1_A_" << line.pointA.x << ' ' << line.pointA.y << std::endl;
-	std::cout << "_w1_B_" << line.pointB.x << ' ' << line.pointB.y << std::endl;
-	std::cout << "_pos__" << pos.x << ' ' << pos.y << std::endl;
+	//std::cout << "_w1_A_" << line.pointA.x << ' ' << line.pointA.y << std::endl;
+	//std::cout << "_w1_B_" << line.pointB.x << ' ' << line.pointB.y << std::endl;
+	//std::cout << "_pos__" << pos.x << ' ' << pos.y << std::endl;
 	line = Line(line.pointA + pos, line.pointB + pos);
-	std::cout << "_w2_A_" << line.pointA.x << ' ' << line.pointA.y << std::endl;
-	std::cout << "_w2_B_" << line.pointB.x << ' ' << line.pointB.y << std::endl;
+	//std::cout << "_w2_A_" << line.pointA.x << ' ' << line.pointA.y << std::endl;
+	//std::cout << "_w2_B_" << line.pointB.x << ' ' << line.pointB.y << std::endl;
 	body.setPosition(line.pointA);
 }
 

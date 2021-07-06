@@ -1,5 +1,10 @@
 #include "Asteroid.h"
 
+std::random_device rd;
+std::mt19937_64 gen(rd());
+std::uniform_int_distribution<int> dist(5, 15);
+std::uniform_real_distribution<float> rot(0.5, 1.0);
+
 Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 	: pos(pos_),
 	dir(dir_),
@@ -7,27 +12,20 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 	stage(stage_),
 	alive(true) {
 	radius = stage * 15;
-	body.setFillColor(sf::Color::Red);
-	body.setRadius(1);
-	//body.setOrigin(sf::Vector2f(radius / 2, radius / 2));
-	//std::cout << "ya_rodilsyia " << stage << ' ' << pos.x << ' ' << pos.y << std::endl;
-	std::random_device rd;
-	std::mt19937_64 gen(rd());
-	std::uniform_int_distribution<int> dist(10*stage, 15*stage);
-	std::uniform_int_distribution<int> rot(0, 1.57);
+		
 	std::vector<sf::Vector2f> points;
 	points.reserve(3*stage);
 	float prevAngle = 0;
-	for (int i = 0; i < 3 * stage; ++i) {
-		sf::Vector2f p(dist(gen), 0);
+	for (int i = 0; i < 8; ++i) {
+		sf::Vector2f p(dist(gen)*stage, 0);
 		points.push_back(p);
 	}
-	for (int i = 1; i < 3 * stage; ++i) {
+	for (int i = 1; i < 8; ++i) {
 		float angle = rot(gen);
 		RotateVector(points[i], prevAngle + angle);
 		prevAngle += angle;
 	}
-	pBody = Polygon(pos, points);
+	body = Polygon(pos, points);
 }
 
 Asteroid::~Asteroid(){
@@ -41,8 +39,7 @@ void Asteroid::Move(float time, std::vector<Asteroid>& asteroids){
 	pos += dir * speed * time;			//new position
 	CheckCollision(asteroids);
 	PassScreenBorder(pos);
-	body.setPosition(pos);
-	pBody.Move(pos);
+	body.Move(pos);
 }
 
 void Asteroid::CheckCollision(std::vector<Asteroid>& asteroids){
@@ -63,8 +60,7 @@ void Asteroid::UpdateDirection(sf::Vector2f newDir){
 }
 
 void Asteroid::Draw(sf::RenderWindow& w){
-	w.draw(body);
-	pBody.Draw(w);
+	body.Draw(w);
 }
 
 void Asteroid::Destroy(){

@@ -9,10 +9,10 @@ private:
 	float time;
 	float lifeTime;
 	bool alive;
-	sf::RectangleShape body;
+	sf::CircleShape body;
 
 public:
-	const sf::RectangleShape& GetBody() const;
+	const sf::CircleShape& GetBody() const;
 	bool GetAlive() const;
 
 	Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime);

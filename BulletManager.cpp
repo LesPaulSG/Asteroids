@@ -3,6 +3,13 @@
 
 #include "BulletManager.h"
 
+std::random_device rd_;
+std::mt19937_64 gen_(rd_());
+//std::default_random_engine generator;
+std::uniform_int_distribution<int> xDistr(50, 1870);
+std::uniform_int_distribution<int> yDistr(50, 1230);
+std::uniform_int_distribution<int> dDistr(-10, 10);
+
 BulletManager::BulletManager() : player(sf::Vector2f(960, 540), 1.57) {
 	bullets.reserve(BULLETS_MAX_CAPACITY);
 	walls.reserve(WALLS_MAX_CAPACITY);
@@ -72,16 +79,17 @@ void BulletManager::Update(float time) {
 		for (auto iter = asteroids.begin(); iter != asteroids.end(); ++iter) {
 			if (!iter->GetAlive()) {
 				int stage = iter->GetStage();
+				sf::Vector2f pos = iter->GetPos();
 				asteroids.erase(iter);
-				if (--stage > 0) {
-					SpawnAsteroid(time, stage);
+				if (stage > 1) {
+					CrackAsteroid(pos, --stage);
 				}
 				break;
 			}
 		}
 	}
 
-	SpawnAsteroid(time);
+	GenerateAsteroid(time);
 	for (auto& iter : asteroids) {
 		iter.Move(time, asteroids);
 	}
@@ -96,43 +104,31 @@ void BulletManager::Fire(const sf::Vector2f& pos, float dir, float speed, float 
 	}
 }
 
-void BulletManager::SpawnAsteroid(float deltaTime, int stage){
+void BulletManager::GenerateAsteroid(float deltaTime){
 	static float timePassed = 0;
+	static sf::Vector2f pos;
+	static sf::Vector2f dir;
 	timePassed += deltaTime;
-	//std::cout << "spawn?\n";
-	std::random_device rd;
-	std::mt19937_64 gen(rd());
-	//std::default_random_engine generator;
-	std::uniform_int_distribution<int> xDistr(50, 1870);
-	std::uniform_int_distribution<int> yDistr(50, 1230);
-	std::uniform_int_distribution<int> dDistr(-10, 10);
-
-	if (stage < 3) {
-		sf::Vector2f pos;
-		sf::Vector2f dir;
-		pos.x = xDistr(gen);
-		pos.y = yDistr(gen);
-		dir.x = dDistr(gen) / 10.f;
-		dir.y = dDistr(gen) / 10.f;
-		asteroids.push_back(Asteroid(pos, dir, stage));  //initial stage == 3
-		pos.x = xDistr(gen);
-		pos.y = yDistr(gen);
-		dir.x = dDistr(gen) / 10.f;
-		dir.y = dDistr(gen) / 10.f;
-		asteroids.push_back(Asteroid(pos, dir, stage));  //initial stage == 3
-	}
 
 	if (timePassed >= 1.f) {
 		if (asteroids.size() < ASTEROIDS_MAX_QUANTITY/3) {
-			sf::Vector2f pos;
-			sf::Vector2f dir;
-			pos.x = xDistr(gen);
-			pos.y = yDistr(gen);
-			dir.x = dDistr(gen) / 10.f;
-			dir.y = dDistr(gen) / 10.f;
+			pos.x = xDistr(gen_);
+			pos.y = yDistr(gen_);
+			dir.x = dDistr(gen_) / 10.f;
+			dir.y = dDistr(gen_) / 10.f;
 			asteroids.push_back(Asteroid(pos, dir));  //initial stage == 3
 			timePassed = 0;
 		}
+	}
+}
+
+void BulletManager::CrackAsteroid(sf::Vector2f& pos, int stage) {
+	int num = 4 / stage;	//stage == 2 -> num == 4; stage == 3 -> num == 2; not a bug, but a feature
+	static sf::Vector2f dir;
+	for (int i = 0; i < num; ++i) {
+		dir.x = dDistr(gen_) / 10.f;
+		dir.y = dDistr(gen_) / 10.f;
+		asteroids.push_back(Asteroid(pos+dir*10.f, dir, stage));  //initial stage == 3
 	}
 }
 

@@ -39,8 +39,8 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 				if (evt.mouseButton.button == sf::Mouse::Left) {
 					LmbReleasedPos = sf::Mouse::getPosition();
 					sf::Vector2f direction = (sf::Vector2f)LmbReleasedPos;// -bm.GetPlayer().GetPosition();
-					Task task{ TaskType::ADD_BULLET, PackagedTask{bm.GetPlayer().GetPosition(), bm.GetPlayer().GetRotation(), 1000, 10} };
-					bm.AddTask(task);
+					//Task task{ TaskType::ADD_BULLET, PackagedTask{bm.GetPlayer().GetPosition(), bm.GetPlayer().GetRotation(), 1000, 10} };
+					//bm.AddTask(task);
 				} else if (evt.mouseButton.button == sf::Mouse::Right) {
 					RmbReleasedPos = sf::Mouse::getPosition();
 					//Task task{ TaskType::ADD_WALL, PackagedTask{sf::Vector2f(RmbStartPos), sf::Vector2f(RmbReleasedPos)} };
@@ -134,6 +134,10 @@ void KeyboardCheck(sf::Event& event, BulletManager& bm, float t){
 		break;
 	case sf::Keyboard::A:
 		bm.GetPlayer().SetDir(LFT);
+		break;
+	case sf::Keyboard::Space:
+		Task task{ TaskType::ADD_BULLET, PackagedTask{bm.GetPlayer().GetPosition(), bm.GetPlayer().GetRotation(), 1000, 10} };
+		bm.AddTask(task);
 		break;
 	}
 }

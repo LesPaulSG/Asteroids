@@ -63,6 +63,8 @@ public:
 	void CreateWall(const sf::Vector2f& start, const sf::Vector2f& end);
 	void Update(float time);
 	void Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime);
-	void SpawnAsteroid(float deltaTime, int stage = 3);
+	void GenerateAsteroid(float deltaTime);
+	void CrackAsteroid(sf::Vector2f& pos, int stage);
+	//void SpawnAsteroid(float deltaTime, int stage = 3);
 	void Draw(sf::RenderWindow& w);
 };
