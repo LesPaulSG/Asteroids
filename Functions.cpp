@@ -16,12 +16,6 @@ void RotateVector(sf::Vector2f& vec, float angle){
 }
 
 void RotateVectorAround(sf::Vector2f& vec, const sf::Vector2f& anchor, float angle) {
-	angle = 0.005;
-	//x1 = 500 + (x1 - 500.00) * cos(0.05) - (500.00 - y1) * sin(0.05);
-	//y1 = 500 + (x1 - 500.00) * sin(0.05) + (y1 - 500.00) * cos(0.05);
-	//std::cout << anchor.x << ' ' << anchor.y << std::endl;
-	//float xNew = anchor.x + (vec.x - anchor.x) * cos(angle) - (vec.y - anchor.y) * sin(angle);
-	//float yNew = anchor.y + (vec.x - anchor.x) * sin(angle) - (vec.y - anchor.y) * cos(angle);
 	float xNew = (vec.x - anchor.x) * cos(angle) - (vec.y - anchor.y) * sin(angle) + anchor.x;
 	float yNew = (vec.x - anchor.x) * sin(angle) + (vec.y - anchor.y) * cos(angle) + anchor.y;
 	vec.x = xNew;
@@ -29,10 +23,8 @@ void RotateVectorAround(sf::Vector2f& vec, const sf::Vector2f& anchor, float ang
 }
 
 void RotateUnitVector(sf::Vector2f& vec, float angle){
-	//std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
 	vec.x = sin(angle);
 	vec.y = -cos(angle);
-	//std::cout << "_" << vec.x << ' ' << vec.y << ' ' << angle << std::endl;
 }
 
 void PassScreenBorder(sf::Vector2f& vec) {

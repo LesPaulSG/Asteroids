@@ -2,9 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include <mutex>
 #include <iostream>
+#include <random>
+
+static std::random_device rd;
+static std::mt19937_64 gen(rd());
 
 const int BULLETS_MAX_CAPACITY	 = 50;
-const int WALLS_MAX_CAPACITY	 = 50;
 const int POLYGON_MAX_SIZE		 = 10;
 const int ASTEROIDS_MAX_QUANTITY = 30;
 

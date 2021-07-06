@@ -3,8 +3,8 @@
 Player::Player(sf::Vector2f pos, float cRotation) 
 	: pos(std::move(pos)),
 	rotation(0.f),
-	speed(100.f),
-	rotSpeed(0.000001f),
+	speed(150.f),
+	rotSpeed(5.f),
 	radius(1.f),
 	body(pos, { sf::Vector2f(0, -20), sf::Vector2f(10, 10), sf::Vector2f(0, 5), sf::Vector2f(-10, 10) }) {
 	forwardVector = sf::Vector2f(0.f, -1.f);
@@ -41,92 +41,51 @@ void Player::Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2
 	} else {
 		pos += (tmpDir + forwardVector) * time;// -forwardVector;
 	}
-	//std::cout << rotation << std::endl;
-	//Move(time/10);
-	//pos += tmpDir * time * speed;
-	//ChangeDirection(angle, wall.isPointRight(oldPos));
-	//pos = iPoint + forwardVector * 0.00001f;		//update positon to intersection point + small distance
-	//pos = oldPos;
-	//body.setPosition(pos);
-	//std::cout << pos.x << ' ' << pos.y << std::endl;
-	//speed *= 0.95f;
 }
 
-void Player::Update(float time, std::vector<Wall>& walls) {
-	const sf::Vector2f oldPos = pos;
+void Player::Update(float time) {
+	float old = rotation;
 	if (Move(time)) {
-		//CheckCollision(time, oldPos, walls);
 		PassScreenBorder(pos);
 		body.Move(pos);
+		if(old!=rotation)
+			body.Rotate((old-rotation)*-1.f);
 	}
-	//CheckCollision(oldPos, walls);
 }
 
 void Player::Rotate(float angle){
-	std::cout << angle << std::endl;
-	if (angle > 6.28319) {
-		angle = 0;
-	}
-	else if (angle < 0) {
-		angle = 6.28319;
-	}
-	rotation = angle - 1.5708f;
-
 	float fxNew = sin(rotation);
 	float fyNew = -cos(rotation);
 	forwardVector.x = fxNew;
 	forwardVector.y = fyNew;
-	//RotateUnitVector(forwardVector, angle);
-	//RotateUnitVector(rightVector, angle);
 	float rxNew = cos(rotation);
 	float ryNew = sin(rotation);
 	rightVector.x = rxNew;
 	rightVector.y = ryNew;
 }
 
-/*void Player::Rotate(const sf::Vector2f& mousePos){
-	static Line horizontalLine(sf::Vector2f(0, 0), sf::Vector2f(1920, 0));
-	Line posToMouse(pos, mousePos);
-	float angle = horizontalLine.AngleOfIntersec(posToMouse);
-	angle *= -1.f;
-	if (mousePos.y < pos.y) {
-		angle += 3.14159f;
-	}
-	Rotate(angle);
-}*/
-
 bool Player::Move(float time){
-	float oldRot = rotation;
 	switch (dir){
 	case STP:
 		return false;
 	case FWD:
 		pos += forwardVector * time * speed;
 		return true;
-		break;
 	case BWD:
 		pos -= forwardVector * time * speed;
 		return true;
-		break;
 	case RGH:
-		//pos += rightVector * time * speed;
-		Rotate(rotation + rotSpeed * time);
-		body.Rotate(rotation);
+		rotation += rotSpeed * time;
+		Rotate(rotation);
 		return true;
-		break;
 	case LFT:
-		//pos -= rightVector * time * speed;
-		Rotate(rotation - rotSpeed * time);
-		body.Rotate(rotation);
+		rotation -= rotSpeed * time;
+		Rotate(rotation);
 		return true;
-		break;
 	default:
 		return false;
-		break;
 	}
 }
-
-//const sf::CircleShape& Player::GetBody() const {return body;}
 
 const sf::Vector2f& Player::GetPosition() const {return pos;}
 

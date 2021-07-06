@@ -1,6 +1,4 @@
 #pragma once
-#include <random>
-
 #include "Wall.h"
 
 class Polygon{
@@ -18,5 +16,6 @@ public:
 	void Rotate(float angle);
 
 	std::vector<Wall>& getEdges();
+	float GetRot();
 };
 

@@ -1,7 +1,5 @@
 #include "Asteroid.h"
 
-std::random_device rd;
-std::mt19937_64 gen(rd());
 std::uniform_int_distribution<int> dist(5, 15);
 std::uniform_real_distribution<float> rot(0.5, 1.0);
 
@@ -12,12 +10,12 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 	stage(stage_),
 	alive(true) {
 	radius = stage * 15;
-		
+
 	std::vector<sf::Vector2f> points;
-	points.reserve(3*stage);
+	points.reserve(3 * stage);
 	float prevAngle = 0;
 	for (int i = 0; i < 8; ++i) {
-		sf::Vector2f p(dist(gen)*stage, 0);
+		sf::Vector2f p(dist(gen) * stage, 0);
 		points.push_back(p);
 	}
 	for (int i = 1; i < 8; ++i) {
@@ -26,12 +24,6 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 		prevAngle += angle;
 	}
 	body = Polygon(pos, points);
-}
-
-Asteroid::~Asteroid(){
-	if (--stage > 0) {
-		//
-	}
 }
 
 void Asteroid::Move(float time, std::vector<Asteroid>& asteroids){

@@ -1,79 +1,48 @@
 #include "IO_Thread.h"
+#include "Explosion.h"
 
 sf::Vector2i LmbStartPos,    RmbStartPos;			//mouse positions for firing
 sf::Vector2i LmbReleasedPos, RmbReleasedPos;		//and creating walls
 
-//Polygon pT(sf::Vector2f(1000, 300), { sf::Vector2f(0, 20), sf::Vector2f(-10, -10), sf::Vector2f(10, -10) });
+std::vector<Explosion> VFX;
 
 void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Font font;									//text obj for UI
 	font.loadFromFile("OpenSans-Bold.ttf");			//
 	sf::Text ui("", font, 16);						//
-	ui.setPosition(5.f, 5.f);							//
+	ui.setPosition(5.f, 5.f);						//
 	ui.setFillColor(sf::Color::Red);				//
 
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "BulletManager", sf::Style::Fullscreen);
 	window.setVerticalSyncEnabled(true);
 
-	std::chrono::duration<float> time;
+	std::chrono::duration<float> time{ 0 };
 	auto clock = std::chrono::high_resolution_clock::now();
 
 	sf::Event evt;
 
-	//POLYGON TEST
-	
-	//Polygon p(sf::Vector2f(100, 300), { sf::Vector2f(10, -10), sf::Vector2f(0, 20), sf::Vector2f(-10, -10) });
-	//Wall w(sf::Vector2f(1000, 400), sf::Vector2f(1000, 600));
-
 	while (true) {
 		while (window.pollEvent(evt)) {
 			CheckEvent(evt, bm, time.count());
-			if (evt.type == sf::Event::Closed) {
-				gameOver = true;
-				window.close();
-			}	else if (evt.type == sf::Event::MouseButtonPressed) {
-				if (evt.mouseButton.button == sf::Mouse::Right) {
-					RmbStartPos = sf::Mouse::getPosition();											//save coordinates of LMB pressed
-				}
-			} else if (evt.type == sf::Event::MouseButtonReleased) {
-				if (evt.mouseButton.button == sf::Mouse::Left) {
-					LmbReleasedPos = sf::Mouse::getPosition();
-					sf::Vector2f direction = (sf::Vector2f)LmbReleasedPos;// -bm.GetPlayer().GetPosition();
-					//Task task{ TaskType::ADD_BULLET, PackagedTask{bm.GetPlayer().GetPosition(), bm.GetPlayer().GetRotation(), 1000, 10} };
-					//bm.AddTask(task);
-				} else if (evt.mouseButton.button == sf::Mouse::Right) {
-					RmbReleasedPos = sf::Mouse::getPosition();
-					//Task task{ TaskType::ADD_WALL, PackagedTask{sf::Vector2f(RmbStartPos), sf::Vector2f(RmbReleasedPos)} };
-					//bm.AddTask(task);
-				}
-			}
 		}
 
-		//p.Move(bm.GetPlayer().GetPosition());
-		//p.Rotate(bm.GetPlayer().GetRotation());
-		//p.Move(bm.GetPlayer().GetPosition());
-		//w.RotateAround(sf::Vector2f(1000, 400), 0.000001f);
-		//pT.Rotate(0.00005f);
-		/*for (auto& iter : pT.getEdges()) {
-			iter.RotateAround(sf::Vector2f(1000, 300), 0.00005f);
-		}*/
+		if (bm.isExplosions()) {
+			VFX.push_back(bm.PopExplosion());
+		}
+		for (auto iter = VFX.begin(); iter != VFX.end(); ++iter) {
+			iter->Update(time.count());
+			if (!iter->isAlive()) {
+				VFX.erase(iter);
+				break;
+			}
+		}
 
 		window.clear();
 
-		//p.Draw(window);
-		//pT.Draw(window);
-		//window.draw(w.GetBody());
-
-		/*{
-			std::lock_guard guard(bm.GetBmMutex());
-			for (auto& iter : bm.GetWalls()){
-				window.draw(iter.GetBody());
-			}
-			for (auto& iter : bm.GetBullets()){
-				window.draw(iter.GetBody());
-			}
+		for (auto& iter : VFX) {
+			iter.Draw(window);
 		}
-		window.draw(bm.GetPlayer().GetBody());*/
+
 		bm.Draw(window);
 
 		//crushing on the startup
@@ -104,17 +73,6 @@ void CheckEvent(sf::Event& event, BulletManager& bm, float t){
 		break;
 	case sf::Event::KeyReleased:
 		bm.GetPlayer().SetDir(STP);
-		break;
-	case sf::Event::MouseButtonPressed:
-		//for (auto& iter : pT.getEdges()) {
-			//iter.RotateAround(sf::Vector2f(1000, 300), -0.000001f);
-		//}
-		//pT.Move(sf::Vector2f(1000, 400));
-		break;
-	case sf::Event::MouseButtonReleased:
-		break;
-	case sf::Event::MouseMoved:
-		//bm.GetPlayer().Rotate(std::move(sf::Vector2f(sf::Mouse::getPosition())));
 		break;
 	default:
 		break;

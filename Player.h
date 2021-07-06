@@ -30,7 +30,7 @@ public:
 
 	void CheckCollision(float time, const sf::Vector2f& oldPos, std::vector<Wall>& walls);
 	void Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2f& oldPos, const Wall& wall);
-	void Update(float time, std::vector<Wall>& walls);
+	void Update(float time);
 	void Rotate(float angle);
 	void Rotate(const sf::Vector2f& mousePos);
 	bool Move(float time);	

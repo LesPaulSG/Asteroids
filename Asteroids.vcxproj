@@ -149,6 +149,7 @@
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="IO_Thread.h" />
     <ClInclude Include="Line.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="IO_Thread.cpp" />
     <ClCompile Include="Line.cpp" />

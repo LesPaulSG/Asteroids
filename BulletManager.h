@@ -37,10 +37,10 @@ struct Task {
 class BulletManager {
 private:
 	std::vector<Bullet> bullets;
-	std::vector<Wall> walls;
 	std::vector<Asteroid> asteroids;
 
 	std::queue<Task> tasks;
+	std::queue<sf::Vector2f> explosions;
 
 	mutable std::mutex bmMutex;
 
@@ -54,17 +54,16 @@ public:
 	~BulletManager() = default;
 
 	const std::vector<Bullet>& GetBullets() const;
-	const std::vector<Wall>& GetWalls() const;
 	std::mutex& GetBmMutex();
 	Player& GetPlayer();
 
 	void AddTask(Task& pt);
-	void AddWall(Wall&& wall);
-	void CreateWall(const sf::Vector2f& start, const sf::Vector2f& end);
 	void Update(float time);
 	void Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime);
 	void GenerateAsteroid(float deltaTime);
 	void CrackAsteroid(sf::Vector2f& pos, int stage);
-	//void SpawnAsteroid(float deltaTime, int stage = 3);
 	void Draw(sf::RenderWindow& w);
+
+	bool isExplosions();
+	sf::Vector2f PopExplosion();
 };

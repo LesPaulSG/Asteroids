@@ -25,6 +25,7 @@ void Bullet::CheckCollision(std::vector<Asteroid>& asteroids, const sf::Vector2f
 		if (Line(pos, iter.GetPos()).lenght <= iter.GetRadius()) {
 			iter.Destroy();
 			alive = false;
+			return;
 		}
 		//old collision detectcion
 		/*if (iter.GetAlive()) {
