@@ -10,10 +10,11 @@ private:
 	float rotation;
 public:
 	Polygon();
-	Polygon(sf::Vector2f pos_, std::vector<sf::Vector2f> points);
+	Polygon(sf::Vector2f pos_, const std::vector<sf::Vector2f>& points);
 	void Draw(sf::RenderWindow& w) const;
 	void Move(sf::Vector2f dest);
 	void Rotate(float angle);
+	bool isCollision(Line line);
 
 	std::vector<Wall>& getEdges();
 	float GetRot();

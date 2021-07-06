@@ -23,5 +23,7 @@ public:
 	float GetRadius() const;
 	bool GetAlive() const;
 	int GetStage() const;
+
+	bool isCollision(Line line);
 };
 

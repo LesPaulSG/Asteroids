@@ -3,25 +3,30 @@
 Player::Player(sf::Vector2f pos, float cRotation) 
 	: pos(std::move(pos)),
 	rotation(0.f),
-	speed(150.f),
+	speed(100.f),
 	rotSpeed(5.f),
-	radius(1.f),
-	body(pos, { sf::Vector2f(0, -20), sf::Vector2f(10, 10), sf::Vector2f(0, 5), sf::Vector2f(-10, 10) }) {
+	radius(20.f),
+	force(0.f),
+	lives(3),
+	body(pos, STARSHIP_PATTERN) {
 	forwardVector = sf::Vector2f(0.f, -1.f);
 	rightVector   = sf::Vector2f(1.f, 0.f);
 
 	Rotate(cRotation);
 }
 
-void Player::CheckCollision(float time, const sf::Vector2f& oldPos, std::vector<Wall>& walls){
-	sf::Vector2f iPoint(0.f, 0.f);
-	Line offset(oldPos, pos);
-	int i = 0;
-	for (auto& iter : walls) {
-		if (iter.GetAlive()) {
-			if (iter.GetLine().CircleIntersection(pos, radius, iPoint)) {
-				Collision(time, iPoint, oldPos, iter);
-				//break;
+void Player::CheckCollision(float time, std::vector<Asteroid>& asteroids){
+	float radSum = 0, dist = 0;
+	for (auto& iter : asteroids) {
+		radSum = radius + iter.GetRadius();
+		dist = Line(pos, iter.GetPos()).lenght;
+		if (dist <= radSum) {
+			for (auto& b : body.getEdges()) {
+				if (iter.isCollision(b.GetLine())) {
+					--lives;
+					Refresh();
+					return;
+				}
 			}
 		}
 	}
@@ -43,14 +48,16 @@ void Player::Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2
 	}
 }
 
-void Player::Update(float time) {
+void Player::Update(float time, std::vector<Asteroid>& asteroids) {
 	float old = rotation;
-	if (Move(time)) {
-		PassScreenBorder(pos);
-		body.Move(pos);
-		if(old!=rotation)
-			body.Rotate((old-rotation)*-1.f);
-	}
+	Move(time);
+	pos += forwardVector * force * speed * time;
+	if(force > 0.f)	force -= 0.1f * time;
+	PassScreenBorder(pos);
+	CheckCollision(time, asteroids);
+	body.Move(pos);
+	if(old!=rotation)
+		body.Rotate((old-rotation)*-1.f);
 }
 
 void Player::Rotate(float angle){
@@ -68,23 +75,34 @@ bool Player::Move(float time){
 	switch (dir){
 	case STP:
 		return false;
-	case FWD:
-		pos += forwardVector * time * speed;
-		return true;
-	case BWD:
-		pos -= forwardVector * time * speed;
+	case BST:
+		Rotate(rotation);
+		force = std::min((force + time * speed), 1.f);
+		PlaySound(Sound::THRUST);
 		return true;
 	case RGH:
 		rotation += rotSpeed * time;
-		Rotate(rotation);
+		//Rotate(rotation);
 		return true;
 	case LFT:
 		rotation -= rotSpeed * time;
-		Rotate(rotation);
+		//Rotate(rotation);
 		return true;
 	default:
 		return false;
 	}
+}
+
+void Player::BonusLife(){
+	if (lives < 3) {
+		++lives;
+		PlaySound(Sound::EXTRA);
+	}
+}
+
+void Player::Refresh(){
+	pos = PLAYER_DEFAULT_POS;
+	Rotate(1.57);
 }
 
 const sf::Vector2f& Player::GetPosition() const {return pos;}
@@ -93,6 +111,10 @@ const sf::Vector2f& Player::GetForwardVector() const {return forwardVector;}
 
 float Player::GetRotation() const{
 	return rotation;
+}
+
+int Player::GetLives(){
+	return lives;
 }
 
 void Player::SetDir(MoveDir nDir){

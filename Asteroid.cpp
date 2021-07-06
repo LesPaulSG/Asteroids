@@ -1,6 +1,6 @@
 #include "Asteroid.h"
 
-std::uniform_int_distribution<int> dist(5, 15);
+std::uniform_int_distribution<int> dist(10, 20);
 std::uniform_real_distribution<float> rot(0.5, 1.0);
 
 Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
@@ -73,4 +73,8 @@ bool Asteroid::GetAlive() const {
 
 int Asteroid::GetStage() const {
 	return stage;
+}
+
+bool Asteroid::isCollision(Line line){
+	return body.isCollision(line);
 }

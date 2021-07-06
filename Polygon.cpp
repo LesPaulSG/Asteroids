@@ -6,7 +6,7 @@ Polygon::Polygon()
 	: pos(sf::Vector2f(0, 0)) {
 }
 
-Polygon::Polygon(sf::Vector2f pos_, std::vector<sf::Vector2f> points)
+Polygon::Polygon(sf::Vector2f pos_, const std::vector<sf::Vector2f>& points)
 	: pos(pos_),
 	rotation(0) {
 	int pointsNum = points.size();
@@ -47,6 +47,15 @@ void Polygon::Rotate(float angle){
 	for (auto& edge : edges) {
 		edge.RotateAround(pos, angle);
 	}
+}
+
+bool Polygon::isCollision(Line line){
+	sf::Vector2f iPoint(0, 0);
+	for (auto& iter : edges) {
+		if (line.Intersection(iter.GetLine(), iPoint))
+			return true;
+	}
+	return false;
 }
 
 std::vector<Wall>& Polygon::getEdges() {

@@ -46,16 +46,17 @@ private:
 
 	Player player;
 
-public:
-	std::vector<std::vector<Bullet>::iterator> bulletsToDelete;
-	std::vector<std::vector<Wall>::iterator> wallsToDelete;
+	int score = 0;
 
+public:
 	BulletManager();
 	~BulletManager() = default;
 
 	const std::vector<Bullet>& GetBullets() const;
 	std::mutex& GetBmMutex();
 	Player& GetPlayer();
+	int GetScore();
+	int GetPlayerLives();
 
 	void AddTask(Task& pt);
 	void Update(float time);
@@ -63,6 +64,7 @@ public:
 	void GenerateAsteroid(float deltaTime);
 	void CrackAsteroid(sf::Vector2f& pos, int stage);
 	void Draw(sf::RenderWindow& w);
+	void UpdateScore(int stage);
 
 	bool isExplosions();
 	sf::Vector2f PopExplosion();

@@ -2,11 +2,11 @@
 
 #include "BulletManager.h"
 
-std::uniform_int_distribution<int> xDistr(50, 1870);
-std::uniform_int_distribution<int> yDistr(50, 1230);
-std::uniform_int_distribution<int> dDistr(-10, 10);
+std::uniform_int_distribution<int> xDistr(50, WIDTH - 50);
+std::uniform_int_distribution<int> yDistr(50, HEIGHT -50);
+std::uniform_int_distribution<int> dDistr(-30, 30);
 
-BulletManager::BulletManager() : player(sf::Vector2f(960, 540), 1.57) {
+BulletManager::BulletManager() : player(PLAYER_DEFAULT_POS, 1.57) {
 	bullets.reserve(BULLETS_MAX_CAPACITY);
 	asteroids.reserve(ASTEROIDS_MAX_QUANTITY);
 }
@@ -17,13 +17,19 @@ std::mutex& BulletManager::GetBmMutex() {return bmMutex;}
 
 Player& BulletManager::GetPlayer() {return player;}
 
+int BulletManager::GetScore() {return score;}
+
+int BulletManager::GetPlayerLives(){
+	return player.GetLives();
+}
+
 void BulletManager::AddTask(Task& pt) {
 	std::lock_guard lg(bmMutex);
 	tasks.push(pt);
 }
 
 void BulletManager::Update(float time) {
-	player.Update(time);
+	player.Update(time, asteroids);
 	
 	if (!tasks.empty()) {
 		std::lock_guard lg(bmMutex);
@@ -47,6 +53,8 @@ void BulletManager::Update(float time) {
 				sf::Vector2f pos = iter->GetPos();
 				asteroids.erase(iter);
 				explosions.push(pos);
+				UpdateScore(stage);
+				PlaySound(Sound(1 + stage));
 				if (stage > 1) {
 					CrackAsteroid(pos, --stage);
 				}
@@ -66,35 +74,34 @@ void BulletManager::Update(float time) {
 
 void BulletManager::Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime) {
 	if (bullets.size() < BULLETS_MAX_CAPACITY) {
-		bullets.push_back(Bullet(pos, dir, std::max(speed, 10.f), lifeTime));
+		bullets.push_back(Bullet(pos, dir, 250.f, lifeTime));
+		PlaySound(Sound::FIRE);
 	}
 }
 
 void BulletManager::GenerateAsteroid(float deltaTime){
-	static float timePassed = 0;
 	static sf::Vector2f pos;
 	static sf::Vector2f dir;
-	timePassed += deltaTime;
 
-	if (timePassed >= 1.f) {
-		if (asteroids.size() < ASTEROIDS_MAX_QUANTITY/3) {
+	if (asteroids.empty()) {
+		for (int i = 0; i < 10; ++i) {
 			pos.x = xDistr(gen);
 			pos.y = yDistr(gen);
-			dir.x = dDistr(gen) / 10.f;
-			dir.y = dDistr(gen) / 10.f;
+			dir.x = dDistr(gen) / 30.f;
+			dir.y = dDistr(gen) / 30.f;
 			asteroids.push_back(Asteroid(pos, dir));  //initial stage == 3
-			timePassed = 0;
 		}
 	}
+
 }
 
 void BulletManager::CrackAsteroid(sf::Vector2f& pos, int stage) {
 	int num = 4 / stage;
 	static sf::Vector2f dir;
 	for (int i = 0; i < num; ++i) {
-		dir.x = dDistr(gen) / 10.f;
-		dir.y = dDistr(gen) / 10.f;
-		asteroids.push_back(Asteroid(pos+dir*10.f, dir, stage));
+		dir.x = dDistr(gen) / 10.f * stage;
+		dir.y = dDistr(gen) / 10.f * stage;
+		asteroids.push_back(Asteroid(pos+dir*10.f, dir, stage)); //small offset 
 	}
 }
 
@@ -107,6 +114,16 @@ void BulletManager::Draw(sf::RenderWindow& w){
 		iter.Draw(w);
 	}
 	player.Draw(w);
+}
+
+void BulletManager::UpdateScore(int stage){
+	static int bonusLife = 0;
+	score += 300 / stage;
+	bonusLife += 300 / stage;
+	if (bonusLife >= 10'000) {
+		player.BonusLife();
+		bonusLife = 0;
+	}
 }
 
 bool BulletManager::isExplosions() {

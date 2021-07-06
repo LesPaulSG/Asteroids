@@ -4,6 +4,9 @@
 #include <iostream>
 #include <random>
 
+const int HEIGHT = sf::VideoMode::getDesktopMode().height;
+const int WIDTH = sf::VideoMode::getDesktopMode().width;
+
 static std::random_device rd;
 static std::mt19937_64 gen(rd());
 
@@ -11,8 +14,20 @@ const int BULLETS_MAX_CAPACITY	 = 50;
 const int POLYGON_MAX_SIZE		 = 10;
 const int ASTEROIDS_MAX_QUANTITY = 30;
 
-const int HEIGHT = sf::VideoMode::getDesktopMode().height;
-const int WIDTH  = sf::VideoMode::getDesktopMode().width;
+const sf::Vector2f PLAYER_DEFAULT_POS(WIDTH / 2, HEIGHT / 2);
+
+const std::vector<sf::Vector2f> STARSHIP_PATTERN{ 
+	sf::Vector2f(0, -20),
+	sf::Vector2f(10, 10),
+	sf::Vector2f(6, 6),
+	sf::Vector2f(-6, 6),
+	sf::Vector2f(-10, 10) };
+
+enum class Sound{ FIRE, THRUST, BANG_S, BANG_M, BANG_L, SOUC_S, SOUS_B, EXTRA };
+
+void LoadSounds();
+
+void PlaySound(Sound s);
 
 bool isPointInRange(float x, float a, float b);
 
@@ -24,4 +39,4 @@ void RotateVectorAround(sf::Vector2f& vec, const sf::Vector2f& anchor, float ang
 
 void RotateUnitVector(sf::Vector2f& vec, float angle);
 
-void PassScreenBorder(sf::Vector2f& vec);
+bool PassScreenBorder(sf::Vector2f& vec);

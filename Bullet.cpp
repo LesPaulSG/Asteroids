@@ -4,7 +4,7 @@
 
 Bullet::Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime)
 	: pos(std::move(pos)),
-	speed(150),
+	speed(600.f),
 	time(0.f),
 	lifeTime(lifeTime),
 	alive(true) {
@@ -23,9 +23,11 @@ void Bullet::CheckCollision(std::vector<Asteroid>& asteroids, const sf::Vector2f
 	Line offset(oldPos, pos);
 	for (auto& iter : asteroids){
 		if (Line(pos, iter.GetPos()).lenght <= iter.GetRadius()) {
-			iter.Destroy();
-			alive = false;
-			return;
+			if (iter.isCollision(offset)) {
+				iter.Destroy();
+				alive = false;
+				return;
+			}
 		}
 		//old collision detectcion
 		/*if (iter.GetAlive()) {
@@ -41,7 +43,10 @@ void Bullet::CheckCollision(std::vector<Asteroid>& asteroids, const sf::Vector2f
 void Bullet::Update(float t, std::vector<Asteroid>& asteroids) {
 	sf::Vector2f oldPos = pos;			//position before update
 	pos += dir *speed* t;				//new position
-	PassScreenBorder(pos);
+	if (PassScreenBorder(pos)) {
+		alive = false;
+		return;
+	}
 	body.setPosition(pos);
 	CheckCollision(asteroids, oldPos);
 

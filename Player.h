@@ -1,7 +1,7 @@
 #pragma once
 #include "Asteroid.h"
 
-enum MoveDir{ STP, FWD, BWD, RGH, LFT };
+enum MoveDir{ STP, BST, RGH, LFT };
 
 class Player{
 private:
@@ -12,7 +12,9 @@ private:
 	float speed;
 	float rotSpeed;
 	float radius;
+	float force;
 	MoveDir dir;
+	int lives;
 
 	Polygon body;
 
@@ -24,15 +26,17 @@ public:
 	const sf::Vector2f& GetPosition() const;
 	const sf::Vector2f& GetForwardVector() const;
 	float GetRotation() const;
+	int GetLives();
 
 	void SetDir(MoveDir nDir);
 	void Draw(sf::RenderWindow& w);
 
-	void CheckCollision(float time, const sf::Vector2f& oldPos, std::vector<Wall>& walls);
+	void CheckCollision(float time, std::vector<Asteroid>& asteroids);
 	void Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2f& oldPos, const Wall& wall);
-	void Update(float time);
+	void Update(float time, std::vector<Asteroid>& asteroids);
 	void Rotate(float angle);
-	void Rotate(const sf::Vector2f& mousePos);
 	bool Move(float time);	
+	void BonusLife();
+	void Refresh();
 };
 
