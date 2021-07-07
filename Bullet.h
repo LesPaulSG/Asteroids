@@ -13,12 +13,12 @@ private:
 
 public:
 	const sf::CircleShape& GetBody() const;
-	bool GetAlive() const;
+	bool isAlive() const;
 
-	Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime);
+	Bullet(Shot sho);
 	~Bullet() = default;
 
-	void CheckCollision(std::vector<Asteroid>& asteroids, const sf::Vector2f& oldPos);
-	void Update(float t, std::vector<Asteroid>& asteroids);
+	void CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos);
+	void Update(float t, std::vector<Actor*>& actors);
 	void LifeCheck();
 };

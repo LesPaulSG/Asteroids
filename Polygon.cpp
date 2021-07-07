@@ -10,6 +10,10 @@ Polygon::Polygon(sf::Vector2f pos_, const std::vector<sf::Vector2f>& points)
 	: pos(pos_),
 	rotation(0) {
 	int pointsNum = points.size();
+	if (pointsNum < 0) {
+		std::cout << "ERROR: too little points\n";
+		return;
+	}
 	edges.reserve(pointsNum);
 	offsets.reserve(pointsNum);
 
@@ -64,4 +68,8 @@ std::vector<Wall>& Polygon::getEdges() {
 
 float Polygon::GetRot(){
 	return rotation;
+}
+
+float Polygon::GetRadius(){
+	return radius;
 }

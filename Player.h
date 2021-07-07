@@ -31,9 +31,9 @@ public:
 	void SetDir(MoveDir nDir);
 	void Draw(sf::RenderWindow& w);
 
-	void CheckCollision(float time, std::vector<Asteroid>& asteroids);
+	void CheckCollision(float time, std::vector<Actor*>& actors);
 	void Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2f& oldPos, const Wall& wall);
-	void Update(float time, std::vector<Asteroid>& asteroids);
+	void Update(float time, std::vector<Actor*>& actors);
 	void Rotate(float angle);
 	bool Move(float time);	
 	void BonusLife();

@@ -4,6 +4,7 @@
 
 #include "Bullet.h"
 #include "Player.h"
+#include "Saucer.h"
 
 enum class TaskType {
 	ADD_BULLET
@@ -28,9 +29,9 @@ struct Task {
 class BulletManager {
 private:
 	std::vector<Bullet> bullets;
-	std::vector<Asteroid> asteroids;
+	std::vector<Actor*> actors;
 
-	std::queue<Task> tasks;
+	std::queue<Shot> shots;
 	std::queue<sf::Vector2f> explosions;
 
 	mutable std::mutex bmMutex;
@@ -38,6 +39,9 @@ private:
 	Player player;
 
 	int score = 0;
+	bool saucerSpawned;
+
+	Saucer* saucer;
 
 public:
 	BulletManager();
@@ -49,11 +53,12 @@ public:
 	int GetScore();
 	int GetPlayerLives();
 
-	void AddTask(Task& pt);
+	void Shoot();
 	void Update(float time);
-	void Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime);
+	void Fire(Shot sho);
 	void GenerateAsteroid(float deltaTime);
-	void CrackAsteroid(sf::Vector2f& pos, int stage);
+	void SpawnSaucer(float deltaTime);
+	void CrackAsteroid(const sf::Vector2f& pos, int stage);
 	void Draw(sf::RenderWindow& w);
 	void UpdateScore(int stage);
 

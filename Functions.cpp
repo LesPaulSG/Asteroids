@@ -52,6 +52,10 @@ void LoopSound(Sound ss) {
 	PlaySound(ss);
 }
 
+void EndSoundLoop(Sound ss){
+	sounds[(int)ss].stop();
+}
+
 bool isPointInRange(float x, float a, float b) {
 	return (x >= std::min(a, b) && x <= std::max(a, b));
 }
@@ -82,19 +86,19 @@ void RotateUnitVector(sf::Vector2f& vec, float angle){
 bool PassScreenBorder(sf::Vector2f& vec) {
 	bool passed = false;
 	if (vec.x >= WIDTH) {
-		vec.x = 0.1;
+		vec.x -= WIDTH;
 		passed = true;
 	}
 	if (vec.x <= 0) {
-		vec.x = WIDTH-0.1;
+		vec.x += WIDTH;
 		passed = true;
 	}
 	if (vec.y >= HEIGHT) {
-		vec.y = 0.1;
+		vec.y -= HEIGHT;
 		passed = true;
 	}
 	if (vec.y <= 0) {
-		vec.y = HEIGHT-0.1;
+		vec.y += HEIGHT;
 		passed = true;
 	}
 	return passed;

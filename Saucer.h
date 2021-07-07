@@ -1,18 +1,14 @@
 #pragma once
-#include "Polygon.h"
+#include "Actor.h"
 
-class Saucer {
+class Saucer : public Actor {
 private:
-	sf::Vector2f pos;
-	sf::Vector2f dir;
-	float speed;
 	float cooldown;
-	Polygon body;
 	bool big;
 public:
 	Saucer(sf::Vector2f p, bool b);
-	void Update(float deltaTime);
-	void Draw(sf::RenderWindow& w);
-
-	bool CanShoot(float deltaTime);
+	void Move(float time, std::vector<Actor*>& asteroids) override;
+	bool CanShoot();
+	void Destroy() override;
+	Shot GetShoot(sf::Vector2f playerPos);
 };

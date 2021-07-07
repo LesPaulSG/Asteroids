@@ -35,6 +35,12 @@ const std::vector<sf::Vector2f> SMALL_SAUCER_PATTERN{
 	sf::Vector2f(0, 10),
 	sf::Vector2f(-15, 0) };
 
+struct Shot {
+	sf::Vector2f from;
+	float angle;
+	Shot(sf::Vector2f f, float a) : from(f), angle(a) {};
+};
+
 enum class Sound{ FIRE, THRUST, BANG_S, BANG_M, BANG_L, SOUC_S, SOUC_B, EXTRA };
 
 void LoadSounds();
@@ -42,6 +48,8 @@ void LoadSounds();
 void PlaySound(Sound ss);
 
 void LoopSound(Sound ss);
+
+void EndSoundLoop(Sound ss);
 
 bool isPointInRange(float x, float a, float b);
 

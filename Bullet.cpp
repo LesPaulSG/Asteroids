@@ -2,13 +2,13 @@
 
 #include <iostream>
 
-Bullet::Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime)
-	: pos(std::move(pos)),
+Bullet::Bullet(Shot sho)
+	: pos(sho.from),
 	speed(600.f),
 	time(0.f),
-	lifeTime(lifeTime),
+	lifeTime(1.f),
 	alive(true) {
-	RotateUnitVector(this->dir, dir);
+	RotateUnitVector(this->dir, sho.angle);
 	body.setPosition(pos);
 	body.setRadius(1);
 	body.setFillColor(sf::Color::White);
@@ -16,31 +16,25 @@ Bullet::Bullet(sf::Vector2f pos, float dir, float speed, float lifeTime)
 
 const sf::CircleShape& Bullet::GetBody() const {return body;}
 
-bool Bullet::GetAlive() const {return alive;}
+bool Bullet::isAlive() const {return alive;}
 
-void Bullet::CheckCollision(std::vector<Asteroid>& asteroids, const sf::Vector2f& oldPos) {
+void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos) {
+	static float dist = 0;
 	sf::Vector2f iPoint(0.f, 0.f);
 	Line offset(oldPos, pos);
-	for (auto& iter : asteroids){
-		if (Line(pos, iter.GetPos()).lenght <= iter.GetRadius()) {
-			if (iter.isCollision(offset)) {
-				iter.Destroy();
+	for (auto& iter : actors){
+		dist = Line::Distance(pos, iter->GetPos());
+		if (dist <= iter->GetRadius()) {
+			if (iter->DeepCollision(offset)) {
+				iter->Destroy();
 				alive = false;
 				return;
 			}
 		}
-		//old collision detectcion
-		/*if (iter.GetAlive()) {
-			if (offset.Intersection(iter.GetLine(), iPoint)) {
-				alive = false;
-				iter.Destroy();
-				return;
-			}
-		}*/
 	}
 }
 
-void Bullet::Update(float t, std::vector<Asteroid>& asteroids) {
+void Bullet::Update(float t, std::vector<Actor*>& actors) {
 	sf::Vector2f oldPos = pos;			//position before update
 	pos += dir *speed* t;				//new position
 	if (PassScreenBorder(pos)) {
@@ -48,7 +42,7 @@ void Bullet::Update(float t, std::vector<Asteroid>& asteroids) {
 		return;
 	}
 	body.setPosition(pos);
-	CheckCollision(asteroids, oldPos);
+	CheckCollision(actors, oldPos);
 
 	speed -= t/30.f;					//braking over time
 	time  += t;

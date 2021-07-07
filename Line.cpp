@@ -14,7 +14,7 @@ Line::Line(sf::Vector2f A, sf::Vector2f B) {
 Line::~Line() {}
 
 void Line::CalculateRotation() {
-	double angle = acos(midPoint.y / VectorsModule(midPoint));
+	rotation = acos(midPoint.y / VectorsModule(midPoint));
 }
 
 bool Line::Intersection(const Line& B, sf::Vector2f& iPoint) const {
@@ -87,6 +87,18 @@ bool Line::HasPoint(const sf::Vector2f& point) const {
 		return false;
 	}
 	return true;
+}
+
+float Line::Distance(sf::Vector2f from, sf::Vector2f to){
+	float midX = to.x - from.x;
+	float midY = to.y - from.y;
+	return sqrt(pow(midX, 2) + pow(midY, 2));
+}
+
+float Line::Rotation(sf::Vector2f from, sf::Vector2f to){
+	float midX = to.x - from.x;
+	float midY = to.y - from.y;
+	return acos(midY / VectorsModule(sf::Vector2f(midX, midY)));
 }
 
 float Line::CalculateRotation(sf::Vector2f A, sf::Vector2f B){

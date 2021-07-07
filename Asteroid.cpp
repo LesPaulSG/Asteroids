@@ -3,13 +3,10 @@
 std::uniform_int_distribution<int> dist(10, 20);
 std::uniform_real_distribution<float> rot(0.5, 1.0);
 
-Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
-	: pos(pos_),
-	dir(dir_),
-	speed(50.f),
+Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_): 
+	Actor(pos_, dir_, {}),
 	stage(stage_),
 	alive(true) {
-	radius = stage * 20;
 
 	std::vector<sf::Vector2f> points;
 	points.reserve(3 * stage);
@@ -24,53 +21,9 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 		prevAngle += angle;
 	}
 	body = Polygon(pos, points);
-}
-
-void Asteroid::Move(float time, std::vector<Asteroid>& asteroids){
-	sf::Vector2f oldPos = pos;			//position before update
-	pos += dir * speed * time;			//new position
-	CheckCollision(asteroids);
-	PassScreenBorder(pos);
-	body.Move(pos);
-}
-
-void Asteroid::CheckCollision(std::vector<Asteroid>& asteroids){
-	static float radSum = 0, dist = 0;
-	for (auto& iter : asteroids) {
-		if (&iter != this) {
-			radSum = radius + iter.GetRadius();
-			dist = Line(pos, iter.GetPos()).lenght;
-			if (radSum >= dist) {
-				//std::cout << "collide " << radSum << ' ' << dist << std::endl;
-			}
-		}
-	}
-}
-
-void Asteroid::Draw(sf::RenderWindow& w){
-	body.Draw(w);
-}
-
-void Asteroid::Destroy(){
-	alive = false;
-}
-
-const sf::Vector2f& Asteroid::GetPos() const{
-	return pos;
-}
-
-float Asteroid::GetRadius() const{
-	return radius;
-}
-
-bool Asteroid::GetAlive() const {
-	return alive;
+	radius = body.GetRadius();
 }
 
 int Asteroid::GetStage() const {
 	return stage;
-}
-
-bool Asteroid::isCollision(Line line){
-	return body.isCollision(line);
 }

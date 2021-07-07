@@ -18,5 +18,6 @@ public:
 
 	std::vector<Wall>& getEdges();
 	float GetRot();
+	float GetRadius();
 };
 

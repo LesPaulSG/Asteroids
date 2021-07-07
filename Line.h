@@ -22,5 +22,8 @@ public:
 	float AngleOfIntersec(const Line& B) const;
 	bool HasPoint(const sf::Vector2f& point) const;
 
+	static float Distance(sf::Vector2f from, sf::Vector2f to);
+	static float Rotation(sf::Vector2f from, sf::Vector2f to);
+
 	static float CalculateRotation(sf::Vector2f A, sf::Vector2f B);
 };

@@ -7,9 +7,6 @@
 std::vector<Explosion> VFX;
 std::vector<Polygon> lives;
 
-//Saucer sb(sf::Vector2f(600, 600), true);
-Saucer ss(sf::Vector2f(600, 300), false);
-
 void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Font font;
 	font.loadFromFile("zig.ttf");
@@ -49,9 +46,6 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 			}
 		}
 
-		//sb.Update(time.count());
-		ss.Update(time.count());
-
 		window.clear();
 
 		for (auto& iter : VFX) {
@@ -62,9 +56,6 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 		}
 
 		bm.Draw(window);
-
-		//sb.Draw(window);
-		ss.Draw(window);
 
 		debug.setString("fps:  " + std::to_string(1.f / time.count())	//GUI FPS
 					  + "\npFps: " + std::to_string(1.f / t.count()));	//physics FPS*/
@@ -110,10 +101,8 @@ void KeyboardCheck(sf::Event& event, BulletManager& bm, float t){
 	case sf::Keyboard::A:
 		bm.GetPlayer().SetDir(LFT);
 		break;
-	case sf::Keyboard::Space:
-		Task task{ TaskType::ADD_BULLET, PackagedTask{bm.GetPlayer().GetPosition(), bm.GetPlayer().GetRotation(), 1000, 10} };
-		
-		bm.AddTask(task);
+	case sf::Keyboard::Space:	
+		bm.Shoot();
 		break;
 	}
 }

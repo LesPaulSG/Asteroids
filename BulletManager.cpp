@@ -6,9 +6,11 @@ std::uniform_int_distribution<int> xDistr(50, WIDTH - 50);
 std::uniform_int_distribution<int> yDistr(50, HEIGHT -50);
 std::uniform_int_distribution<int> dDistr(-30, 30);
 
-BulletManager::BulletManager() : player(PLAYER_DEFAULT_POS, 1.57) {
+BulletManager::BulletManager() :
+	player(PLAYER_DEFAULT_POS, 1.57),
+	saucerSpawned(false) {
 	bullets.reserve(BULLETS_MAX_CAPACITY);
-	asteroids.reserve(ASTEROIDS_MAX_QUANTITY);
+	actors.reserve(1000);
 }
 
 const std::vector<Bullet>& BulletManager::GetBullets() const {return bullets;}
@@ -23,58 +25,68 @@ int BulletManager::GetPlayerLives(){
 	return player.GetLives();
 }
 
-void BulletManager::AddTask(Task& pt) {
+void BulletManager::Shoot() {
 	std::lock_guard lg(bmMutex);
-	tasks.push(pt);
+	shots.push(Shot(Shot(player.GetPosition(), player.GetRotation())));
 }
 
 void BulletManager::Update(float time) {
-	player.Update(time, asteroids);
+	player.Update(time, actors);
 	
-	if (!tasks.empty()) {
+	if (!shots.empty()) {
 		std::lock_guard lg(bmMutex);
-		while (!tasks.empty()) {
-			auto cTask = tasks.front();
-			tasks.pop();
-			Fire(std::move(cTask.pt.ab.pos), cTask.pt.ab.dir, cTask.pt.ab.speed, cTask.pt.ab.lifeTime);
+		while (!shots.empty()) {
+			Fire(shots.front());
+			shots.pop();
 		}
 	}
 	{
 		std::lock_guard lg(bmMutex);
-		for (auto iter = bullets.begin(); iter != bullets.end(); ++iter) {
-			if (!iter->GetAlive()) {
-				bullets.erase(iter);
-				break;
-			}
-		}
-		for (auto iter = asteroids.begin(); iter != asteroids.end(); ++iter) {
-			if (!iter->GetAlive()) {
-				int stage = iter->GetStage();
-				sf::Vector2f pos = iter->GetPos();
-				asteroids.erase(iter);
-				explosions.push(pos);
-				UpdateScore(stage);
-				PlaySound(Sound(1 + stage));
-				if (stage > 1) {
-					CrackAsteroid(pos, --stage);
+		bullets.erase(std::remove_if(bullets.begin(),
+									bullets.end(),
+									[](Bullet b) {return !b.isAlive(); }),
+					bullets.end());
+		for (auto iter : actors) {
+			if (dynamic_cast<Asteroid*>(iter)) {
+				if (!iter->isAlive()) {
+					int stage = dynamic_cast<Asteroid*>(iter)->GetStage();
+					explosions.push(iter->GetPos());
+					UpdateScore(stage);
+					PlaySound(Sound(1 + stage));
+					if (dynamic_cast<Asteroid*>(iter)->GetStage() > 1) {
+						CrackAsteroid(iter->GetPos(), --stage);
+					}
+
 				}
-				break;
+			}
+			else if (dynamic_cast<Saucer*>(iter)) {
+				if (!iter->isAlive()) {
+					saucerSpawned = false;
+				}
 			}
 		}
+		actors.erase(std::remove_if(actors.begin(),
+									actors.end(),
+									[](Actor* a) {return !a->isAlive(); }),
+					actors.end());
 	}
 
+	SpawnSaucer(time);
 	GenerateAsteroid(time);
-	for (auto& iter : asteroids) {
-		iter.Move(time, asteroids);
+	for (auto iter : actors) {
+		iter->Move(time, actors);
 	}
-	for (auto iter = bullets.begin(); iter != bullets.end(); ++iter) {
-		iter->Update(time, asteroids);
+	if (saucerSpawned && saucer->CanShoot()) {
+		Fire(saucer->GetShoot(player.GetPosition()));
+	}
+	for (auto& iter : bullets) {
+		iter.Update(time, actors);
 	}
 }
 
-void BulletManager::Fire(const sf::Vector2f& pos, float dir, float speed, float lifeTime) {
+void BulletManager::Fire(Shot sho) {
 	if (bullets.size() < BULLETS_MAX_CAPACITY) {
-		bullets.push_back(Bullet(pos, dir, 250.f, lifeTime));
+		bullets.push_back(Bullet(sho));
 		PlaySound(Sound::FIRE);
 	}
 }
@@ -83,25 +95,38 @@ void BulletManager::GenerateAsteroid(float deltaTime){
 	static sf::Vector2f pos;
 	static sf::Vector2f dir;
 
-	if (asteroids.empty()) {
+	if (actors.empty()) {
 		for (int i = 0; i < 10; ++i) {
 			pos.x = xDistr(gen);
 			pos.y = yDistr(gen);
 			dir.x = dDistr(gen) / 30.f;
 			dir.y = dDistr(gen) / 30.f;
-			asteroids.push_back(Asteroid(pos, dir));  //initial stage == 3
+			actors.push_back(new Asteroid(pos, dir));  //initial stage == 3
 		}
 	}
 
 }
 
-void BulletManager::CrackAsteroid(sf::Vector2f& pos, int stage) {
+void BulletManager::SpawnSaucer(float deltaTime){
+	static float cooldown = 0;
+	if (!saucerSpawned ) {
+		cooldown += deltaTime;
+		if (cooldown > 3.f) {
+			saucer = new Saucer(sf::Vector2f(300, 300), true);
+			actors.push_back(saucer);
+			cooldown = 0.f;
+			saucerSpawned = true;
+		}
+	}
+}
+
+void BulletManager::CrackAsteroid(const sf::Vector2f& pos, int stage) {
 	int num = 4 / stage;
 	static sf::Vector2f dir;
 	for (int i = 0; i < num; ++i) {
 		dir.x = dDistr(gen) / 10.f * stage;
 		dir.y = dDistr(gen) / 10.f * stage;
-		asteroids.push_back(Asteroid(pos+dir*10.f, dir, stage)); //small offset 
+		actors.push_back(new Asteroid(pos+dir*10.f, dir, stage)); //small offset 
 	}
 }
 
@@ -110,8 +135,8 @@ void BulletManager::Draw(sf::RenderWindow& w){
 	for (auto& iter : bullets) {
 		w.draw(iter.GetBody());
 	}
-	for (auto& iter : asteroids) {
-		iter.Draw(w);
+	for (auto iter : actors) {
+		iter->Draw(w);
 	}
 	player.Draw(w);
 }

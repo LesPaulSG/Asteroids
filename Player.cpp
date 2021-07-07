@@ -15,14 +15,14 @@ Player::Player(sf::Vector2f pos, float cRotation)
 	Rotate(cRotation);
 }
 
-void Player::CheckCollision(float time, std::vector<Asteroid>& asteroids){
+void Player::CheckCollision(float time, std::vector<Actor*>& actors){
 	float radSum = 0, dist = 0;
-	for (auto& iter : asteroids) {
-		radSum = radius + iter.GetRadius();
-		dist = Line(pos, iter.GetPos()).lenght;
+	for (auto& iter : actors) {
+		radSum = radius + iter->GetRadius();
+		dist = Line::Distance(pos, iter->GetPos());
 		if (dist <= radSum) {
 			for (auto& b : body.getEdges()) {
-				if (iter.isCollision(b.GetLine())) {
+				if (iter->DeepCollision(b.GetLine())) {
 					--lives;
 					Refresh();
 					return;
@@ -40,7 +40,6 @@ void Player::Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2
 	} else {
 		tmpDir = wall.GetLine().pointB;// +forwardVector;// *radius;
 	}
-	
 	if (!wall.GetLine().isPointRight(pos)) {
 		pos -= (tmpDir - forwardVector) * time;// +forwardVector;
 	} else {
@@ -48,13 +47,13 @@ void Player::Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2
 	}
 }
 
-void Player::Update(float time, std::vector<Asteroid>& asteroids) {
+void Player::Update(float time, std::vector<Actor*>& actors) {
 	float old = rotation;
 	Move(time);
 	pos += forwardVector * force * speed * time;
 	if(force > 0.f)	force -= 0.1f * time;
 	PassScreenBorder(pos);
-	CheckCollision(time, asteroids);
+	CheckCollision(time, actors);
 	body.Move(pos);
 	if(old!=rotation)
 		body.Rotate((old-rotation)*-1.f);
