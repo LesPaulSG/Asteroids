@@ -9,7 +9,7 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_)
 	speed(50.f),
 	stage(stage_),
 	alive(true) {
-	radius = stage * 15;
+	radius = stage * 20;
 
 	std::vector<sf::Vector2f> points;
 	points.reserve(3 * stage);
@@ -45,10 +45,6 @@ void Asteroid::CheckCollision(std::vector<Asteroid>& asteroids){
 			}
 		}
 	}
-}
-
-void Asteroid::UpdateDirection(sf::Vector2f newDir){
-	dir = newDir;
 }
 
 void Asteroid::Draw(sf::RenderWindow& w){

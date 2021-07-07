@@ -1,10 +1,14 @@
 #include "IO_Thread.h"
 #include "Explosion.h"
+#include "Saucer.h"
 
 #include "SFML/Audio.hpp"
 
 std::vector<Explosion> VFX;
 std::vector<Polygon> lives;
+
+//Saucer sb(sf::Vector2f(600, 600), true);
+Saucer ss(sf::Vector2f(600, 300), false);
 
 void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Font font;
@@ -45,6 +49,9 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 			}
 		}
 
+		//sb.Update(time.count());
+		ss.Update(time.count());
+
 		window.clear();
 
 		for (auto& iter : VFX) {
@@ -55,6 +62,9 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 		}
 
 		bm.Draw(window);
+
+		//sb.Draw(window);
+		ss.Draw(window);
 
 		debug.setString("fps:  " + std::to_string(1.f / time.count())	//GUI FPS
 					  + "\npFps: " + std::to_string(1.f / t.count()));	//physics FPS*/

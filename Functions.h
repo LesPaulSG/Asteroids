@@ -23,6 +23,18 @@ const std::vector<sf::Vector2f> STARSHIP_PATTERN{
 	sf::Vector2f(-6, 6),
 	sf::Vector2f(-10, 10) };
 
+const std::vector<sf::Vector2f> BIG_SAUCER_PATTERN{
+	sf::Vector2f(0, -20),
+	sf::Vector2f(30, 0),
+	sf::Vector2f(0, 20),
+	sf::Vector2f(-30, 0) };
+
+const std::vector<sf::Vector2f> SMALL_SAUCER_PATTERN{
+	sf::Vector2f(0, -10),
+	sf::Vector2f(15, 0),
+	sf::Vector2f(0, 10),
+	sf::Vector2f(-15, 0) };
+
 enum class Sound{ FIRE, THRUST, BANG_S, BANG_M, BANG_L, SOUC_S, SOUC_B, EXTRA };
 
 void LoadSounds();

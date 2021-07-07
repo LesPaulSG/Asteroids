@@ -6,6 +6,7 @@ private:
 	sf::Vector2f pos;
 	sf::Vector2f dir;
 	float speed;
+	float cooldown;
 	Polygon body;
 	bool big;
 public:

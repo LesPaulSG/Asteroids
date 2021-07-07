@@ -15,7 +15,6 @@ public:
 	
 	void Move(float time, std::vector<Asteroid>& asteroids);
 	void CheckCollision(std::vector<Asteroid>& asteroids);
-	void UpdateDirection(sf::Vector2f newDir);
 	void Draw(sf::RenderWindow& w);
 	void Destroy();
 

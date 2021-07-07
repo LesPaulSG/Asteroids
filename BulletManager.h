@@ -6,15 +6,7 @@
 #include "Player.h"
 
 enum class TaskType {
-	ADD_BULLET,
-	ADD_WALL,
-	DELETE_BULLET,
-	DELETE_WALL
-};
-
-struct AddWall {//: public PackagedTask {
-	sf::Vector2f pos;
-	sf::Vector2f dir;
+	ADD_BULLET
 };
 
 struct AddBullet {//: public PackagedTask {
@@ -25,8 +17,7 @@ struct AddBullet {//: public PackagedTask {
 };
 
 union PackagedTask {
-	AddBullet    ab;
-	AddWall		 aw;
+	AddBullet ab;
 };
 
 struct Task {
