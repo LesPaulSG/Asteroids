@@ -14,8 +14,13 @@ Saucer::Saucer(sf::Vector2f p, bool b):
 	LoopSound(big ? Sound::SOUC_B : Sound::SOUC_S);
 }
 
-void Saucer::Move(float time, std::vector<Actor*>& asteroids){
-	Actor::Move(time, asteroids);
+void Saucer::Move(float time, std::vector<Actor*>& actors){
+	float yDist = std::abs(actors.at(0)->GetPos().y - pos.y);
+	if (yDist > HEIGHT / 10) {
+		if (actors.at(0)->GetPos().y > pos.y) dir.y = 1.f;
+		else dir.y = -1.f;
+	} else dir.y = 0.f;
+	Actor::Move(time, actors);
 	cooldown += time;
 }
 

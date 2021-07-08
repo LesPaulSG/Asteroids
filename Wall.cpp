@@ -21,6 +21,11 @@ const Line& Wall::GetLine() const {return line;}
 
 double Wall::GetRotation() const {return rotation;}
 
+void Wall::AddOffset(){
+	offsetA *= 1.000015f;
+	offsetB *= 1.000015f;
+}
+
 void Wall::Destroy() { alive = false; }
 
 void Wall::CalculateRotation() {

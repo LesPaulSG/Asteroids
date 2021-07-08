@@ -19,6 +19,7 @@ public:
 	const sf::RectangleShape& GetBody() const;
 	const Line& GetLine() const;
 	double GetRotation() const;
+	void AddOffset();
 
 	void Destroy();
 	void CalculateRotation();

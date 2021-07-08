@@ -19,7 +19,7 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	ui.setPosition(5.f, 5.f);
 	ui.setFillColor(sf::Color::White);
 
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 5; ++i) {
 		lives.push_back(Polygon(sf::Vector2f(30 * i + 30, 70), STARSHIP_PATTERN));
 	}
 
@@ -31,10 +31,12 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	auto clock = std::chrono::high_resolution_clock::now();
 
 	sf::Event evt;
+	bool playerDead = false;
 
 	while (true) {
 		while (window.pollEvent(evt)) {
-			CheckEvent(evt, bm, time.count());
+			if(bm.GetPlayer().CanMove()) 
+				CheckEvent(evt, bm, time.count());
 		}
 
 		if (bm.isExplosions()) {

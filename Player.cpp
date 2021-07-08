@@ -13,30 +13,21 @@ Player::Player(sf::Vector2f pos, float cRotation) :
 	thrustOn(false),
 	flame(pos, FLAME_PATTERN)
 {
+	radius = body.GetRadius();
 	speed = 100.f;
 	dir = sf::Vector2f(0.f, -1.f);
 	SetRotation(cRotation);
 }
 
-/*bool Player::Collision(std::vector<Actor*>& actors){
-	if (Actor::Collision(actors)) {
-		--lives;
-		return true;
-	}
-	return false;
-}*/
-
 void Player::Thrust(bool on){
-	if (canMove) {
-		thrustOn = on;
-		if (thrustOn) {
-			SetRotation(rotation);
-			force = 1.5f;
-			LoopSound(Sound::THRUST);
-		}
-		else {
-			EndSoundLoop(Sound::THRUST);
-		}
+	thrustOn = on;
+	if (thrustOn) {
+		SetRotation(rotation);
+		force = 1.5f;
+		LoopSound(Sound::THRUST);
+	}
+	else {
+		EndSoundLoop(Sound::THRUST);
 	}
 }
 
@@ -48,12 +39,13 @@ void Player::HyperJump(){
 
 void Player::Move(float time, std::vector<Actor*>& actors) {
 	static float old = rotation;
+	static Delay del(1.5f);
 	if (canMove) {
 		pos += dir * force * speed * time;
 		rotation += rotSpeed * time * rDir;
 		if (force > 0.f)	force -= 0.1f * time;
 		PassScreenBorder(pos);
-		canMove = !Collision(actors);
+		Collision(actors);
 		body.Move(pos);
 		flame.Move(pos);
 		if (old != rotation) {
@@ -63,13 +55,27 @@ void Player::Move(float time, std::vector<Actor*>& actors) {
 			if (thrustOn) SetRotation(rotation);
 		}
 	}
-	else if (Delay(time, 1.5f)) {
+	else if (del.Wait(time)) {
 		Refresh();
+		flame.Rotate((old - rotation) * -1.f);
+		old = 0.f;
+	}
+	else {
+		body.Explode();
+		body.Move(pos);
+	}
+}
+
+bool Player::Collision(std::vector<Actor*>& actors){
+	if (!canMove) return false;
+	if (Actor::Collision(actors)) {
+		Destroy();
+		return true;
 	}
 }
 
 void Player::Rotate(RotateDir nDir){
-	if(canMove)	rDir = nDir;
+	rDir = nDir;
 }
 
 void Player::SetRotation(float angle){
@@ -87,7 +93,9 @@ void Player::BonusLife(){
 }
 
 void Player::Refresh(){
+	body = Polygon(PLAYER_DEFAULT_POS, STARSHIP_PATTERN);
 	canMove = true;
+	thrustOn = false;
 	pos = PLAYER_DEFAULT_POS;
 	SetRotation(0.f);
 	rDir = STP;
@@ -96,15 +104,15 @@ void Player::Refresh(){
 }
 void Player::Draw(sf::RenderWindow& w){
 	static bool flameDrawed = false;
+	Actor::Draw(w);
 	if (canMove) {
-		Actor::Draw(w);
 		if (thrustOn && !flameDrawed) flame.Draw(w);
 		flameDrawed = !flameDrawed;
 	}
 }
 
 void Player::Destroy(){
-	--lives;
+	if (--lives < 1) alive = false;
 	canMove = false;
 }
 
@@ -114,4 +122,8 @@ float Player::GetRotation() const{
 
 int Player::GetLives(){
 	return lives;
+}
+
+bool Player::CanMove(){
+	return canMove;
 }

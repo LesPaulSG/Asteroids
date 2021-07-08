@@ -88,4 +88,19 @@ void RotateUnitVector(sf::Vector2f& vec, float angle);
 
 bool PassScreenBorder(sf::Vector2f& vec);
 
-bool Delay(float deltaTime, const float waitTime); //maybe functional object will be more suitableb
+class Delay {
+	float timePassed;
+	float waitTime;
+public:
+	Delay(float wT) : timePassed(0.f), waitTime(wT) {}
+	bool Wait(float deltaTime) {
+		timePassed += deltaTime;
+		if (timePassed > waitTime) {
+			timePassed = 0.f;
+			return true;
+		}
+		return false;
+	}
+};
+
+//bool Delay(float deltaTime, const float waitTime); //maybe functional object will be more suitableb

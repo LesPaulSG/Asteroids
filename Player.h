@@ -20,9 +20,10 @@ public:
 
 	float GetRotation() const;
 	int GetLives();
+	bool CanMove();
 
 	void Move(float time, std::vector<Actor*>& asteroids) override;
-	//bool Collision(std::vector<Actor*>& actors) override;
+	bool Collision(std::vector<Actor*>& actors) override;
 	void Rotate(RotateDir nDir);
 	void SetRotation(float angle);
 	void Thrust(bool on);

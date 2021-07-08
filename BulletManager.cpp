@@ -105,9 +105,9 @@ void BulletManager::Fire(Shot sho, float pushDist) {
 void BulletManager::GenerateAsteroid(float deltaTime){
 	static sf::Vector2f pos;
 	static sf::Vector2f dir;
-
+	static Delay del(3.f);
 	if (actors.size() < 2) {
-		if (Delay(deltaTime, 3.f)) {
+		if (del.Wait(deltaTime)) {
 			for (int i = 0; i < 10; ++i) {
 				pos.x = xDistr(gen);
 				pos.y = yDistr(gen);
@@ -120,8 +120,9 @@ void BulletManager::GenerateAsteroid(float deltaTime){
 }
 
 void BulletManager::SpawnSaucer(float deltaTime){
+	static Delay del(5.5f);
 	if (!saucerSpawned ) {
-		if(Delay(deltaTime, 5.5f)) {
+		if(del.Wait(deltaTime)) {
 			bool bigProb = randomBool(gen);
 			bool spawnBig = (score > 40'000 || bigProb) ? false : true;
 			sf::Vector2f startPos;

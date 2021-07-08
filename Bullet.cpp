@@ -1,4 +1,5 @@
 #include "Bullet.h"
+#include "Player.h"
 
 #include <iostream>
 
@@ -20,7 +21,6 @@ bool Bullet::isAlive() const {return alive;}
 
 void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos) {
 	static float dist = 0;
-	sf::Vector2f iPoint(0.f, 0.f);
 	Line offset(oldPos, pos);
 	for (auto& iter : actors){
 		dist = Line::Distance(pos, iter->GetPos());

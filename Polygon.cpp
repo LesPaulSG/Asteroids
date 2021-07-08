@@ -1,7 +1,5 @@
 #include "Polygon.h"
 
-std::vector<float> r;
-
 Polygon::Polygon() 
 	: pos(sf::Vector2f(0, 0)) {
 }
@@ -11,19 +9,16 @@ Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs)
 	rotation(0) {
 	int pointsNum = pairs.size();
 	edges.reserve(pointsNum);
-	offsets.reserve(pointsNum);
 
 	for (auto pair : pairs) {
-		radius = std::max(radius, pair.f.x);
-		radius = std::max(radius, pair.f.y);
-		radius = std::max(radius, pair.s.x);
-		radius = std::max(radius, pair.s.y);
+		radius = std::max(radius, std::abs(pair.f.x));
+		radius = std::max(radius, std::abs(pair.f.y));
+		radius = std::max(radius, std::abs(pair.s.x));
+		radius = std::max(radius, std::abs(pair.s.y));
 		edges.push_back(Wall(pair.f, pair.s));
 	}
 
 	for (auto& edge : edges) {
-		offsets.push_back(edge.GetLine().pointB);
-		r.push_back(edge.GetRotation());
 		edge.SetPos(pos);
 	}
 }
@@ -55,6 +50,12 @@ bool Polygon::isCollision(Line line){
 			return true;
 	}
 	return false;
+}
+
+void Polygon::Explode(){
+	for (auto& edge : edges) {
+		edge.AddOffset();
+	}
 }
 
 std::vector<Wall>& Polygon::getEdges() {
