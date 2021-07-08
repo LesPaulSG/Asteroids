@@ -1,42 +1,35 @@
 #pragma once
 #include "Asteroid.h"
 
-enum MoveDir{ STP, BST, RGH, LFT };
+enum RotateDir{ STP = 0, RGH = 1, LFT = -1 };
 
-class Player{
+class Player : public Actor {
 private:
-	sf::Vector2f pos;
-	sf::Vector2f forwardVector;
-	sf::Vector2f rightVector;
 	float rotation;
-	float speed;
 	float rotSpeed;
-	float radius;
 	float force;
-	MoveDir dir;
 	int lives;
-
-	Polygon body;
+	RotateDir rDir;
+	bool canMove;
+	bool thrustOn;
+	Polygon flame;
 
 public:
 	Player(sf::Vector2f pos, float rotation);
 	~Player() = default;
 
-	//const sf::CircleShape& GetBody() const;
-	const sf::Vector2f& GetPosition() const;
-	const sf::Vector2f& GetForwardVector() const;
 	float GetRotation() const;
 	int GetLives();
 
-	void SetDir(MoveDir nDir);
-	void Draw(sf::RenderWindow& w);
-
-	void CheckCollision(float time, std::vector<Actor*>& actors);
-	void Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2f& oldPos, const Wall& wall);
-	void Update(float time, std::vector<Actor*>& actors);
-	void Rotate(float angle);
-	bool Move(float time);	
+	void Move(float time, std::vector<Actor*>& asteroids) override;
+	bool Collision(std::vector<Actor*>& actors) override;
+	void Rotate(RotateDir nDir);
+	void SetRotation(float angle);
+	void Thrust(bool on);
+	void HyperJump();
 	void BonusLife();
 	void Refresh();
+	void Draw(sf::RenderWindow& w) override;
+	void Destroy() override;
 };
 

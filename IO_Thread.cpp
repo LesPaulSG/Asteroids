@@ -80,28 +80,43 @@ void CheckEvent(sf::Event& event, BulletManager& bm, float t){
 	case sf::Event::Closed:
 		break;
 	case sf::Event::KeyPressed:
-		KeyboardCheck(event, bm, t);
+		KeyboardPressCheck(event, bm, t);
 		break;
 	case sf::Event::KeyReleased:
-		bm.GetPlayer().SetDir(STP);
-		break;
-	default:
+		KeyboardReleaseCheck(event, bm, t);
 		break;
 	}
 }
 
-void KeyboardCheck(sf::Event& event, BulletManager& bm, float t){
+void KeyboardPressCheck(sf::Event& event, BulletManager& bm, float t){
 	switch (event.key.code) {
 	case sf::Keyboard::W:
-		bm.GetPlayer().SetDir(BST);
+		bm.GetPlayer().Thrust(true);
 		break;
 	case sf::Keyboard::D:
-		bm.GetPlayer().SetDir(RGH);
+		bm.GetPlayer().Rotate(RGH);
 		break;
 	case sf::Keyboard::A:
-		bm.GetPlayer().SetDir(LFT);
+		bm.GetPlayer().Rotate(LFT);
 		break;
-	case sf::Keyboard::Space:	
+	}
+}
+
+void KeyboardReleaseCheck(sf::Event& event, BulletManager& bm, float t) {
+	switch (event.key.code) {
+	case sf::Keyboard::W:
+		bm.GetPlayer().Thrust(false);
+		break;
+	case sf::Keyboard::D:
+		bm.GetPlayer().Rotate(STP);
+		break;
+	case sf::Keyboard::A:
+		bm.GetPlayer().Rotate(STP);
+		break;
+	case sf::Keyboard::V:
+		bm.GetPlayer().HyperJump();
+		break;
+	case sf::Keyboard::Space:
 		bm.Shoot();
 		break;
 	}

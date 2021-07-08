@@ -14,9 +14,9 @@ public:
 	Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs);
 
 	virtual void Move(float time, std::vector<Actor*>& asteroids);
-	bool Collision(std::vector<Actor*>& asteroids);
+	virtual bool Collision(std::vector<Actor*>& asteroids);
 	void SetDirection(sf::Vector2f newDir);
-	void Draw(sf::RenderWindow& w);
+	virtual void Draw(sf::RenderWindow& w);
 	virtual void Destroy();
 
 	const sf::Vector2f& GetPos() const;

@@ -1,95 +1,83 @@
 #include "Player.h"
 
-Player::Player(sf::Vector2f pos, float cRotation) 
-	: pos(std::move(pos)),
+std::uniform_int_distribution<int> x(50, WIDTH  - 50);
+std::uniform_int_distribution<int> y(50, HEIGHT - 50);
+
+Player::Player(sf::Vector2f pos, float cRotation) :
+	Actor(pos, sf::Vector2f(0.f, 0.f), STARSHIP_PATTERN),
 	rotation(0.f),
-	speed(100.f),
 	rotSpeed(5.f),
-	radius(20.f),
 	force(0.f),
 	lives(3),
-	body(pos, STARSHIP_PATTERN) {
-	forwardVector = sf::Vector2f(0.f, -1.f);
-	rightVector   = sf::Vector2f(1.f, 0.f);
-
-	Rotate(cRotation);
+	canMove(true),
+	thrustOn(false),
+	flame(pos, FLAME_PATTERN)
+{
+	speed = 100.f;
+	dir = sf::Vector2f(0.f, -1.f);
+	SetRotation(cRotation);
 }
 
-void Player::CheckCollision(float time, std::vector<Actor*>& actors){
-	float radSum = 0, dist = 0;
-	for (auto& iter : actors) {
-		radSum = radius + iter->GetRadius();
-		dist = Line::Distance(pos, iter->GetPos());
-		if (dist <= radSum) {
-			for (auto& b : body.getEdges()) {
-				if (iter->DeepCollision(b.GetLine())) {
-					--lives;
-					Refresh();
-					return;
-				}
-			}
+bool Player::Collision(std::vector<Actor*>& actors){
+	if (Actor::Collision(actors)) {
+		--lives;
+		return true;
+	}
+	return false;
+}
+
+void Player::Thrust(bool on){
+	if (canMove) {
+		thrustOn = on;
+		if (thrustOn) {
+			SetRotation(rotation);
+			force = 1.5f;
+			LoopSound(Sound::THRUST);
+		}
+		else {
+			EndSoundLoop(Sound::THRUST);
 		}
 	}
 }
 
-void Player::Collision(float time, const sf::Vector2f& iPoint, const sf::Vector2f& oldPos, const Wall& wall){
-	float angle = wall.GetLine().AngleOfIntersec(Line(oldPos, pos));
-	sf::Vector2f tmpDir;
-	if (angle >= 1.5708f) {
-		tmpDir = wall.GetLine().pointA;// -forwardVector;// *radius;
-	} else {
-		tmpDir = wall.GetLine().pointB;// +forwardVector;// *radius;
+void Player::HyperJump(){
+	pos.x = x(gen);
+	pos.y = y(gen);
+	force = 0.f;
+}
+
+void Player::Move(float time, std::vector<Actor*>& actors) {
+	static float old = rotation;
+	if (canMove) {
+		pos += dir * force * speed * time;
+		rotation += rotSpeed * time * rDir;
+		if (force > 0.f)	force -= 0.1f * time;
+		PassScreenBorder(pos);
+		canMove = !Collision(actors);
+		body.Move(pos);
+		flame.Move(pos);
+		if (old != rotation) {
+			body.Rotate((old - rotation) * -1.f);
+			flame.Rotate((old - rotation) * -1.f);
+			old = rotation;
+			if (thrustOn) SetRotation(rotation);
+		}
 	}
-	if (!wall.GetLine().isPointRight(pos)) {
-		pos -= (tmpDir - forwardVector) * time;// +forwardVector;
-	} else {
-		pos += (tmpDir + forwardVector) * time;// -forwardVector;
+	else if (Delay(time, 1.5f)) {
+		std::cout << "delay passed\n";
+		Refresh();
 	}
 }
 
-void Player::Update(float time, std::vector<Actor*>& actors) {
-	float old = rotation;
-	Move(time);
-	pos += forwardVector * force * speed * time;
-	if(force > 0.f)	force -= 0.1f * time;
-	PassScreenBorder(pos);
-	CheckCollision(time, actors);
-	body.Move(pos);
-	if(old!=rotation)
-		body.Rotate((old-rotation)*-1.f);
+void Player::Rotate(RotateDir nDir){
+	if(canMove)	rDir = nDir;
 }
 
-void Player::Rotate(float angle){
+void Player::SetRotation(float angle){
 	float fxNew = sin(rotation);
 	float fyNew = -cos(rotation);
-	forwardVector.x = fxNew;
-	forwardVector.y = fyNew;
-	float rxNew = cos(rotation);
-	float ryNew = sin(rotation);
-	rightVector.x = rxNew;
-	rightVector.y = ryNew;
-}
-
-bool Player::Move(float time){
-	switch (dir){
-	case STP:
-		return false;
-	case BST:
-		Rotate(rotation);
-		force = std::min((force + time * speed), 1.f);
-		PlaySound(Sound::THRUST);
-		return true;
-	case RGH:
-		rotation += rotSpeed * time;
-		//Rotate(rotation);
-		return true;
-	case LFT:
-		rotation -= rotSpeed * time;
-		//Rotate(rotation);
-		return true;
-	default:
-		return false;
-	}
+	dir.x = fxNew;
+	dir.y = fyNew;
 }
 
 void Player::BonusLife(){
@@ -100,13 +88,22 @@ void Player::BonusLife(){
 }
 
 void Player::Refresh(){
+	canMove = true;
 	pos = PLAYER_DEFAULT_POS;
-	Rotate(1.57);
+	SetRotation(0.f);
+	rDir = STP;
+	rotation = 0.f;
+	force = 0.f;
+}
+void Player::Draw(sf::RenderWindow& w){
+	Actor::Draw(w);
+	if (thrustOn) flame.Draw(w);
 }
 
-const sf::Vector2f& Player::GetPosition() const {return pos;}
-
-const sf::Vector2f& Player::GetForwardVector() const {return forwardVector;}
+void Player::Destroy(){
+	--lives;
+	canMove = false;
+}
 
 float Player::GetRotation() const{
 	return rotation;
@@ -114,12 +111,4 @@ float Player::GetRotation() const{
 
 int Player::GetLives(){
 	return lives;
-}
-
-void Player::SetDir(MoveDir nDir){
-	dir = nDir;
-}
-
-void Player::Draw(sf::RenderWindow& w){
-	body.Draw(w);
 }

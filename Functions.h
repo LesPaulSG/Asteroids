@@ -31,6 +31,11 @@ const std::vector<VectorPair> STARSHIP_PATTERN{
 	VectorPair(sf::Vector2f( -6.f,   6.f), sf::Vector2f(-10.f,  10.f)),
 	VectorPair(sf::Vector2f(-10.f,  10.f), sf::Vector2f(  0.f, -20.f)) };
 
+const std::vector<VectorPair> FLAME_PATTERN{
+	VectorPair(sf::Vector2f( -5.f,	 6.f), sf::Vector2f(  5.f,   6.f)),
+	VectorPair(sf::Vector2f(  5.f,   6.f), sf::Vector2f(  0.f,  15.f)),
+	VectorPair(sf::Vector2f(  0.f,  15.f), sf::Vector2f( -5.f,   6.f)) };
+
 const std::vector<VectorPair> BIG_SAUCER_PATTERN{
 	VectorPair(sf::Vector2f( -9.f,  -19.5f),	sf::Vector2f(  9.f, -19.5f)),
 	VectorPair(sf::Vector2f(  9.f,  -19.5f),	sf::Vector2f( 15.f,  -7.5f)),
@@ -82,3 +87,5 @@ void RotateVectorAround(sf::Vector2f& vec, const sf::Vector2f& anchor, float ang
 void RotateUnitVector(sf::Vector2f& vec, float angle);
 
 bool PassScreenBorder(sf::Vector2f& vec);
+
+bool Delay(float deltaTime, const float waitTime); //maybe functional object will be more suitableb

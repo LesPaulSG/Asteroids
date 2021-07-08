@@ -11,6 +11,7 @@ BulletManager::BulletManager() :
 	saucerSpawned(false) {
 	bullets.reserve(BULLETS_MAX_CAPACITY);
 	actors.reserve(1000);
+	actors.push_back(&player);
 }
 
 const std::vector<Bullet>& BulletManager::GetBullets() const {return bullets;}
@@ -27,11 +28,11 @@ int BulletManager::GetPlayerLives(){
 
 void BulletManager::Shoot() {
 	std::lock_guard lg(bmMutex);
-	shots.push(Shot(Shot(player.GetPosition(), player.GetRotation())));
+	shots.push(Shot(Shot(player.GetPos(), player.GetRotation())));
 }
 
 void BulletManager::Update(float time) {
-	player.Update(time, actors);
+	//player.Move(time, actors);
 
 	if (!shots.empty()) {
 		std::lock_guard lg(bmMutex);
@@ -71,13 +72,14 @@ void BulletManager::Update(float time) {
 					actors.end());
 	}
 
-	SpawnSaucer(time);
 	GenerateAsteroid(time);
+	SpawnSaucer(time);
+	
 	for (auto iter : actors) {
 		iter->Move(time, actors);
 	}
 	if (saucerSpawned && saucer->CanShoot()) {
-		Fire(saucer->GetShoot(player.GetPosition()), saucer->GetRadius());
+		Fire(saucer->GetShoot(player.GetPos()), saucer->GetRadius());
 	}
 	for (auto& iter : bullets) {
 		iter.Update(time, actors);
@@ -96,23 +98,23 @@ void BulletManager::GenerateAsteroid(float deltaTime){
 	static sf::Vector2f pos;
 	static sf::Vector2f dir;
 
-	if (actors.empty()) {
-		for (int i = 0; i < 10; ++i) {
-			pos.x = xDistr(gen);
-			pos.y = yDistr(gen);
-			dir.x = dDistr(gen) / 30.f;
-			dir.y = dDistr(gen) / 30.f;
-			actors.push_back(new Asteroid(pos, dir));  //initial stage == 3
+	if (actors.size() < 1) {
+		if (Delay(deltaTime, 3.f)) {
+			for (int i = 0; i < 10; ++i) {
+				pos.x = xDistr(gen);
+				pos.y = yDistr(gen);
+				dir.x = dDistr(gen) / 30.f;
+				dir.y = dDistr(gen) / 30.f;
+				actors.push_back(new Asteroid(pos, dir));  //initial stage == 3
+			}
 		}
 	}
 
 }
 
 void BulletManager::SpawnSaucer(float deltaTime){
-	static float cooldown = 0;
 	if (!saucerSpawned ) {
-		cooldown += deltaTime;
-		if (cooldown > 3.f) {
+		if(Delay(deltaTime, 3.5f)) {
 			bool bigProb = randomBool(gen);
 			bool spawnBig = (score > 40'000 || bigProb) ? false : true;
 			sf::Vector2f startPos;
@@ -120,7 +122,6 @@ void BulletManager::SpawnSaucer(float deltaTime){
 			startPos.y = yDistr(gen);
 			saucer = new Saucer(startPos, spawnBig);
 			actors.push_back(saucer);
-			cooldown = 0.f;
 			saucerSpawned = true;
 		}
 	}

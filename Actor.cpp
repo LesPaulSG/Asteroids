@@ -25,7 +25,6 @@ bool Actor::Collision(std::vector<Actor*>& asteroids) {
 			radSum = radius + iter->GetRadius();
 			dist = Line::Distance(pos, iter->GetPos());
 			if (radSum >= dist) {
-				//std::cout << "collide " << radSum << ' ' << dist << std::endl;
 				return true;
 			}
 		}

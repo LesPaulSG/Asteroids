@@ -103,3 +103,14 @@ bool PassScreenBorder(sf::Vector2f& vec) {
 	}
 	return passed;
 }
+
+bool Delay(float deltaTime, const float waitTime){
+	static float timePassed = 0.f;
+	timePassed += deltaTime;
+	if (timePassed > waitTime) {
+		
+		timePassed = 0.f;
+		return true;
+	}
+	return false;
+}

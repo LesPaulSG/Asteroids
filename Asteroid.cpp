@@ -23,7 +23,7 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_):
 	std::vector<VectorPair> pairs;
 	pairs.reserve(8);
 	for (int i = 1; i < 8; ++i) {
-		pairs.push_back(VectorPair(points[i - 1], points[i]));
+		pairs.push_back(VectorPair(points[i-1], points[i]));
 	}
 	pairs.push_back(VectorPair(points[7], points[0]));
 	body = Polygon(pos, pairs);
