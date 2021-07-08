@@ -7,28 +7,36 @@ std::uniform_int_distribution<int> yDistr(50, HEIGHT -50);
 std::uniform_int_distribution<int> dDistr(-30, 30);
 
 BulletManager::BulletManager() :
-	player(PLAYER_DEFAULT_POS, 1.57),
+	player(new Player(PLAYER_DEFAULT_POS, 1.57)),
 	saucerSpawned(false) {
 	bullets.reserve(BULLETS_MAX_CAPACITY);
 	actors.reserve(1000);
-	actors.push_back(&player);
+	actors.push_back(player);
 }
 
 const std::vector<Bullet>& BulletManager::GetBullets() const {return bullets;}
 
 std::mutex& BulletManager::GetBmMutex() {return bmMutex;}
 
-Player& BulletManager::GetPlayer() {return player;}
+Player& BulletManager::GetPlayer() {return *player;}
 
 int BulletManager::GetScore() {return score;}
 
 int BulletManager::GetPlayerLives(){
-	return player.GetLives();
+	return player->GetLives();
+}
+
+void BulletManager::StartGame(){
+	player = new Player(PLAYER_DEFAULT_POS, 1.57),
+	saucerSpawned = false;
+	bullets.clear();
+	actors.clear();
+	actors.push_back(player);
 }
 
 void BulletManager::Shoot() {
 	std::lock_guard lg(bmMutex);
-	shots.push(Shot(Shot(player.GetPos(), player.GetRotation())));
+	shots.push(Shot(Shot(player->GetPos(), player->GetRotation())));
 }
 
 void BulletManager::Update(float time) {
@@ -47,6 +55,7 @@ void BulletManager::Update(float time) {
 									bullets.end(),
 									[](Bullet b) {return !b.isAlive(); }),
 					bullets.end());
+
 		for (auto iter : actors) {
 			if (dynamic_cast<Asteroid*>(iter)) {
 				if (!iter->isAlive()) {
@@ -60,11 +69,10 @@ void BulletManager::Update(float time) {
 
 				}
 			}
-			else if (dynamic_cast<Saucer*>(iter)) {
-				if (!iter->isAlive()) {
-					saucerSpawned = false;
-				}
-			}
+		}
+		if (saucerSpawned && !saucer->isAlive()) {
+			saucerSpawned = false;
+			explosions.push(saucer->GetPos());
 		}
 		actors.erase(std::remove_if(actors.begin(),
 									actors.end(),
@@ -79,7 +87,7 @@ void BulletManager::Update(float time) {
 		iter->Move(time, actors);
 	}
 	if (saucerSpawned && saucer->CanShoot()) {
-		Fire(saucer->GetShoot(player.GetPos()), saucer->GetRadius());
+		Fire(saucer->GetShoot(player->GetPos()), saucer->GetRadius());
 	}
 	for (auto& iter : bullets) {
 		iter.Update(time, actors);
@@ -98,7 +106,7 @@ void BulletManager::GenerateAsteroid(float deltaTime){
 	static sf::Vector2f pos;
 	static sf::Vector2f dir;
 
-	if (actors.size() < 1) {
+	if (actors.size() < 2) {
 		if (Delay(deltaTime, 3.f)) {
 			for (int i = 0; i < 10; ++i) {
 				pos.x = xDistr(gen);
@@ -109,12 +117,11 @@ void BulletManager::GenerateAsteroid(float deltaTime){
 			}
 		}
 	}
-
 }
 
 void BulletManager::SpawnSaucer(float deltaTime){
 	if (!saucerSpawned ) {
-		if(Delay(deltaTime, 3.5f)) {
+		if(Delay(deltaTime, 5.5f)) {
 			bool bigProb = randomBool(gen);
 			bool spawnBig = (score > 40'000 || bigProb) ? false : true;
 			sf::Vector2f startPos;
@@ -145,7 +152,6 @@ void BulletManager::Draw(sf::RenderWindow& w){
 	for (auto iter : actors) {
 		iter->Draw(w);
 	}
-	player.Draw(w);
 }
 
 void BulletManager::UpdateScore(int stage){
@@ -153,7 +159,7 @@ void BulletManager::UpdateScore(int stage){
 	score += 300 / stage;
 	bonusLife += 300 / stage;
 	if (bonusLife >= 10'000) {
-		player.BonusLife();
+		player->BonusLife();
 		bonusLife = 0;
 	}
 }

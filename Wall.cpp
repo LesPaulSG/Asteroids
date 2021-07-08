@@ -1,8 +1,11 @@
 #include "Wall.h"
 
-Wall::Wall(sf::Vector2f A, sf::Vector2f B) 
-	:	alive(true),
-		line(A, B) {
+Wall::Wall(sf::Vector2f A, sf::Vector2f B) :
+		alive(true),
+		offsetA(A),
+		offsetB(B),
+		line(A, B)
+{
 	vector = line.midPoint;
 	CalculateRotation();
 	body.setPosition(line.pointA);
@@ -40,14 +43,17 @@ void Wall::SetPos(sf::Vector2f pos){
 }
 
 void Wall::Move(sf::Vector2f dest){
-	line.pointA += dest;
-	line.pointB += dest;
+	line.pointA = dest + offsetA;
+	line.pointB = dest + offsetB;
+	CalculateRotation();
 	body.setPosition(line.pointA);
 }
 
 void Wall::RotateAround(const sf::Vector2f& anchor, float angle){
 	RotateVectorAround(line.pointA, anchor, angle);
 	RotateVectorAround(line.pointB, anchor, angle);
+	RotateVectorAround(offsetA, sf::Vector2f(0.f, 0.f), angle);
+	RotateVectorAround(offsetB, sf::Vector2f(0.f, 0.f), angle);
 	vector.x = line.pointB.x - line.pointA.x;
 	vector.y = line.pointB.y - line.pointA.y;
 	CalculateRotation();

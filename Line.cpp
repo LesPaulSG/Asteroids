@@ -1,10 +1,14 @@
 #include "Line.h"
 
 Line::Line(sf::Vector2f A, sf::Vector2f B) {
-	pointA = (A.y >= B.y) ? A : B;
-	pointB = (A.y >= B.y) ? B : A;
+	//pointA = (A.y >= B.y) ? A : B;
+	//pointB = (A.y >= B.y) ? B : A;
+	pointA = A;
+	pointB = B;
 	midX = pointB.x - pointA.x;
 	midY = pointB.y - pointA.y;
+	midX = (midX == 0.f) ? 0.0001f : midX;	//if midX or midY == 0 collision detection don't works
+	midY = (midY == 0.f) ? 0.0001f : midY;	//
 	midPoint.x = midX;
 	midPoint.y = midY;
 	lenght = sqrt(pow(midX, 2) + pow(midY, 2));

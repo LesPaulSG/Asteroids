@@ -5,6 +5,8 @@ class Wall {
 private:
 	bool alive;
 	sf::Vector2f vector;
+	sf::Vector2f offsetA;
+	sf::Vector2f offsetB;
 	sf::RectangleShape body;
 	Line line;
 	double rotation;

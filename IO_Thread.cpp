@@ -9,11 +9,13 @@ std::vector<Polygon> lives;
 
 void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Font font;
-	font.loadFromFile("zig.ttf");
+	font.loadFromFile("vector.ttf");
 	sf::Text debug("", font, 16);
 	debug.setPosition(5.f, 150.f);
 	debug.setFillColor(sf::Color::Red);
 	sf::Text ui("", font, 30);
+	ui.setOutlineColor(sf::Color::White);
+	ui.setOutlineThickness(0.5);
 	ui.setPosition(5.f, 5.f);
 	ui.setFillColor(sf::Color::White);
 
@@ -59,7 +61,7 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 
 		debug.setString("fps:  " + std::to_string(1.f / time.count())	//GUI FPS
 					  + "\npFps: " + std::to_string(1.f / t.count()));	//physics FPS*/
-		ui.setString("SCORE: " + std::to_string(bm.GetScore()));
+		ui.setString(std::to_string(bm.GetScore()));
 
 		window.draw(debug);
 		window.draw(ui);

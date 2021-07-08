@@ -18,13 +18,13 @@ Player::Player(sf::Vector2f pos, float cRotation) :
 	SetRotation(cRotation);
 }
 
-bool Player::Collision(std::vector<Actor*>& actors){
+/*bool Player::Collision(std::vector<Actor*>& actors){
 	if (Actor::Collision(actors)) {
 		--lives;
 		return true;
 	}
 	return false;
-}
+}*/
 
 void Player::Thrust(bool on){
 	if (canMove) {
@@ -64,7 +64,6 @@ void Player::Move(float time, std::vector<Actor*>& actors) {
 		}
 	}
 	else if (Delay(time, 1.5f)) {
-		std::cout << "delay passed\n";
 		Refresh();
 	}
 }
@@ -96,8 +95,12 @@ void Player::Refresh(){
 	force = 0.f;
 }
 void Player::Draw(sf::RenderWindow& w){
-	Actor::Draw(w);
-	if (thrustOn) flame.Draw(w);
+	static bool flameDrawed = false;
+	if (canMove) {
+		Actor::Draw(w);
+		if (thrustOn && !flameDrawed) flame.Draw(w);
+		flameDrawed = !flameDrawed;
+	}
 }
 
 void Player::Destroy(){

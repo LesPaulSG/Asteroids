@@ -10,7 +10,6 @@ Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs)
 	: pos(pos_),
 	rotation(0) {
 	int pointsNum = pairs.size();
-
 	edges.reserve(pointsNum);
 	offsets.reserve(pointsNum);
 
@@ -39,7 +38,7 @@ void Polygon::Move(sf::Vector2f dest){
 	sf::Vector2f diff = dest - pos;
 	pos = dest;
 	for (auto& edge : edges) {
-		edge.Move(diff);
+		edge.Move(pos);
 	}
 }
 

@@ -6,26 +6,6 @@
 #include "Player.h"
 #include "Saucer.h"
 
-enum class TaskType {
-	ADD_BULLET
-};
-
-struct AddBullet {//: public PackagedTask {
-	sf::Vector2f pos;
-	float dir;
-	float speed;
-	float lifeTime;
-};
-
-union PackagedTask {
-	AddBullet ab;
-};
-
-struct Task {
-	TaskType type;
-	PackagedTask pt;
-};
-
 class BulletManager {
 private:
 	std::vector<Bullet> bullets;
@@ -36,7 +16,7 @@ private:
 
 	mutable std::mutex bmMutex;
 
-	Player player;
+	Player* player;
 
 	int score = 0;
 	bool saucerSpawned;
@@ -53,6 +33,7 @@ public:
 	int GetScore();
 	int GetPlayerLives();
 
+	void StartGame();
 	void Shoot();
 	void Update(float time);
 	void Fire(Shot sho, float pushDist);
