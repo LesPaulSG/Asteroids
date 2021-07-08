@@ -7,6 +7,10 @@
 std::vector<Explosion> VFX;
 std::vector<Polygon> lives;
 
+BulletManager* BM;
+bool* GAME_OVER;
+sf::RenderWindow* W;
+
 void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	sf::Font font;
 	font.loadFromFile("vector.ttf");
@@ -30,53 +34,78 @@ void input(BulletManager& bm, std::chrono::duration<float>& t, bool& gameOver) {
 	std::chrono::duration<float> time{ 0 };
 	auto clock = std::chrono::high_resolution_clock::now();
 
-	sf::Event evt;
 	bool playerDead = false;
 
+	BM = &bm;
+	GAME_OVER = &gameOver;
+	W = &window;
+
+	while (W->isOpen()) {
+		Game(time.count());
+
+		time = std::chrono::high_resolution_clock::now() - clock;
+		clock = std::chrono::high_resolution_clock::now();
+
+	}
+}
+
+void Start(float deltaTime)
+{
+}
+
+void Game(float deltaTime)
+{
+	sf::Event evt;
+
 	while (true) {
-		while (window.pollEvent(evt)) {
-			if(bm.GetPlayer().CanMove()) 
-				CheckEvent(evt, bm, time.count());
+		while (W->pollEvent(evt)) {
+			if (BM->GetPlayer().CanMove())
+				CheckEvent(evt, *BM, deltaTime);
 		}
 
-		if (bm.isExplosions()) {
-			VFX.push_back(bm.PopExplosion());
+		if (BM->isExplosions()) {
+			VFX.push_back(BM->PopExplosion());
 		}
 		for (auto iter = VFX.begin(); iter != VFX.end(); ++iter) {
-			iter->Update(time.count());
+			iter->Update(deltaTime);
 			if (!iter->isAlive()) {
 				VFX.erase(iter);
 				break;
 			}
 		}
 
-		window.clear();
+		W->clear();
 
 		for (auto& iter : VFX) {
-			iter.Draw(window);
+			iter.Draw(*W);
 		}
-		for (int i = 0; i < bm.GetPlayerLives(); ++i) {
-			lives.at(i).Draw(window);
+		for (int i = 0; i < BM->GetPlayerLives(); ++i) {
+			lives.at(i).Draw(*W);
 		}
 
-		bm.Draw(window);
+		BM->Draw(*W);
 
-		debug.setString("fps:  " + std::to_string(1.f / time.count())	//GUI FPS
-					  + "\npFps: " + std::to_string(1.f / t.count()));	//physics FPS*/
-		ui.setString(std::to_string(bm.GetScore()));
+		//debug.setString("fps:  " + std::to_string(1.f / time.count())	//GUI FPS
+		//	+ "\npFps: " + std::to_string(1.f / t.count()));	//physics FPS*/
+		//ui.setString(std::to_string(BM->GetScore()));
 
-		window.draw(debug);
-		window.draw(ui);
-		window.display();
+		//W->draw(debug);
+		//W->draw(ui);
+		W->display();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			gameOver = true;
-			break;
+			*GAME_OVER = true;
+			W->close();
 		}
-
-		time  = std::chrono::high_resolution_clock::now() - clock;
-		clock = std::chrono::high_resolution_clock::now();
 	}
+}
+
+void NewTopScore(float deltaTime)
+{
+}
+
+void LeaderBoard(float deltaTime)
+{
 }
 
 void CheckEvent(sf::Event& event, BulletManager& bm, float t){
