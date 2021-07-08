@@ -6,25 +6,21 @@ Polygon::Polygon()
 	: pos(sf::Vector2f(0, 0)) {
 }
 
-Polygon::Polygon(sf::Vector2f pos_, const std::vector<sf::Vector2f>& points)
+Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs)
 	: pos(pos_),
 	rotation(0) {
-	int pointsNum = points.size();
-	if (pointsNum < 0) {
-		std::cout << "ERROR: too little points\n";
-		return;
-	}
+	int pointsNum = pairs.size();
+
 	edges.reserve(pointsNum);
 	offsets.reserve(pointsNum);
 
-	for (auto point : points) {
-		radius = (radius < point.x) ? point.x : radius;
-		radius = (radius < point.y) ? point.y : radius;
+	for (auto pair : pairs) {
+		radius = std::max(radius, pair.f.x);
+		radius = std::max(radius, pair.f.y);
+		radius = std::max(radius, pair.s.x);
+		radius = std::max(radius, pair.s.y);
+		edges.push_back(Wall(pair.f, pair.s));
 	}
-	for (int i = 0; i < pointsNum - 1; ++i) {
-		edges.push_back(Wall(points.at(i), points.at(i + 1)));
-	}
-	edges.push_back(Wall(points.at(pointsNum - 1), points.at(0)));
 
 	for (auto& edge : edges) {
 		offsets.push_back(edge.GetLine().pointB);

@@ -9,7 +9,7 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_):
 	alive(true) {
 
 	std::vector<sf::Vector2f> points;
-	points.reserve(3 * stage);
+	points.reserve(8);
 	float prevAngle = 0;
 	for (int i = 0; i < 8; ++i) {
 		sf::Vector2f p(dist(gen) * stage, 0);
@@ -20,7 +20,13 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_):
 		RotateVector(points[i], prevAngle + angle);
 		prevAngle += angle;
 	}
-	body = Polygon(pos, points);
+	std::vector<VectorPair> pairs;
+	pairs.reserve(8);
+	for (int i = 1; i < 8; ++i) {
+		pairs.push_back(VectorPair(points[i - 1], points[i]));
+	}
+	pairs.push_back(VectorPair(points[7], points[0]));
+	body = Polygon(pos, pairs);
 	radius = body.GetRadius();
 }
 

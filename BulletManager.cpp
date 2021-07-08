@@ -32,11 +32,11 @@ void BulletManager::Shoot() {
 
 void BulletManager::Update(float time) {
 	player.Update(time, actors);
-	
+
 	if (!shots.empty()) {
 		std::lock_guard lg(bmMutex);
 		while (!shots.empty()) {
-			Fire(shots.front());
+			Fire(shots.front(), 20); //player radius 
 			shots.pop();
 		}
 	}
@@ -77,16 +77,17 @@ void BulletManager::Update(float time) {
 		iter->Move(time, actors);
 	}
 	if (saucerSpawned && saucer->CanShoot()) {
-		Fire(saucer->GetShoot(player.GetPosition()));
+		Fire(saucer->GetShoot(player.GetPosition()), saucer->GetRadius());
 	}
 	for (auto& iter : bullets) {
 		iter.Update(time, actors);
 	}
 }
 
-void BulletManager::Fire(Shot sho) {
+void BulletManager::Fire(Shot sho, float pushDist) {
 	if (bullets.size() < BULLETS_MAX_CAPACITY) {
 		bullets.push_back(Bullet(sho));
+		bullets.back().PushForward(pushDist);
 		PlaySound(Sound::FIRE);
 	}
 }
@@ -112,7 +113,12 @@ void BulletManager::SpawnSaucer(float deltaTime){
 	if (!saucerSpawned ) {
 		cooldown += deltaTime;
 		if (cooldown > 3.f) {
-			saucer = new Saucer(sf::Vector2f(300, 300), true);
+			bool bigProb = randomBool(gen);
+			bool spawnBig = (score > 40'000 || bigProb) ? false : true;
+			sf::Vector2f startPos;
+			startPos.x = randomBool(gen) ? (WIDTH - 0.1f) : 0.1f;
+			startPos.y = yDistr(gen);
+			saucer = new Saucer(startPos, spawnBig);
 			actors.push_back(saucer);
 			cooldown = 0.f;
 			saucerSpawned = true;

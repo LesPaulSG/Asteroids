@@ -1,15 +1,15 @@
 #include "Actor.h"
 
-Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<sf::Vector2f>& points)
+Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs)
 	: pos(pos_),
 	dir(dir_),
 	speed(50.f),
 	alive(true),
 	body() {
-	if (points.size() > 1) {
-		body = Polygon(pos, points);
+	if (pairs.size() > 1) {
+		body = Polygon(pos, pairs);
+		radius = GetRadius();
 	}
-	radius = GetRadius();
 }
 
 void Actor::Move(float time, std::vector<Actor*>& asteroids) {

@@ -20,5 +20,6 @@ public:
 
 	void CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos);
 	void Update(float t, std::vector<Actor*>& actors);
+	void PushForward(float distance);
 	void LifeCheck();
 };

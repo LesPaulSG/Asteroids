@@ -11,7 +11,7 @@ protected:
 	bool alive;
 	
 public:
-	Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<sf::Vector2f>& points);
+	Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs);
 
 	virtual void Move(float time, std::vector<Actor*>& asteroids);
 	bool Collision(std::vector<Actor*>& asteroids);

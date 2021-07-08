@@ -50,6 +50,10 @@ void Bullet::Update(float t, std::vector<Actor*>& actors) {
 	LifeCheck();
 }
 
+void Bullet::PushForward(float distance){
+	pos += dir * distance;
+}
+
 void Bullet::LifeCheck(){
 	if (time >= lifeTime) {
 		alive = false;
