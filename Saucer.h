@@ -10,5 +10,6 @@ public:
 	void Move(float time, std::vector<Actor*>& asteroids) override;
 	bool CanShoot();
 	void Destroy() override;
+	bool isBig();
 	Shot GetShoot(sf::Vector2f playerPos);
 };

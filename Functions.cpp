@@ -7,20 +7,8 @@ std::vector<sf::Sound> sounds;
 
 sf::Font font;
 
-sf::Text pressAnyKey;
-sf::Text score;
-sf::Text enterInitials;
-sf::Text leaderBoard;
-std::vector<sf::Text> leaders;
-
 void LoadSounds() {
 	font.loadFromFile("vector.ttf");
-	pressAnyKey.setFont(font);
-	pressAnyKey.setCharacterSize(30);
-	pressAnyKey.setOutlineColor(sf::Color::White);
-	pressAnyKey.setOutlineThickness(0.5);
-	pressAnyKey.setPosition(5.f, 5.f);
-	pressAnyKey.setFillColor(sf::Color::White);
 
 	buffers.push_back(sf::SoundBuffer());
 	buffers.push_back(sf::SoundBuffer());
@@ -70,6 +58,10 @@ void LoopSound(Sound ss) {
 
 void EndSoundLoop(Sound ss){
 	sounds[(int)ss].stop();
+}
+
+sf::Font& GetFont() {
+	return font;
 }
 
 bool isPointInRange(float x, float a, float b) {

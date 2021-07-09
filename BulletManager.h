@@ -37,7 +37,7 @@ public:
 	void Shoot();
 	void Update(float time);
 	void Fire(Shot sho, float pushDist);
-	void GenerateAsteroid(float deltaTime);
+	void GenerateAsteroid(float deltaTime, float waitTime);
 	void SpawnSaucer(float deltaTime);
 	void CrackAsteroid(const sf::Vector2f& pos, int stage);
 	void Draw(sf::RenderWindow& w);

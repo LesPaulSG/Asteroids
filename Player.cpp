@@ -68,10 +68,19 @@ void Player::Move(float time, std::vector<Actor*>& actors) {
 
 bool Player::Collision(std::vector<Actor*>& actors){
 	if (!canMove) return false;
-	if (Actor::Collision(actors)) {
-		Destroy();
-		return true;
+	static float radSum = 0, dist = 0;
+	for (auto iter : actors) {
+		if (iter != this) {
+			radSum = radius + iter->GetRadius();
+			dist = Line::Distance(pos, iter->GetPos());
+			if (radSum >= dist) {
+				iter->Destroy();
+				Destroy();
+				return true;
+			}
+		}
 	}
+	return false;
 }
 
 void Player::Rotate(RotateDir nDir){

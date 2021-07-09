@@ -12,6 +12,10 @@ BulletManager::BulletManager() :
 	bullets.reserve(BULLETS_MAX_CAPACITY);
 	actors.reserve(1000);
 	actors.push_back(player);
+	player->Destroy();
+	player->Destroy();
+	player->Destroy();
+	GenerateAsteroid(0, 0);
 }
 
 const std::vector<Bullet>& BulletManager::GetBullets() const {return bullets;}
@@ -40,12 +44,10 @@ void BulletManager::Shoot() {
 }
 
 void BulletManager::Update(float time) {
-	//player.Move(time, actors);
-
 	if (!shots.empty()) {
 		std::lock_guard lg(bmMutex);
 		while (!shots.empty()) {
-			Fire(shots.front(), 20); //player radius 
+			Fire(shots.front(), player->GetRadius());
 			shots.pop();
 		}
 	}
@@ -71,6 +73,7 @@ void BulletManager::Update(float time) {
 			}
 		}
 		if (saucerSpawned && !saucer->isAlive()) {
+			score += saucer->isBig() ? 150 : 300;
 			saucerSpawned = false;
 			explosions.push(saucer->GetPos());
 		}
@@ -80,8 +83,8 @@ void BulletManager::Update(float time) {
 					actors.end());
 	}
 
-	GenerateAsteroid(time);
-	SpawnSaucer(time);
+	GenerateAsteroid(time, 3);
+	if(player->isAlive()) SpawnSaucer(time);
 	
 	for (auto iter : actors) {
 		iter->Move(time, actors);
@@ -102,10 +105,10 @@ void BulletManager::Fire(Shot sho, float pushDist) {
 	}
 }
 
-void BulletManager::GenerateAsteroid(float deltaTime){
+void BulletManager::GenerateAsteroid(float deltaTime, float waitTime){
 	static sf::Vector2f pos;
 	static sf::Vector2f dir;
-	static Delay del(3.f);
+	static Delay del(waitTime);
 	if (actors.size() < 2) {
 		if (del.Wait(deltaTime)) {
 			for (int i = 0; i < 10; ++i) {
@@ -136,11 +139,10 @@ void BulletManager::SpawnSaucer(float deltaTime){
 }
 
 void BulletManager::CrackAsteroid(const sf::Vector2f& pos, int stage) {
-	int num = 4 / stage;
 	static sf::Vector2f dir;
-	for (int i = 0; i < num; ++i) {
-		dir.x = dDistr(gen) / 10.f * stage;
-		dir.y = dDistr(gen) / 10.f * stage;
+	for (int i = 0; i < 2; ++i) {
+		dir.x = dDistr(gen) / 10.f / stage;
+		dir.y = dDistr(gen) / 10.f / stage;
 		actors.push_back(new Asteroid(pos+dir*10.f, dir, stage)); //small offset 
 	}
 }

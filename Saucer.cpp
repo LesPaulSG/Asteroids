@@ -37,6 +37,10 @@ void Saucer::Destroy(){
 	Actor::Destroy();
 }
 
+bool Saucer::isBig(){
+	return big;
+}
+
 Shot Saucer::GetShoot(sf::Vector2f playerPos){
 	if (big) {
 		return Shot(pos, shootAngle(gen));

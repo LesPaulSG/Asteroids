@@ -76,6 +76,8 @@ void LoopSound(Sound ss);
 
 void EndSoundLoop(Sound ss);
 
+sf::Font& GetFont();
+
 bool isPointInRange(float x, float a, float b);
 
 float VectorsModule(const sf::Vector2f& vec);
