@@ -10,57 +10,30 @@ sf::Font font;
 void LoadSounds() {
 	font.loadFromFile("vector.ttf");
 
-	buffers.push_back(sf::SoundBuffer());
-	buffers.push_back(sf::SoundBuffer());
-	buffers.push_back(sf::SoundBuffer());
-	buffers.push_back(sf::SoundBuffer());
-	buffers.push_back(sf::SoundBuffer());
-	buffers.push_back(sf::SoundBuffer());
-	buffers.push_back(sf::SoundBuffer());
-	buffers.push_back(sf::SoundBuffer());
+	buffers.reserve(soundFileNames.size());
+	sounds.reserve(soundFileNames.size());
 
-	buffers[0].loadFromFile("sounds/fire.wav");
-	buffers[1].loadFromFile("sounds/thrust.wav");
-	buffers[2].loadFromFile("sounds/bangSmall.wav");
-	buffers[3].loadFromFile("sounds/bangMedium.wav");
-	buffers[4].loadFromFile("sounds/bangLarge.wav");
-	buffers[5].loadFromFile("sounds/saucerSmall.wav");
-	buffers[6].loadFromFile("sounds/saucerBig.wav");
-	buffers[7].loadFromFile("sounds/extraShip.wav");	
-
-	sounds.push_back(sf::Sound());
-	sounds.push_back(sf::Sound());
-	sounds.push_back(sf::Sound());
-	sounds.push_back(sf::Sound());
-	sounds.push_back(sf::Sound());
-	sounds.push_back(sf::Sound());
-	sounds.push_back(sf::Sound());
-	sounds.push_back(sf::Sound());
-
-	sounds[0].setBuffer(buffers[0]);
-	sounds[1].setBuffer(buffers[1]);
-	sounds[2].setBuffer(buffers[2]);
-	sounds[3].setBuffer(buffers[3]);
-	sounds[4].setBuffer(buffers[4]);
-	sounds[5].setBuffer(buffers[5]);
-	sounds[6].setBuffer(buffers[6]);
-	sounds[7].setBuffer(buffers[7]);
+	for (auto& name : soundFileNames) {
+		buffers.push_back(sf::SoundBuffer());
+		buffers.back().loadFromFile("sounds/" + name + ".wav");
+		sounds.push_back(sf::Sound(buffers.back()));
+	}
 }
 
-void PlaySound(Sound ss) {
-	sounds[(int)ss].play();
+void PlaySound(Sound s) {
+	sounds[(int)s].play();
 }
 
-void LoopSound(Sound ss) {
-	sounds[(int)ss].setLoop(true);
-	PlaySound(ss);
+void LoopSound(Sound s) {
+	sounds[(int)s].setLoop(true);
+	PlaySound(s);
 }
 
-void EndSoundLoop(Sound ss){
-	sounds[(int)ss].stop();
+void EndSoundLoop(Sound s){
+	sounds[(int)s].stop();
 }
 
-sf::Font& GetFont() {
+const sf::Font& GetFont() {
 	return font;
 }
 
@@ -110,15 +83,4 @@ bool PassScreenBorder(sf::Vector2f& vec) {
 		passed = true;
 	}
 	return passed;
-}
-
-bool Delay(float deltaTime, const float waitTime){
-	static float timePassed = 0.f;
-	timePassed += deltaTime;
-	if (timePassed > waitTime) {
-		
-		timePassed = 0.f;
-		return true;
-	}
-	return false;
 }

@@ -1,10 +1,9 @@
 #include "Line.h"
 
-Line::Line(sf::Vector2f A, sf::Vector2f B) {
-	//pointA = (A.y >= B.y) ? A : B;
-	//pointB = (A.y >= B.y) ? B : A;
-	pointA = A;
-	pointB = B;
+Line::Line(sf::Vector2f A, sf::Vector2f B) :
+		pointA(A),
+		pointB(B)
+{
 	midX = pointB.x - pointA.x;
 	midY = pointB.y - pointA.y;
 	midX = (midX == 0.f) ? 0.0001f : midX;	//if midX or midY == 0 collision detection don't works
@@ -21,7 +20,8 @@ void Line::CalculateRotation() {
 	rotation = acos(midPoint.y / VectorsModule(midPoint));
 }
 
-bool Line::Intersection(const Line& B, sf::Vector2f& iPoint) const {
+//may need refactor
+bool Line::Intersection(const Line& B) const {
 	double kA = midY / midX;
 	double kB = B.midY / B.midX;
 	if (kA == kB) {
@@ -42,7 +42,6 @@ bool Line::Intersection(const Line& B, sf::Vector2f& iPoint) const {
 	double yInter = kA * xInter + bA;
 	sf::Vector2f result(xInter, yInter);
 	if (HasPoint(result) && B.HasPoint(result)) {
-		iPoint = result;
 		return true;
 	}
 	return false;

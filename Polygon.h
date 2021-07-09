@@ -13,11 +13,10 @@ public:
 	void Draw(sf::RenderWindow& w) const;
 	void Move(sf::Vector2f dest);
 	void Rotate(float angle);
-	bool isCollision(Line line);
+	bool isCollision(const Line& line) const;
 	void Explode();
 
-	std::vector<Wall>& getEdges();
-	float GetRot();
-	float GetRadius();
+	float GetRot() const;
+	float GetRadius() const;
 };
 

@@ -7,6 +7,7 @@ private:
 	bool big;
 public:
 	Saucer(sf::Vector2f p, bool b);
+	~Saucer() override;
 	void Move(float time, std::vector<Actor*>& asteroids) override;
 	bool CanShoot();
 	void Destroy() override;

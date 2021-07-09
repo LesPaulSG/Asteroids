@@ -23,14 +23,14 @@ public:
 	bool CanMove();
 
 	void Move(float time, std::vector<Actor*>& asteroids) override;
-	bool Collision(std::vector<Actor*>& actors) override;
+	bool Collision(const std::vector<Actor*>& actors) override;
 	void Rotate(RotateDir nDir);
 	void SetRotation(float angle);
 	void Thrust(bool on);
 	void HyperJump();
 	void BonusLife();
 	void Refresh();
-	void Draw(sf::RenderWindow& w) override;
+	void Draw(sf::RenderWindow& w) const override;
 	void Destroy() override;
 };
 

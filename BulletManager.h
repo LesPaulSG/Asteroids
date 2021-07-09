@@ -20,6 +20,7 @@ private:
 
 	int score = 0;
 	bool saucerSpawned;
+	bool gameRunning;
 
 	Saucer* saucer;
 
@@ -27,11 +28,9 @@ public:
 	BulletManager();
 	~BulletManager() = default;
 
-	const std::vector<Bullet>& GetBullets() const;
-	std::mutex& GetBmMutex();
-	Player& GetPlayer();
-	int GetScore();
-	int GetPlayerLives();
+	Player& GetPlayer() const;
+	int GetScore() const;
+	int GetPlayerLives() const;
 
 	void StartGame();
 	void Shoot();
@@ -40,9 +39,10 @@ public:
 	void GenerateAsteroid(float deltaTime, float waitTime);
 	void SpawnSaucer(float deltaTime);
 	void CrackAsteroid(const sf::Vector2f& pos, int stage);
-	void Draw(sf::RenderWindow& w);
+	void Draw(sf::RenderWindow& w) const;
 	void UpdateScore(int stage);
+	void Clear();
 
 	bool isExplosions();
-	sf::Vector2f PopExplosion();
+	const sf::Vector2f& PopExplosion();
 };

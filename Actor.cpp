@@ -1,15 +1,13 @@
 #include "Actor.h"
 
-Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs)
-	: pos(pos_),
-	dir(dir_),
-	speed(50.f),
-	alive(true),
-	body() {
-	if (pairs.size() > 1) {
-		body = Polygon(pos, pairs);
-		radius = GetRadius();
-	}
+Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs) :
+		pos(pos_),
+		dir(dir_),
+		speed(50.f),
+		alive(true),
+		body(pos, pairs)
+{
+
 }
 
 void Actor::Move(float time, std::vector<Actor*>& asteroids) {
@@ -18,13 +16,13 @@ void Actor::Move(float time, std::vector<Actor*>& asteroids) {
 	body.Move(pos);
 }
 
-bool Actor::Collision(std::vector<Actor*>& asteroids) {
+bool Actor::Collision(const std::vector<Actor*>& asteroids) {
 	static float radSum = 0, dist = 0;
 	for (auto iter : asteroids) {
-		if (iter != this) {
-			radSum = radius + iter->GetRadius();
-			dist = Line::Distance(pos, iter->GetPos());
-			if (radSum >= dist) {
+		if (iter != this) {			//check for dont collide with seld
+			radSum = GetBodyRadius() + iter->GetBodyRadius();			//sum of radius
+			dist   = Line::Distance(pos, iter->GetPos());	//distance between actors
+			if (radSum >= dist) {							//kind of "bounding sphere" collision detection
 				return true;
 			}
 		}
@@ -32,11 +30,7 @@ bool Actor::Collision(std::vector<Actor*>& asteroids) {
 	return false;
 }
 
-void Actor::SetDirection(sf::Vector2f newDir){
-	dir = newDir;
-}
-
-void Actor::Draw(sf::RenderWindow& w) {
+void Actor::Draw(sf::RenderWindow& w) const {
 	body.Draw(w);
 }
 
@@ -44,18 +38,12 @@ void Actor::Destroy(){
 	alive = false;
 }
 
-const sf::Vector2f& Actor::GetPos() const {
-	return pos;
-}
+const sf::Vector2f& Actor::GetPos() const {return pos;}
 
-float Actor::GetRadius() const {
-	return radius;
-}
+float Actor::GetBodyRadius() const {return body.GetRadius();}
 
-bool Actor::isAlive(){
-	return alive;
-}
+bool Actor::isAlive() const {return alive;}
 
-bool Actor::DeepCollision(Line line) {
+bool Actor::DeepCollision(Line line) const {
 	return body.isCollision(line);
 }

@@ -1,21 +1,17 @@
 #include "Player.h"
 
-std::uniform_int_distribution<int> x(50, WIDTH  - 50);
-std::uniform_int_distribution<int> y(50, HEIGHT - 50);
-
 Player::Player(sf::Vector2f pos, float cRotation) :
-	Actor(pos, sf::Vector2f(0.f, 0.f), STARSHIP_PATTERN),
-	rotation(0.f),
-	rotSpeed(5.f),
-	force(0.f),
-	lives(3),
-	canMove(true),
-	thrustOn(false),
-	flame(pos, FLAME_PATTERN)
+		Actor(pos, sf::Vector2f(0.f, 0.f), STARSHIP_PATTERN),
+		rotation(0.f),
+		rotSpeed(5.f),
+		force(0.f),
+		lives(3),
+		canMove(true),
+		thrustOn(false),
+		flame(pos, FLAME_PATTERN)
 {
-	radius = body.GetRadius();
+	std::cout << "player constructed\n";
 	speed = 100.f;
-	dir = sf::Vector2f(0.f, -1.f);
 	SetRotation(cRotation);
 }
 
@@ -32,8 +28,8 @@ void Player::Thrust(bool on){
 }
 
 void Player::HyperJump(){
-	pos.x = x(gen);
-	pos.y = y(gen);
+	pos.x = RAND_X(gen);
+	pos.y = RAND_Y(gen);
 	force = 0.f;
 }
 
@@ -61,17 +57,23 @@ void Player::Move(float time, std::vector<Actor*>& actors) {
 		old = 0.f;
 	}
 	else {
+		if (lives <= 0) {
+			static Delay death(1.4f);
+			if (death.Wait(time)) {
+				alive = false;
+			}
+		}
 		body.Explode();
 		body.Move(pos);
 	}
 }
 
-bool Player::Collision(std::vector<Actor*>& actors){
+bool Player::Collision(const std::vector<Actor*>& actors){
 	if (!canMove) return false;
 	static float radSum = 0, dist = 0;
 	for (auto iter : actors) {
 		if (iter != this) {
-			radSum = radius + iter->GetRadius();
+			radSum = GetBodyRadius() + iter->GetBodyRadius();
 			dist = Line::Distance(pos, iter->GetPos());
 			if (radSum >= dist) {
 				iter->Destroy();
@@ -95,7 +97,7 @@ void Player::SetRotation(float angle){
 }
 
 void Player::BonusLife(){
-	if (lives < 3) {
+	if (lives < 5) {
 		++lives;
 		PlaySound(Sound::EXTRA);
 	}
@@ -111,7 +113,7 @@ void Player::Refresh(){
 	rotation = 0.f;
 	force = 0.f;
 }
-void Player::Draw(sf::RenderWindow& w){
+void Player::Draw(sf::RenderWindow& w) const {
 	static bool flameDrawed = false;
 	Actor::Draw(w);
 	if (canMove) {
@@ -121,7 +123,8 @@ void Player::Draw(sf::RenderWindow& w){
 }
 
 void Player::Destroy(){
-	if (--lives < 1) alive = false;
+	--lives;
+	EndSoundLoop(Sound::THRUST);
 	canMove = false;
 }
 

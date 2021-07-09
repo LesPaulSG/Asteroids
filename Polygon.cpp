@@ -4,11 +4,11 @@ Polygon::Polygon()
 	: pos(sf::Vector2f(0, 0)) {
 }
 
-Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs)
-	: pos(pos_),
-	rotation(0) {
-	int pointsNum = pairs.size();
-	edges.reserve(pointsNum);
+Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs) :
+		pos(pos_),
+		rotation(0)
+{
+	edges.reserve(pairs.size());
 
 	for (auto pair : pairs) {
 		radius = std::max(radius, std::abs(pair.f.x));
@@ -19,7 +19,7 @@ Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs)
 	}
 
 	for (auto& edge : edges) {
-		edge.SetPos(pos);
+		edge.Move(pos);
 	}
 }
 
@@ -43,10 +43,9 @@ void Polygon::Rotate(float angle){
 	}
 }
 
-bool Polygon::isCollision(Line line){
-	sf::Vector2f iPoint(0, 0);
+bool Polygon::isCollision(const Line& line) const{
 	for (auto& iter : edges) {
-		if (line.Intersection(iter.GetLine(), iPoint))
+		if (line.Intersection(iter.GetLine()))
 			return true;
 	}
 	return false;
@@ -58,14 +57,10 @@ void Polygon::Explode(){
 	}
 }
 
-std::vector<Wall>& Polygon::getEdges() {
-	return edges;
-}
-
-float Polygon::GetRot(){
+float Polygon::GetRot() const {
 	return rotation;
 }
 
-float Polygon::GetRadius(){
+float Polygon::GetRadius() const {
 	return radius;
 }

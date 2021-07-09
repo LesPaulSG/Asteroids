@@ -1,25 +1,28 @@
 #include "Saucer.h"
 
-std::uniform_real_distribution<float> shootAngle(0.f, 6.28319f);
-std::uniform_real_distribution<float> dispersion(-0.05f, 0.05f);
-
-Saucer::Saucer(sf::Vector2f p, bool b): 
-	big(b),
-	Actor(p, sf::Vector2f(0.f, 0.f), b ? BIG_SAUCER_PATTERN : SMALL_SAUCER_PATTERN),
-	cooldown(0.f) {
-	sf::Vector2f newDir = (pos.x > WIDTH / 2) ? sf::Vector2f(-1.f, 0.f) :
-												sf::Vector2f( 1.f, 0.f);
-	SetDirection(newDir);
-	radius = 30;
+Saucer::Saucer(sf::Vector2f p, bool b) : 
+		Actor(p, sf::Vector2f(0.f, 0.f), b ? BIG_SAUCER_PATTERN : SMALL_SAUCER_PATTERN),
+		big(b),
+		cooldown(0.f)
+{
+	dir = (pos.x > WIDTH / 2) ? sf::Vector2f(-1.f, 0.f) :
+								sf::Vector2f(1.f, 0.f);
 	LoopSound(big ? Sound::SOUC_B : Sound::SOUC_S);
 }
 
+Saucer::~Saucer(){
+	EndSoundLoop(big ? Sound::SOUC_B : Sound::SOUC_S);
+}
+
 void Saucer::Move(float time, std::vector<Actor*>& actors){
-	float yDist = std::abs(actors.at(0)->GetPos().y - pos.y);
-	if (yDist > HEIGHT / 10) {
-		if (actors.at(0)->GetPos().y > pos.y) dir.y = 1.f;
-		else dir.y = -1.f;
-	} else dir.y = 0.f;
+	if (!actors.empty()) {
+		float yDist = std::abs(actors.at(0)->GetPos().y - pos.y);
+		if (yDist > HEIGHT / 10) {
+			if (actors.at(0)->GetPos().y > pos.y) dir.y = 1.f;
+			else dir.y = -1.f;
+		}
+		else dir.y = 0.f;
+	}
 	Actor::Move(time, actors);
 	cooldown += time;
 }
@@ -43,9 +46,9 @@ bool Saucer::isBig(){
 
 Shot Saucer::GetShoot(sf::Vector2f playerPos){
 	if (big) {
-		return Shot(pos, shootAngle(gen));
+		return Shot(pos, RAND_ANGLE_360(gen));
 	}
-	float angle = Line::Rotation(playerPos, pos) + dispersion(gen);
+	float angle = Line::Rotation(playerPos, pos) + RAND_DISPERSION(gen);
 	if (playerPos.x < pos.x) angle *= -1.f;
 	return Shot(pos, angle);
 }

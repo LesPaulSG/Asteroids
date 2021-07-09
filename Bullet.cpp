@@ -3,12 +3,13 @@
 
 #include <iostream>
 
-Bullet::Bullet(Shot sho)
-	: pos(sho.from),
-	speed(600.f),
-	time(0.f),
-	lifeTime(1.f),
-	alive(true) {
+Bullet::Bullet(Shot sho) :
+		pos(sho.from),
+		speed(600.f),
+		time(0.f),
+		lifeTime(1.f),
+		alive(true)
+{
 	RotateUnitVector(this->dir, sho.angle);
 	body.setPosition(pos);
 	body.setRadius(1);
@@ -24,7 +25,7 @@ void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& old
 	Line offset(oldPos, pos);
 	for (auto& iter : actors){
 		dist = Line::Distance(pos, iter->GetPos());
-		if (dist <= iter->GetRadius()) {
+		if (dist <= iter->GetBodyRadius()) {
 			if (iter->DeepCollision(offset)) {
 				iter->Destroy();
 				alive = false;

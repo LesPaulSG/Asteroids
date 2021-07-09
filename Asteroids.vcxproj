@@ -150,6 +150,7 @@
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="IO_Thread.h" />
@@ -158,12 +159,6 @@
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Saucer.h" />
     <ClInclude Include="Wall.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="OpenSans-Bold.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Walls.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
