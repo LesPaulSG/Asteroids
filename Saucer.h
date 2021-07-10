@@ -10,7 +10,7 @@ public:
 	~Saucer() override;
 	void Move(float time, std::vector<Actor*>& asteroids) override;
 	bool CanShoot();
-	void Destroy() override;
+	void Destroy(bool playerDestroy = false) override;
 	bool isBig();
 	Shot GetShoot(sf::Vector2f playerPos);
 };

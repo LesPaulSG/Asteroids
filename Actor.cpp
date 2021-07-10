@@ -5,6 +5,7 @@ Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>
 		dir(dir_),
 		speed(50.f),
 		alive(true),
+		playerKiiled(false),
 		body(pos, pairs)
 {
 
@@ -34,8 +35,9 @@ void Actor::Draw(sf::RenderWindow& w) const {
 	body.Draw(w);
 }
 
-void Actor::Destroy(){
+void Actor::Destroy(bool playerDestroy){
 	alive = false;
+	playerKiiled = playerDestroy;
 }
 
 const sf::Vector2f& Actor::GetPos() const {return pos;}
@@ -43,6 +45,8 @@ const sf::Vector2f& Actor::GetPos() const {return pos;}
 float Actor::GetBodyRadius() const {return body.GetRadius();}
 
 bool Actor::isAlive() const {return alive;}
+
+bool Actor::isPlayerDestoyed() const {return playerKiiled;}
 
 bool Actor::DeepCollision(Line line) const {
 	return body.isCollision(line);

@@ -8,7 +8,7 @@ protected:
 	float speed;
 	Polygon body;
 	bool alive;
-	
+	bool playerKiiled;
 public:
 	Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs);
 	virtual ~Actor() = default;
@@ -16,11 +16,12 @@ public:
 	virtual void Move(float time, std::vector<Actor*>& asteroids);
 	virtual bool Collision(const std::vector<Actor*>& asteroids);
 	virtual void Draw(sf::RenderWindow& w) const;
-	virtual void Destroy();
+	virtual void Destroy(bool playerDestroy = false);
 
 	const sf::Vector2f& GetPos() const;
 	float GetBodyRadius() const;
 	virtual bool isAlive() const;
+	bool isPlayerDestoyed() const;
 
 	bool DeepCollision(Line line) const;
 };

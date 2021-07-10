@@ -35,9 +35,9 @@ bool Saucer::CanShoot(){
 	return false;
 }
 
-void Saucer::Destroy(){
+void Saucer::Destroy(bool playerDestroy){
 	EndSoundLoop(big ? Sound::SOUC_B : Sound::SOUC_S);
-	Actor::Destroy();
+	Actor::Destroy(playerDestroy);
 }
 
 bool Saucer::isBig(){

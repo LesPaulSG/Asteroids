@@ -3,7 +3,7 @@
 #include "BulletManager.h"
 
 BulletManager::BulletManager() :
-		player(nullptr),
+		player(new Player(PLAYER_DEFAULT_POS, 1.57)),
 		saucerSpawned(false),
 		gameRunning(false)
 {
@@ -22,8 +22,9 @@ void BulletManager::StartGame(){
 	gameRunning = true;
 	std::lock_guard lg(bmMutex);
 	actors.clear();
-	player = std::move(new Player(PLAYER_DEFAULT_POS, 1.57));
-	player->Refresh(); //kostyl
+	//player = std::move(new Player(PLAYER_DEFAULT_POS, 1.57));
+	//player->Refresh(); //kostyl
+	player->Reset();
 	actors.push_back(player);
 	score = 0;
 	saucerSpawned = false;
@@ -38,34 +39,32 @@ void BulletManager::Update(float time) {
 	if (!shots.empty()) {
 		std::lock_guard lg(bmMutex);
 		while (!shots.empty()) {
-			Fire(shots.front(), player->GetBodyRadius());
+			Fire(shots.front(), player->GetBodyRadius(), true);
 			shots.pop();
 		}
 	}
-	{
-		std::lock_guard lg(bmMutex);
-
-		for (auto iter : actors) {
-			if (dynamic_cast<Asteroid*>(iter)) {
-				if (!iter->isAlive()) {
-					int stage = dynamic_cast<Asteroid*>(iter)->GetStage();
-					explosions.push(iter->GetPos());
-					UpdateScore(stage);
-					PlaySound(Sound(1 + stage));
-					if (dynamic_cast<Asteroid*>(iter)->GetStage() > 1) {
-						CrackAsteroid(iter->GetPos(), --stage);
-					}
-
+	
+	for (auto iter : actors) {
+		if (dynamic_cast<Asteroid*>(iter)) {
+			if (!iter->isAlive()) {
+				int stage = dynamic_cast<Asteroid*>(iter)->GetStage();
+				explosions.push(iter->GetPos());
+				PlaySound(Sound(1 + stage));
+				if (stage > 1) {
+					CrackAsteroid(iter->GetPos(), --stage);
 				}
+				if(iter->isPlayerDestoyed()) UpdateScore(stage); 
 			}
 		}
-		if (saucerSpawned && !saucer->isAlive()) {
-			UpdateScore(saucer->isBig() ? 2 : 1);
-			saucerSpawned = false;
-			explosions.push(saucer->GetPos());
-		}
-
-		bullets.erase(std::remove_if(bullets.begin(),
+	}
+	if (saucerSpawned && !saucer->isAlive()) {
+		saucerSpawned = false;
+		explosions.push(saucer->GetPos());
+		if(saucer->isPlayerDestoyed()) UpdateScore(saucer->isBig() ? 2 : 1);
+	}
+	{
+		std::lock_guard lg(bmMutex);
+		bullets.erase(std::remove_if(bullets.begin(), 
 									bullets.end(),
 									[](Bullet b) {return !b.isAlive(); }),
 					bullets.end());
@@ -89,9 +88,9 @@ void BulletManager::Update(float time) {
 	}
 }
 
-void BulletManager::Fire(Shot sho, float pushDist) {
+void BulletManager::Fire(Shot sho, float pushDist, bool playerShoot) {
 	if (bullets.size() < BULLETS_MAX_CAPACITY) {
-		bullets.push_back(Bullet(sho));
+		bullets.push_back(Bullet(sho, playerShoot));
 		bullets.back().PushForward(pushDist);
 		PlaySound(Sound::FIRE);
 	}

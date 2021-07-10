@@ -5,10 +5,15 @@
 std::vector<sf::SoundBuffer> buffers;
 std::vector<sf::Sound> sounds;
 
+sf::Music oddity;
+
 sf::Font font;
 
 void LoadSounds() {
 	font.loadFromFile("vector.ttf");
+	oddity.openFromFile("sounds/SpaceOddity320.wav");
+	oddity.setLoop(true);
+	oddity.play();
 
 	buffers.reserve(soundFileNames.size());
 	sounds.reserve(soundFileNames.size());

@@ -35,7 +35,7 @@ public:
 	void StartGame();
 	void Shoot();
 	void Update(float time);
-	void Fire(Shot sho, float pushDist);
+	void Fire(Shot sho, float pushDist, bool playerShoot = false);
 	void GenerateAsteroid(float deltaTime, float waitTime);
 	void SpawnSaucer(float deltaTime);
 	void CrackAsteroid(const sf::Vector2f& pos, int stage);

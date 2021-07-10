@@ -1,8 +1,11 @@
 #include <fstream>
 
 #include "IO_Thread.h"
+#include <Windows.h>
 
 int main(){
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, SW_SHOW);
 	LoadSounds();
 
 	BulletManager bulletManager;
@@ -12,8 +15,7 @@ int main(){
 
 	IoManager ioManager(bulletManager, gameOver);
 
-	//std::thread IOThread(input, std::ref(bulletManager), std::ref(time), std::ref(gameOver));		//input output thread
-	std::thread IoThread(&IoManager::Update, ioManager);
+	std::thread IoThread(&IoManager::Update, ioManager);		//input output thread
 	IoThread.detach();
 
 	//std::this_thread::sleep_for(std::chrono::seconds(3));
@@ -25,7 +27,6 @@ int main(){
 		time  = std::chrono::high_resolution_clock::now() - clock;
 		clock = std::chrono::high_resolution_clock::now();
 	}
-	std::cout << 'jui\n';
 
 	return 0;
 }

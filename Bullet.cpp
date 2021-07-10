@@ -3,12 +3,13 @@
 
 #include <iostream>
 
-Bullet::Bullet(Shot sho) :
+Bullet::Bullet(Shot sho, bool playerShooted) :
 		pos(sho.from),
 		speed(600.f),
 		time(0.f),
 		lifeTime(1.f),
-		alive(true)
+		alive(true),
+		playerOwned(playerShooted)
 {
 	RotateUnitVector(this->dir, sho.angle);
 	body.setPosition(pos);
@@ -20,6 +21,8 @@ const sf::CircleShape& Bullet::GetBody() const {return body;}
 
 bool Bullet::isAlive() const {return alive;}
 
+bool Bullet::isPlayerOwned() const {return playerOwned;}
+
 void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos) {
 	static float dist = 0;
 	Line offset(oldPos, pos);
@@ -27,7 +30,7 @@ void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& old
 		dist = Line::Distance(pos, iter->GetPos());
 		if (dist <= iter->GetBodyRadius()) {
 			if (iter->DeepCollision(offset)) {
-				iter->Destroy();
+				iter->Destroy(playerOwned);
 				alive = false;
 				return;
 			}

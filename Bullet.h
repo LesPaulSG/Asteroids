@@ -9,13 +9,15 @@ private:
 	float time;
 	float lifeTime;
 	bool alive;
+	bool playerOwned;
 	sf::CircleShape body;
 
 public:
 	const sf::CircleShape& GetBody() const;
 	bool isAlive() const;
+	bool isPlayerOwned() const;
 
-	Bullet(Shot sho);
+	Bullet(Shot sho, bool playerShooted = false);
 	~Bullet() = default;
 
 	void CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos);

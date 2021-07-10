@@ -113,6 +113,22 @@ void Player::Refresh(){
 	rotation = 0.f;
 	force = 0.f;
 }
+
+void Player::Reset(){
+	body = Polygon(PLAYER_DEFAULT_POS, STARSHIP_PATTERN);
+	pos = PLAYER_DEFAULT_POS;
+	SetRotation(0.f);
+	dir = sf::Vector2f(0.f, 0.f);
+	rotation = 0.f;
+	force = 0.f;
+	lives = 3;
+	alive = true;
+	canMove = true;
+	thrustOn = false;
+	Refresh(); 
+		//flame(pos, FLAME_PATTERN)
+}
+
 void Player::Draw(sf::RenderWindow& w) const {
 	static bool flameDrawed = false;
 	Actor::Draw(w);
@@ -122,10 +138,10 @@ void Player::Draw(sf::RenderWindow& w) const {
 	}
 }
 
-void Player::Destroy(){
-	--lives;
+void Player::Destroy(bool playerDestroy){
+	//--lives;
 	EndSoundLoop(Sound::THRUST);
-	canMove = false;
+	//canMove = false;
 }
 
 float Player::GetRotation() const{

@@ -30,7 +30,8 @@ public:
 	void HyperJump();
 	void BonusLife();
 	void Refresh();
+	void Reset();
 	void Draw(sf::RenderWindow& w) const override;
-	void Destroy() override;
+	void Destroy(bool playerDestroy = false) override;
 };
 

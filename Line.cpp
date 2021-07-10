@@ -6,8 +6,8 @@ Line::Line(sf::Vector2f A, sf::Vector2f B) :
 {
 	midX = pointB.x - pointA.x;
 	midY = pointB.y - pointA.y;
-	midX = (midX == 0.f) ? 0.0001f : midX;	//if midX or midY == 0 collision detection don't works
-	midY = (midY == 0.f) ? 0.0001f : midY;	//
+	//midX = (midX == 0.f) ? 1.f : midX;	//if midX or midY == 0 collision detection don't works
+	//midY = (midY == 0.f) ? 1.f : midY;	//
 	midPoint.x = midX;
 	midPoint.y = midY;
 	lenght = sqrt(pow(midX, 2) + pow(midY, 2));
@@ -18,9 +18,11 @@ Line::~Line() {}
 
 void Line::CalculateRotation() {
 	rotation = acos(midPoint.y / VectorsModule(midPoint));
+	if (midPoint.y == 0.f || midPoint.x == 0.f) std::cout << midPoint.y << ' ' << midPoint.y << ' ' << rotation << std::endl;
 }
 
 //may need refactor
+//intersection dont detecting if midX or midY == 0, need to fix
 bool Line::Intersection(const Line& B) const {
 	double kA = midY / midX;
 	double kB = B.midY / B.midX;

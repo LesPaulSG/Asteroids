@@ -12,7 +12,7 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 		currentState(GameState::START),
 		score("0", GetFont()),
 		activeText(S_PRESS_ANY_KEY, GetFont()),
-		initials("___", GetFont(), 60),
+		initials("a__", GetFont(), 60),
 		playerDead(false)
 {
 	score.setOutlineColor(sf::Color::White);
@@ -31,7 +31,7 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 	initials.setFillColor(sf::Color::White);
 	initials.setLetterSpacing(5.f);
 
-	//leaders.reserve(10);
+	leaders.reserve(10);
 	lives.reserve(5);
 	VFX.reserve(45);
 	for (int i = 0; i < 5; ++i) {
@@ -92,13 +92,10 @@ void IoManager::Start() {
 
 void IoManager::Game(){
 	if (!bm.GetPlayer().isAlive()) {
-		static Delay del(1.5f);
-		if (del.Wait(deltaTime.count())) {
-			bm.Clear();
-			ChangeOnOver();
-			LoadLeaderBoard();
-			return;
-		}
+		bm.Clear();
+		ChangeOnOver();
+		LoadLeaderBoard();
+		return;
 	}
 
 	if (bm.isExplosions()) {
@@ -143,7 +140,8 @@ void IoManager::GameOver() {
 				return;
 			}
 		}
-		currentState = LEADERBORD;
+		//LoadLeaderBoard(); 
+		ChangeOnLeaderboard();
 		return;
 	}
 	w->clear();
@@ -169,8 +167,8 @@ void IoManager::LeaderBoard(){
 void IoManager::ChangeOnStart(){
 	currentState = START;
 	leaders.clear();
-	initials.setString("___");
 	activeText.setString(S_PRESS_ANY_KEY);
+	activeText.setPosition(WIDTH / 2 - activeText.getGlobalBounds().width / 2, HEIGHT / 2 - activeText.getGlobalBounds().height / 2);
 }
 
 void IoManager::ChangeOnGame(){
@@ -182,6 +180,7 @@ void IoManager::ChangeOnGame(){
 void IoManager::ChangeOnOver(){
 	currentState = GAME_OVER;
 	activeText.setString(S_GAME_OVER);
+	activeText.setPosition(WIDTH / 2 - activeText.getGlobalBounds().width / 2, HEIGHT / 2 - activeText.getGlobalBounds().height / 2);
 }
 
 void IoManager::ChangeOnInitials(){
@@ -252,8 +251,9 @@ void IoManager::KeyboardPressCheck() {
 }
 
 void IoManager::KeyboardReleaseCheck() {
-	static std::string l_initials;
+	static std::string l_initials("___");
 	static char activeSymbol = 65;
+	static int activeSymPos = 0;
 	switch (currentState) {
 	case IN_GAME:
 		if (bm.GetPlayer().CanMove()) {
@@ -279,22 +279,30 @@ void IoManager::KeyboardReleaseCheck() {
 	case NEW_TOP_SCORE:
 		switch (evt.key.code) {
 		case sf::Keyboard::V:
-			l_initials += activeSymbol;
+			l_initials.at(activeSymPos) = activeSymbol;
+			++activeSymPos;
 			initials.setString(l_initials);
 			activeSymbol = 65;
 			break;
 		case sf::Keyboard::D:
-			if ((int)activeSymbol < 90) ++activeSymbol;
-			initials.setString(l_initials + activeSymbol);
+			if ((int)activeSymbol < 90) {
+				++activeSymbol;
+				l_initials.at(activeSymPos) = activeSymbol;
+				initials.setString(l_initials);
+			}
 			break;
 		case sf::Keyboard::A:			
-			if ((int)activeSymbol > 65) --activeSymbol;
-			initials.setString(l_initials + activeSymbol);
+			if ((int)activeSymbol > 65) {
+				--activeSymbol;
+				l_initials.at(activeSymPos) = activeSymbol;
+				initials.setString(l_initials);
+			}
 			break;
 		}
-		if (l_initials.size() >= 3) {
+		if (activeSymPos > 2) {
 			ChangeOnLeaderboard();
 			UpdateLeaderbord(l_initials);
+			activeSymPos = 0;
 			return;
 		}
 		break;
