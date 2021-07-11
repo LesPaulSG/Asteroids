@@ -14,7 +14,7 @@ public:
 	void Move(sf::Vector2f dest);
 	void Rotate(float angle);
 	bool isCollision(const Line& line) const;
-	void Explode();
+	void Explode(float deltaTime);
 
 	float GetRot() const;
 	float GetRadius() const;

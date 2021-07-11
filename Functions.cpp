@@ -10,8 +10,8 @@ sf::Music oddity;
 sf::Font font;
 
 void LoadSounds() {
-	font.loadFromFile("vector.ttf");
-	oddity.openFromFile("sounds/SpaceOddity320.wav");
+	font.loadFromFile("res/vector.ttf");
+	oddity.openFromFile("res/sounds/SpaceOddity320.wav");
 	oddity.setLoop(true);
 	oddity.play();
 
@@ -20,7 +20,7 @@ void LoadSounds() {
 
 	for (auto& name : soundFileNames) {
 		buffers.push_back(sf::SoundBuffer());
-		buffers.back().loadFromFile("sounds/" + name + ".wav");
+		buffers.back().loadFromFile("res/sounds/" + name + ".wav");
 		sounds.push_back(sf::Sound(buffers.back()));
 	}
 }
@@ -43,21 +43,26 @@ const sf::Font& GetFont() {
 }
 
 bool isPointInRange(float x, float a, float b) {
-	return (x >= std::min(a, b) && x <= std::max(a, b));
+	if (x == a) return true;
+	if (x == b) return true;
+	if (x >= std::min(a, b)) return true;
+	if (x <= std::max(a, b)) return true;
+	return false;
+	//return (x >= std::min(a, b) && x <= std::max(a, b));
 }
 
 float VectorsModule(const sf::Vector2f& vec){
 	return std::sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
-void RotateVector(sf::Vector2f& vec, float angle){
+/*void RotateVector(sf::Vector2f& vec, float angle){
 	float xNew = vec.x * cos(angle) - vec.y * sin(angle);
 	float yNew = vec.x * sin(angle) + vec.y * cos(angle);
 	vec.x = xNew;
 	vec.y = yNew;
-}
+}*/
 
-void RotateVectorAround(sf::Vector2f& vec, const sf::Vector2f& anchor, float angle) {
+void RotateVector(sf::Vector2f& vec, float angle, const sf::Vector2f& anchor) {
 	float xNew = (vec.x - anchor.x) * cos(angle) - (vec.y - anchor.y) * sin(angle) + anchor.x;
 	float yNew = (vec.x - anchor.x) * sin(angle) + (vec.y - anchor.y) * cos(angle) + anchor.y;
 	vec.x = xNew;

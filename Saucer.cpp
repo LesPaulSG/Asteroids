@@ -6,7 +6,7 @@ Saucer::Saucer(sf::Vector2f p, bool b) :
 		cooldown(0.f)
 {
 	dir = (pos.x > WIDTH / 2) ? sf::Vector2f(-1.f, 0.f) :
-								sf::Vector2f(1.f, 0.f);
+								sf::Vector2f( 1.f, 0.f);
 	LoopSound(big ? Sound::SOUC_B : Sound::SOUC_S);
 }
 
@@ -17,7 +17,7 @@ Saucer::~Saucer(){
 void Saucer::Move(float time, std::vector<Actor*>& actors){
 	if (!actors.empty()) {
 		float yDist = std::abs(actors.at(0)->GetPos().y - pos.y);
-		if (yDist > HEIGHT / 10) {
+		if (yDist > HEIGHT * 0.2f) {
 			if (actors.at(0)->GetPos().y > pos.y) dir.y = 1.f;
 			else dir.y = -1.f;
 		}

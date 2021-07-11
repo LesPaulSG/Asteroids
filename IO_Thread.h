@@ -17,7 +17,8 @@ private:
 	sf::Text activeText;
 	sf::Text initials;
 	
-	std::vector<Polygon> lives;
+	//std::vector<Polygon> lives;
+	Polygon extraLive;
 	std::vector<Explosion> VFX;
 	std::vector<std::pair<int, std::string>> leaders;
 	bool playerDead;
@@ -26,17 +27,22 @@ private:
 public:
 	IoManager(BulletManager& bm_, bool& gameOver_);
 	void Update();
+
 	void Start();
 	void Game();
 	void GameOver();
 	void NewTopScore();
 	void LeaderBoard();
+
 	void ChangeOnStart();
 	void ChangeOnGame();
 	void ChangeOnOver();
 	void ChangeOnInitials();
 	void ChangeOnLeaderboard();
+
 	void LoadLeaderBoard();
+	void SaveLeagerBoard();
+
 	void CheckEvent();
 	void KeyboardPressCheck();
 	void KeyboardReleaseCheck();

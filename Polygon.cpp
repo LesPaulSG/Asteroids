@@ -1,8 +1,6 @@
 #include "Polygon.h"
 
-Polygon::Polygon() 
-	: pos(sf::Vector2f(0, 0)) {
-}
+Polygon::Polygon() : pos(sf::Vector2f(0.f, 0.f)) {}
 
 Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs) :
 		pos(pos_),
@@ -38,8 +36,11 @@ void Polygon::Move(sf::Vector2f dest){
 }
 
 void Polygon::Rotate(float angle){
-	for (auto& edge : edges) {
-		edge.RotateAround(pos, angle);
+	if (angle != rotation) {
+		for (auto& edge : edges) {
+			edge.RotateAround(pos, rotation - angle);
+		}
+		rotation = angle;
 	}
 }
 
@@ -51,9 +52,9 @@ bool Polygon::isCollision(const Line& line) const{
 	return false;
 }
 
-void Polygon::Explode(){
+void Polygon::Explode(float deltaTime){
 	for (auto& edge : edges) {
-		edge.AddOffset();
+		edge.AddOffset(deltaTime);
 	}
 }
 

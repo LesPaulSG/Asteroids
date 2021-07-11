@@ -40,7 +40,7 @@ public:
 	void SpawnSaucer(float deltaTime);
 	void CrackAsteroid(const sf::Vector2f& pos, int stage);
 	void Draw(sf::RenderWindow& w) const;
-	void UpdateScore(int stage);
+	void UpdateScore(Values val);
 	void Clear();
 
 	bool isExplosions();

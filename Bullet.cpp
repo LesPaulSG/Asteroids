@@ -13,7 +13,7 @@ Bullet::Bullet(Shot sho, bool playerShooted) :
 {
 	RotateUnitVector(this->dir, sho.angle);
 	body.setPosition(pos);
-	body.setRadius(1);
+	body.setRadius(1.5f);
 	body.setFillColor(sf::Color::White);
 }
 

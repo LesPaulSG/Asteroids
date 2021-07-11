@@ -36,3 +36,11 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_) :
 }
 
 int Asteroid::GetStage() const {return stage;}
+
+Values Asteroid::GetCost() const {
+	switch (stage) {
+	case 1: return Values::ASTR_S;
+	case 2: return Values::ASTR_M;
+	case 3: return Values::ASTR_B;
+	}
+}

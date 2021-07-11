@@ -10,7 +10,7 @@ Explosion::Explosion(sf::Vector2f p) :
 	for (int i = 0; i < NUM_OF_SPARKS; ++i) {
 		sh.setFillColor(sf::Color::White);
 		sh.setPosition(p);
-		sh.setRadius(1);
+		sh.setRadius(1.5f);
 		sparks.push_back(sh);
 		ofs.x = RAND_DIR(gen);
 		ofs.y = RAND_DIR(gen);

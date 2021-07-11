@@ -1,14 +1,13 @@
 #pragma once
 #include "Functions.h"
 
-class Line {
-public:
+struct Line {
 	sf::Vector2f pointA;
 	sf::Vector2f pointB;
 	float midX;
 	float midY;
 	sf::Vector2f midPoint;
-	float lenght;				//check grammar
+	float lenght;
 	double rotation;
 
 	Line(sf::Vector2f A, sf::Vector2f B);
@@ -18,7 +17,6 @@ public:
 
 	bool isPointRight(const sf::Vector2f& point) const;
 	bool Intersection(const Line& B) const;
-	bool CircleIntersection(const sf::Vector2f& circle, float radius, sf::Vector2f& iPoint) const;
 	float AngleOfIntersec(const Line& B) const;
 	bool HasPoint(const sf::Vector2f& point) const;
 

@@ -41,8 +41,8 @@ bool isPointInRange(float x, float a, float b);
 
 float VectorsModule(const sf::Vector2f& vec);
 
-void RotateVector(sf::Vector2f& vec, float angle);
-void RotateVectorAround(sf::Vector2f& vec, const sf::Vector2f& anchor, float angle);
+//void RotateVector(sf::Vector2f& vec, float angle);
+void RotateVector(sf::Vector2f& vec, float angle, const sf::Vector2f& anchor = sf::Vector2f(0.f, 0.f));
 void RotateUnitVector(sf::Vector2f& vec, float angle);
 
 bool PassScreenBorder(sf::Vector2f& vec);

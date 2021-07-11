@@ -4,28 +4,24 @@ Line::Line(sf::Vector2f A, sf::Vector2f B) :
 		pointA(A),
 		pointB(B)
 {
-	midX = pointB.x - pointA.x;
-	midY = pointB.y - pointA.y;
-	//midX = (midX == 0.f) ? 1.f : midX;	//if midX or midY == 0 collision detection don't works
-	//midY = (midY == 0.f) ? 1.f : midY;	//
-	midPoint.x = midX;
-	midPoint.y = midY;
-	lenght = sqrt(pow(midX, 2) + pow(midY, 2));
 	CalculateRotation();
+	lenght = sqrt(pow(midX, 2) + pow(midY, 2));
 }
 
 Line::~Line() {}
 
+//rework
 void Line::CalculateRotation() {
+	midX = pointB.x - pointA.x;
+	midY = pointB.y - pointA.y;
+	midPoint.x = midX;
+	midPoint.y = midY;
 	rotation = acos(midPoint.y / VectorsModule(midPoint));
-	if (midPoint.y == 0.f || midPoint.x == 0.f) std::cout << midPoint.y << ' ' << midPoint.y << ' ' << rotation << std::endl;
 }
 
-//may need refactor
-//intersection dont detecting if midX or midY == 0, need to fix
 bool Line::Intersection(const Line& B) const {
-	double kA = midY / midX;
-	double kB = B.midY / B.midX;
+	double kA = (midX == 0 || midY == 0) ? 0 :midY / midX;
+	double kB = (B.midX == 0 || B.midY == 0) ? 0 :B.midY / B.midX;
 	if (kA == kB) {
 		return false;
 	}
@@ -44,32 +40,6 @@ bool Line::Intersection(const Line& B) const {
 	double yInter = kA * xInter + bA;
 	sf::Vector2f result(xInter, yInter);
 	if (HasPoint(result) && B.HasPoint(result)) {
-		return true;
-	}
-	return false;
-}
-
-bool Line::CircleIntersection(const sf::Vector2f& circle, float radius, sf::Vector2f& iPoint) const {
-	double k = midY / midX;
-	double b = pointA.y - k * pointA.x;
-	//a = (1 + M ^ 2)
-	double A = (1 + pow(k, 2));
-	//á = 2 * (M Á - Ì C.y - C.x)
-	double B = 2 * (k * b - k * circle.y - circle.x);
-	//c = (C.x ^ 2 + C.y ^ 2 + B ^ 2 - r ^ 2 - 2B * C.y)
-	double C = (pow(circle.x, 2) + pow(circle.y, 2) + pow(b, 2) - pow(radius, 2) - 2 * (b * circle.y));
-	double xInter1 = (B * -1 + sqrt(pow(B, 2) - 4 * A * C)) / (2 * A);
-	double xInter2 = (B * -1 - sqrt(pow(B, 2) - 4 * A * C)) / (2 * A);
-	double yInter1 = k * xInter1 + b;
-	double yInter2 = k * xInter2 + b;
-	sf::Vector2f result1(xInter1, yInter1);
-	sf::Vector2f result2(xInter2, yInter2);
-
-	if (HasPoint(result1)) {
-		iPoint = result1;
-		return true;
-	} else if (HasPoint(result2)) {
-		iPoint = result2;
 		return true;
 	}
 	return false;

@@ -13,6 +13,7 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 		score("0", GetFont()),
 		activeText(S_PRESS_ANY_KEY, GetFont()),
 		initials("a__", GetFont(), 60),
+		extraLive(sf::Vector2f(30.f, 70.f), STARSHIP_PATTERN),
 		playerDead(false)
 {
 	score.setOutlineColor(sf::Color::White);
@@ -32,12 +33,8 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 	initials.setLetterSpacing(5.f);
 
 	leaders.reserve(10);
-	lives.reserve(5);
 	VFX.reserve(45);
-	for (int i = 0; i < 5; ++i) {
-		lives.push_back(Polygon(sf::Vector2f(30 * i + 30, 70), STARSHIP_PATTERN));
-	}
-	
+
 	clock = std::chrono::high_resolution_clock::now();
 }
 
@@ -92,7 +89,6 @@ void IoManager::Start() {
 
 void IoManager::Game(){
 	if (!bm.GetPlayer().isAlive()) {
-		bm.Clear();
 		ChangeOnOver();
 		LoadLeaderBoard();
 		return;
@@ -115,7 +111,8 @@ void IoManager::Game(){
 		iter.Draw(*w);
 	}
 	for (int i = 0; i < bm.GetPlayerLives(); ++i) {
-		lives.at(i).Draw(*w);
+		extraLive.Move(sf::Vector2f(30.f * i + 30.f, 70.f));
+		extraLive.Draw(*w);
 	}
 
 	bm.Draw(*w);
@@ -132,19 +129,22 @@ void IoManager::GameOver() {
 	if (passed > 3) {
 		if (leaders.size() < 10) {
 			ChangeOnInitials();
+			bm.Clear();
 			return;
 		}
 		for (auto& iter : leaders) {
 			if (bm.GetScore() > iter.first) {
 				ChangeOnInitials();
+				bm.Clear();
 				return;
 			}
 		}
-		//LoadLeaderBoard(); 
+		bm.Clear();
 		ChangeOnLeaderboard();
 		return;
 	}
 	w->clear();
+	bm.Draw(*w);
 	w->draw(activeText);
 	w->display();
 }
@@ -193,10 +193,16 @@ void IoManager::ChangeOnInitials(){
 void IoManager::ChangeOnLeaderboard(){
 	currentState = LEADERBORD;
 	activeText.setString(S_HIGH_SCORE);
+	int counter = 0;
+	for (auto& iter : leaders) {
+		++counter;
+		activeText.setString(activeText.getString() + "\n" + std::to_string(counter) + " " + std::to_string(iter.first) + " " + iter.second);
+	}
+	activeText.setPosition(WIDTH / 2 - activeText.getGlobalBounds().width / 2, HEIGHT / 2 - activeText.getGlobalBounds().height / 2);
 }
 
 void IoManager::LoadLeaderBoard(){
-	std::ifstream fin("leaders.txt");
+	std::ifstream fin("res/leaders.txt");
 	int size, score;
 	std::string name;
 	fin >> size;
@@ -205,10 +211,19 @@ void IoManager::LoadLeaderBoard(){
 		leaders.push_back(std::make_pair(score, name));
 	} 
 	fin.close();
-	int counter = 0;
+	/*int counter = 0;
 	std::sort(leaders.begin(), leaders.end(), []
 											(std::pair<int, std::string> f, std::pair<int, std::string> s)
-											{return f.first > s.first; });
+											{return f.first > s.first; });*/
+}
+
+void IoManager::SaveLeagerBoard(){
+	std::ofstream fout("leaders.txt");
+	fout << leaders.size() << std::endl;
+	for (auto& iter : leaders) {
+		fout << iter.second << " " << iter.first << std::endl;
+	}
+	fout.close();
 }
 
 void IoManager::CheckEvent() {
@@ -232,7 +247,7 @@ void IoManager::KeyboardPressCheck() {
 	case IN_GAME:
 		if (bm.GetPlayer().CanMove()) {
 			switch (evt.key.code) {
-			case sf::Keyboard::W:
+			case sf::Keyboard::J:
 				bm.GetPlayer().Thrust(true);
 				break;
 			case sf::Keyboard::D:
@@ -258,7 +273,7 @@ void IoManager::KeyboardReleaseCheck() {
 	case IN_GAME:
 		if (bm.GetPlayer().CanMove()) {
 			switch (evt.key.code) {
-			case sf::Keyboard::W:
+			case sf::Keyboard::J:
 				bm.GetPlayer().Thrust(false);
 				break;
 			case sf::Keyboard::D:
@@ -267,10 +282,10 @@ void IoManager::KeyboardReleaseCheck() {
 			case sf::Keyboard::A:
 				bm.GetPlayer().Rotate(STP);
 				break;
-			case sf::Keyboard::V:
+			case sf::Keyboard::G:
 				bm.GetPlayer().HyperJump();
 				break;
-			case sf::Keyboard::Space:
+			case sf::Keyboard::L:
 				bm.Shoot();
 				break;
 			}
@@ -278,8 +293,9 @@ void IoManager::KeyboardReleaseCheck() {
 		break;
 	case NEW_TOP_SCORE:
 		switch (evt.key.code) {
-		case sf::Keyboard::V:
+		case sf::Keyboard::G:
 			l_initials.at(activeSymPos) = activeSymbol;
+			l_initials.at(activeSymPos+1) = 'a';
 			++activeSymPos;
 			initials.setString(l_initials);
 			activeSymbol = 65;
@@ -311,23 +327,10 @@ void IoManager::KeyboardReleaseCheck() {
 
 void IoManager::UpdateLeaderbord(const std::string& newInitials){
 	leaders.push_back(std::make_pair(bm.GetScore(), newInitials));
-	std::cout << std::to_string(bm.GetScore()) << std::endl;
 	std::sort(leaders.begin(), leaders.end(), []
 											(std::pair<int, std::string> f,
 												std::pair<int, std::string> s)
 											{return f.first > s.first; });
 	if (leaders.size() > 10) leaders.pop_back();
-	currentState = LEADERBORD;
-	int counter = 0;
-	for (auto& iter : leaders) {
-		++counter;
-		activeText.setString(activeText.getString() + "\n" + std::to_string(counter) + ". " + iter.second + " - " + std::to_string(iter.first));
-	}
-	activeText.setPosition(WIDTH / 2 - activeText.getGlobalBounds().width / 2, HEIGHT / 2 - activeText.getGlobalBounds().height / 2);
-	std::ofstream fout("leaders.txt");
-	fout << leaders.size() << std::endl;
-	for (auto& iter : leaders) {
-		fout << iter.second << " " << iter.first << std::endl;
-	}
-	fout.close();
+	SaveLeagerBoard();
 }

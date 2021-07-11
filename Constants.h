@@ -1,8 +1,14 @@
 #pragma once
 
-const int BULLETS_MAX_CAPACITY = 50;
-const int ASTEROID_MAX_SIZE = 8;
-const int ASTEROIDS_MAX_QUANTITY = 50;
+struct VectorPair {
+	sf::Vector2f f;
+	sf::Vector2f s;
+	VectorPair(sf::Vector2f f_, sf::Vector2f s_) : f(f_), s(s_) {}
+};
+
+const int BULLETS_MAX_CAPACITY		  = 50;
+const int ASTEROID_MAX_SIZE			  = 8;
+const int ASTEROIDS_MAX_QUANTITY	  = 100;
 const float SMALL_ASTEROID_MAX_RADIUS = 20;
 
 const std::string S_PRESS_ANY_KEY	= "press any key";
@@ -10,14 +16,8 @@ const std::string S_GAME_OVER		= "game over";
 const std::string S_NEW_HIGH_SCORE	= "your score is one of the ten best\nplease enter your initials\npush rotate to select letter\npush hyperspace when letter is correct";
 const std::string S_HIGH_SCORE		= "high score";
 
-struct VectorPair {
-	sf::Vector2f f;
-	sf::Vector2f s;
-	VectorPair(sf::Vector2f f_, sf::Vector2f s_) : f(f_), s(s_) {}
-};
-
+const int WIDTH	 = sf::VideoMode::getDesktopMode().width;
 const int HEIGHT = sf::VideoMode::getDesktopMode().height;
-const int WIDTH = sf::VideoMode::getDesktopMode().width;
 
 const sf::Vector2f PLAYER_DEFAULT_POS(WIDTH / 2, HEIGHT / 2);
 
@@ -34,43 +34,45 @@ const std::uniform_real_distribution<float> RAND_ANGLE_HALF_RAD(0.5, 1.0);
 const std::uniform_real_distribution<float> RAND_ANGLE_360(0.f, 6.28319f);
 const std::uniform_real_distribution<float> RAND_DISPERSION(-0.05f, 0.05f);
 
+enum class Values{ASTR_B = 20, ASTR_M = 50, ASTR_S = 100, SAUC_B = 200, SAUC_S = 1'000};
+
 const std::vector<VectorPair> STARSHIP_PATTERN{
-	VectorPair(sf::Vector2f(0.f, -20.f), sf::Vector2f(10.f,  10.f)),
-	VectorPair(sf::Vector2f(10.f,  10.f), sf::Vector2f(6.f,   6.f)),
-	VectorPair(sf::Vector2f(6.f,   6.f), sf::Vector2f(-6.f,   6.f)),
-	VectorPair(sf::Vector2f(-6.f,   6.f), sf::Vector2f(-10.f,  10.f)),
-	VectorPair(sf::Vector2f(-10.f,  10.f), sf::Vector2f(0.f, -20.f)) 
+	VectorPair(sf::Vector2f(  0.f, -20.f),	sf::Vector2f( 10.f,  10.f)),
+	VectorPair(sf::Vector2f( 10.f,  10.f),	sf::Vector2f(  6.f,   6.f)),
+	VectorPair(sf::Vector2f( 6.f,   6.f),	sf::Vector2f( -6.f,   6.f)),
+	VectorPair(sf::Vector2f(-6.f,   6.f),	sf::Vector2f(-10.f,  10.f)),
+	VectorPair(sf::Vector2f(-10.f,  10.f),	sf::Vector2f(  0.f, -20.f)) 
 };
 
 const std::vector<VectorPair> FLAME_PATTERN{
-	VectorPair(sf::Vector2f(-5.f,	 6.f), sf::Vector2f(5.f,   6.f)),
-	VectorPair(sf::Vector2f(5.f,   6.f), sf::Vector2f(0.f,  15.f)),
-	VectorPair(sf::Vector2f(0.f,  15.f), sf::Vector2f(-5.f,   6.f)) 
+	VectorPair(sf::Vector2f( -5.f,	 6.f), sf::Vector2f(  5.f,   6.f)),
+	VectorPair(sf::Vector2f(  5.f,   6.f), sf::Vector2f(  0.f,  15.f)),
+	VectorPair(sf::Vector2f(  0.f,  15.f), sf::Vector2f( -5.f,   6.f)) 
 };
 
 const std::vector<VectorPair> BIG_SAUCER_PATTERN{
-	VectorPair(sf::Vector2f(-9.f,  -19.5f),	sf::Vector2f(9.f, -19.5f)),
-	VectorPair(sf::Vector2f(9.f,  -19.5f),	sf::Vector2f(15.f,  -7.5f)),
-	VectorPair(sf::Vector2f(15.f,   -7.5f),	sf::Vector2f(-15.f,  -7.5f)),
-	VectorPair(sf::Vector2f(-15.f,   -7.5f),	sf::Vector2f(-9.f, -19.5f)),
+	VectorPair(sf::Vector2f( -9.f,  -19.5f),	sf::Vector2f(  9.f, -19.5f)),
+	VectorPair(sf::Vector2f(  9.f,  -19.5f),	sf::Vector2f( 15.f,  -7.5f)),
+	VectorPair(sf::Vector2f( 15.f,   -7.5f),	sf::Vector2f(-15.f,  -7.5f)),
+	VectorPair(sf::Vector2f(-15.f,   -7.5f),	sf::Vector2f( -9.f, -19.5f)),
 	VectorPair(sf::Vector2f(-15.f,   -7.5f),	sf::Vector2f(-30.f,   4.5f)),
-	VectorPair(sf::Vector2f(-30.f,    4.5f),	sf::Vector2f(30.f,   4.5f)),
-	VectorPair(sf::Vector2f(30.f,    4.5f),	sf::Vector2f(15.f,  -7.5f)),
-	VectorPair(sf::Vector2f(30.f,    4.5f),	sf::Vector2f(18.f,  13.5f)),
-	VectorPair(sf::Vector2f(18.f,   13.5f),	sf::Vector2f(-18.f,  13.5f)),
+	VectorPair(sf::Vector2f(-30.f,    4.5f),	sf::Vector2f( 30.f,   4.5f)),
+	VectorPair(sf::Vector2f( 30.f,    4.5f),	sf::Vector2f( 15.f,  -7.5f)),
+	VectorPair(sf::Vector2f( 30.f,    4.5f),	sf::Vector2f( 18.f,  13.5f)),
+	VectorPair(sf::Vector2f( 18.f,   13.5f),	sf::Vector2f(-18.f,  13.5f)),
 	VectorPair(sf::Vector2f(-18.f,   13.5f),	sf::Vector2f(-30.f,   4.5f)) 
 };
 
 const std::vector<VectorPair> SMALL_SAUCER_PATTERN{
-	VectorPair(sf::Vector2f(-6.f,  -13.f),	sf::Vector2f(6.f, -13.f)),
-	VectorPair(sf::Vector2f(6.f,  -13.f),	sf::Vector2f(10.f,  -5.f)),
-	VectorPair(sf::Vector2f(10.f,  -5.f),	sf::Vector2f(-10.f,  -5.f)),
-	VectorPair(sf::Vector2f(-10.f,  -5.f),	sf::Vector2f(-6.f, -13.f)),
+	VectorPair(sf::Vector2f( -6.f,  -13.f),	sf::Vector2f(  6.f, -13.f)),
+	VectorPair(sf::Vector2f(  6.f,  -13.f),	sf::Vector2f( 10.f,  -5.f)),
+	VectorPair(sf::Vector2f( 10.f,  -5.f),	sf::Vector2f(-10.f,  -5.f)),
+	VectorPair(sf::Vector2f(-10.f,  -5.f),	sf::Vector2f( -6.f, -13.f)),
 	VectorPair(sf::Vector2f(-10.f,  -5.f),	sf::Vector2f(-20.f,   3.f)),
-	VectorPair(sf::Vector2f(-20.f,   3.f),	sf::Vector2f(20.f,   3.f)),
-	VectorPair(sf::Vector2f(20.f,   3.f),	sf::Vector2f(10.f,  -5.f)),
-	VectorPair(sf::Vector2f(20.f,   3.f),	sf::Vector2f(12.f,   9.f)),
-	VectorPair(sf::Vector2f(12.f,   9.f),	sf::Vector2f(-12.f,   9.f)),
+	VectorPair(sf::Vector2f(-20.f,   3.f),	sf::Vector2f( 20.f,   3.f)),
+	VectorPair(sf::Vector2f( 20.f,   3.f),	sf::Vector2f( 10.f,  -5.f)),
+	VectorPair(sf::Vector2f( 20.f,   3.f),	sf::Vector2f( 12.f,   9.f)),
+	VectorPair(sf::Vector2f( 12.f,   9.f),	sf::Vector2f(-12.f,   9.f)),
 	VectorPair(sf::Vector2f(-12.f,   9.f),	sf::Vector2f(-20.f,   3.f)) 
 };
 

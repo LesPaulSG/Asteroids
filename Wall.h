@@ -16,7 +16,7 @@ public:
 
 	const sf::RectangleShape& GetBody() const;
 	const Line& GetLine() const;
-	void AddOffset();
+	void AddOffset(float deltaTime);
 
 	void CalculateRotation();
 	void Move(sf::Vector2f dest);
