@@ -172,8 +172,11 @@ void BulletManager::UpdateScore(Values val){
 void BulletManager::Clear(){
 	std::lock_guard lg(bmMutex);
 	if (saucerSpawned) saucer->Destroy();
+	saucer == nullptr;
 	bullets.clear();
 	actors.clear();
+	GenerateAsteroid(0.f, 0.f);
+	explosions = std::queue<sf::Vector2f>();
 	gameRunning = false;
 }
 

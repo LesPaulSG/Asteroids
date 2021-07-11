@@ -127,6 +127,7 @@ void IoManager::GameOver() {
 	static float passed = 0;
 	passed += deltaTime.count();
 	if (passed > 3) {
+		passed = 0.f;
 		if (leaders.size() < 10) {
 			ChangeOnInitials();
 			bm.Clear();
@@ -166,6 +167,7 @@ void IoManager::LeaderBoard(){
 
 void IoManager::ChangeOnStart(){
 	currentState = START;
+	VFX.clear();
 	leaders.clear();
 	activeText.setString(S_PRESS_ANY_KEY);
 	activeText.setPosition(WIDTH / 2 - activeText.getGlobalBounds().width / 2, HEIGHT / 2 - activeText.getGlobalBounds().height / 2);
@@ -211,10 +213,6 @@ void IoManager::LoadLeaderBoard(){
 		leaders.push_back(std::make_pair(score, name));
 	} 
 	fin.close();
-	/*int counter = 0;
-	std::sort(leaders.begin(), leaders.end(), []
-											(std::pair<int, std::string> f, std::pair<int, std::string> s)
-											{return f.first > s.first; });*/
 }
 
 void IoManager::SaveLeagerBoard(){

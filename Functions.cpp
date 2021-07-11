@@ -22,6 +22,7 @@ void LoadSounds() {
 		buffers.push_back(sf::SoundBuffer());
 		buffers.back().loadFromFile("res/sounds/" + name + ".wav");
 		sounds.push_back(sf::Sound(buffers.back()));
+		sounds.back().setVolume(30.f);
 	}
 }
 

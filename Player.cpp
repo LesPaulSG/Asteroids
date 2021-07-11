@@ -57,7 +57,6 @@ void Player::Move(float time, std::vector<Actor*>& actors) {
 			return;
 		}
 		Refresh();
-		flame.Rotate((rotation) * -1.f);
 	}
 	else {
 		body.Explode(time);
@@ -101,6 +100,7 @@ void Player::BonusLife(){
 
 void Player::Refresh(){
 	body = Polygon(PLAYER_DEFAULT_POS, STARSHIP_PATTERN);
+	flame.Rotate(0.f);
 	canMove = true;
 	thrustOn = false;
 	pos = PLAYER_DEFAULT_POS;
