@@ -4,19 +4,20 @@ Line::Line(sf::Vector2f A, sf::Vector2f B) :
 		pointA(A),
 		pointB(B)
 {
+	CaLculateMidPoint();
 	CalculateRotation();
 	lenght = sqrt(pow(midX, 2) + pow(midY, 2));
 }
 
-Line::~Line() {}
-
-//rework
 void Line::CalculateRotation() {
+	rotation = acos(midPoint.y / VectorsModule(midPoint));
+}
+
+void Line::CaLculateMidPoint(){
 	midX = pointB.x - pointA.x;
 	midY = pointB.y - pointA.y;
 	midPoint.x = midX;
 	midPoint.y = midY;
-	rotation = acos(midPoint.y / VectorsModule(midPoint));
 }
 
 bool Line::Intersection(const Line& B) const {
@@ -45,15 +46,6 @@ bool Line::Intersection(const Line& B) const {
 	return false;
 }
 
-float Line::AngleOfIntersec(const Line& B) const {
-	sf::Vector2f first(midPoint), second(B.midPoint);
-
-	float fMod = VectorsModule(first);
-	float sMod = VectorsModule(second);
-
-	return acos((first.x * second.x + first.y * second.y) / (fMod * sMod));
-}
-
 bool Line::HasPoint(const sf::Vector2f& point) const {
 	if (!isPointInRange(point.x, pointA.x, pointB.x)) {
 		return false;
@@ -64,31 +56,14 @@ bool Line::HasPoint(const sf::Vector2f& point) const {
 	return true;
 }
 
-float Line::Distance(sf::Vector2f from, sf::Vector2f to){
-	float midX = to.x - from.x;
-	float midY = to.y - from.y;
+float Line::Distance(sf::Vector2f lhs, sf::Vector2f rhs){
+	float midX = rhs.x - lhs.x;
+	float midY = rhs.y - lhs.y;
 	return sqrt(pow(midX, 2) + pow(midY, 2));
 }
 
-float Line::Rotation(sf::Vector2f from, sf::Vector2f to){
-	float midX = to.x - from.x;
-	float midY = to.y - from.y;
+float Line::Rotation(sf::Vector2f lhs, sf::Vector2f rhs){
+	float midX = rhs.x - lhs.x;
+	float midY = rhs.y - lhs.y;
 	return acos(midY / VectorsModule(sf::Vector2f(midX, midY)));
-}
-
-float Line::CalculateRotation(sf::Vector2f A, sf::Vector2f B){
-	sf::Vector2f mid;
-	mid.x = B.x - A.x;
-	mid.y = B.y - A.y;
-	double angle = acos(mid.y / VectorsModule(mid));
-	return angle;
-}
-
-//function checks point position relative to line (left or right)
-bool Line::isPointRight(const sf::Vector2f& point) const {
-	float D = (point.x - pointA.x) * midY - (point.y - pointA.y) * midX;
-	if (D > 0) {
-		return false;
-	}
-	return true;
 }

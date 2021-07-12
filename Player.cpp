@@ -2,13 +2,14 @@
 
 Player::Player(sf::Vector2f pos, float cRotation) :
 		Actor(pos, sf::Vector2f(0.f, 0.f), STARSHIP_PATTERN),
+		flame(pos, FLAME_PATTERN),
 		rotation(0.f),
 		rotSpeed(5.f),
 		force(0.f),
 		lives(3),
+		rDir(RotateDir::STP),
 		canMove(true),
-		thrustOn(false),
-		flame(pos, FLAME_PATTERN)
+		thrustOn(false)	
 {
 	speed = 100.f;
 	SetRotation(cRotation);
@@ -29,7 +30,7 @@ void Player::Thrust(bool on){
 void Player::HyperJump(){
 	pos.x = RAND_X(gen);
 	pos.y = RAND_Y(gen);
-	force = 0.f;
+	body.Move(pos);
 }
 
 void Player::Move(float time, std::vector<Actor*>& actors) {
@@ -38,7 +39,7 @@ void Player::Move(float time, std::vector<Actor*>& actors) {
 		if (force > 0.f) {
 			if (thrustOn) SetRotation(rotation);
 			pos += dir * force * speed * time;
-			force -= 0.1f * time;
+			if (!thrustOn) force -= 0.1f * time;
 			PassScreenBorder(pos);
 			Collision(actors);
 			body.Move(pos);
@@ -72,10 +73,13 @@ bool Player::Collision(const std::vector<Actor*>& actors){
 			radSum = GetBodyRadius() + iter->GetBodyRadius();
 			dist = Line::Distance(pos, iter->GetPos());
 			if (radSum >= dist) {
-				//add deep collision check?
-				iter->Destroy();
-				Destroy();
-				return true;
+				for (auto& edge : body.GetEdges()) {
+					if (iter->DeepCollision(edge.GetLine())) {
+						iter->Destroy();
+						Destroy();
+						return true;
+					}
+				}
 			}
 		}
 	}

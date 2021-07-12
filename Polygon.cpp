@@ -4,7 +4,8 @@ Polygon::Polygon() : pos(sf::Vector2f(0.f, 0.f)) {}
 
 Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs) :
 		pos(pos_),
-		rotation(0)
+		radius(0.f),
+		rotation(0.f)
 {
 	edges.reserve(pairs.size());
 
@@ -64,4 +65,8 @@ float Polygon::GetRot() const {
 
 float Polygon::GetRadius() const {
 	return radius;
+}
+
+const std::vector<Wall>& Polygon::GetEdges() const {
+	return edges;
 }

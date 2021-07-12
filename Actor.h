@@ -3,10 +3,10 @@
 
 class Actor {
 protected:
+	Polygon body;
 	sf::Vector2f pos;
 	sf::Vector2f dir;
 	float speed;
-	Polygon body;
 	bool alive;
 	bool playerKiiled;
 public:
@@ -17,12 +17,12 @@ public:
 	virtual bool Collision(const std::vector<Actor*>& asteroids);
 	virtual void Draw(sf::RenderWindow& w) const;
 	virtual void Destroy(bool playerDestroy = false);
-
+	
 	const sf::Vector2f& GetPos() const;
 	float GetBodyRadius() const;
 	virtual bool isAlive() const;
 	bool isPlayerDestoyed() const;
 
-	bool DeepCollision(Line line) const;
+	bool DeepCollision(const Line& line) const;
 };
 

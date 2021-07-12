@@ -1,9 +1,8 @@
 #include "Bullet.h"
 #include "Player.h"
 
-#include <iostream>
-
 Bullet::Bullet(Shot sho, bool playerShooted) :
+		body(1.5f),
 		pos(sho.from),
 		speed(600.f),
 		time(0.f),
@@ -12,8 +11,6 @@ Bullet::Bullet(Shot sho, bool playerShooted) :
 		playerOwned(playerShooted)
 {
 	RotateUnitVector(this->dir, sho.angle);
-	body.setPosition(pos);
-	body.setRadius(1.5f);
 	body.setFillColor(sf::Color::White);
 }
 
@@ -39,7 +36,7 @@ void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& old
 }
 
 void Bullet::Update(float t, std::vector<Actor*>& actors) {
-	sf::Vector2f oldPos = pos;			//position before update
+	static sf::Vector2f oldPos = pos;	//position before update
 	pos += dir *speed* t;				//new position
 	if (PassScreenBorder(pos)) {
 		alive = false;
@@ -47,6 +44,7 @@ void Bullet::Update(float t, std::vector<Actor*>& actors) {
 	}
 	body.setPosition(pos);
 	CheckCollision(actors, oldPos);
+	oldPos = pos;
 
 	speed -= t/30.f;					//braking over time
 	time  += t;

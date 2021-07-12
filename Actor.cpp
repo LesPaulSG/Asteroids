@@ -1,12 +1,12 @@
 #include "Actor.h"
 
 Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs) :
+		body(pos, pairs),
 		pos(pos_),
 		dir(dir_),
-		speed(50.f),
+		speed(100.f),
 		alive(true),
-		playerKiiled(false),
-		body(pos, pairs)
+		playerKiiled(false)	
 {
 
 }
@@ -20,10 +20,10 @@ void Actor::Move(float time, std::vector<Actor*>& asteroids) {
 bool Actor::Collision(const std::vector<Actor*>& asteroids) {
 	static float radSum = 0, dist = 0;
 	for (auto iter : asteroids) {
-		if (iter != this) {			//check for dont collide with seld
-			radSum = GetBodyRadius() + iter->GetBodyRadius();			//sum of radius
-			dist   = Line::Distance(pos, iter->GetPos());	//distance between actors
-			if (radSum >= dist) {							//kind of "bounding sphere" collision detection
+		if (iter != this) {			//check for dont collide with self
+			radSum = GetBodyRadius() + iter->GetBodyRadius();	//sum of radius
+			dist   = Line::Distance(pos, iter->GetPos());		//distance between actors
+			if (radSum >= dist) {								//kind of "bounding sphere" collision detection
 				return true;
 			}
 		}
@@ -48,6 +48,6 @@ bool Actor::isAlive() const {return alive;}
 
 bool Actor::isPlayerDestoyed() const {return playerKiiled;}
 
-bool Actor::DeepCollision(Line line) const {
+bool Actor::DeepCollision(const Line& line) const {
 	return body.isCollision(line);
 }

@@ -5,7 +5,7 @@ class Polygon{
 private:
 	std::vector<Wall> edges;
 	sf::Vector2f pos;
-	float radius = 0;
+	float radius;
 	float rotation;
 public:
 	Polygon();
@@ -18,5 +18,6 @@ public:
 
 	float GetRot() const;
 	float GetRadius() const;
+	const std::vector<Wall>& GetEdges() const;
 };
 

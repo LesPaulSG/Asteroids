@@ -3,6 +3,7 @@
 
 class Bullet {
 private:
+	sf::CircleShape body;
 	sf::Vector2f pos;
 	sf::Vector2f dir;
 	float speed;
@@ -10,7 +11,6 @@ private:
 	float lifeTime;
 	bool alive;
 	bool playerOwned;
-	sf::CircleShape body;
 
 public:
 	const sf::CircleShape& GetBody() const;

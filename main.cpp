@@ -1,12 +1,10 @@
-#include <fstream>
-
 #include "IO_Thread.h"
 #include <Windows.h>
 
 int main(){
 	HWND hWnd = GetConsoleWindow();
 	ShowWindow(hWnd, SW_SHOW);
-	LoadSounds();
+	LoadResources();
 
 	BulletManager bulletManager;
 	
@@ -19,7 +17,7 @@ int main(){
 	IoThread.detach();
 
 	//std::this_thread::sleep_for(std::chrono::seconds(3));
-	auto clock = std::chrono::high_resolution_clock::now();											//upper
+	auto clock = std::chrono::high_resolution_clock::now();
 
 	while (!gameOver){
 		bulletManager.Update(time.count());

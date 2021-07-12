@@ -5,6 +5,7 @@ enum RotateDir{ STP = 0, RGH = 1, LFT = -1 };
 
 class Player : public Actor {
 private:
+	Polygon flame;
 	float rotation;
 	float rotSpeed;
 	float force;
@@ -12,7 +13,7 @@ private:
 	RotateDir rDir;
 	bool canMove;
 	bool thrustOn;
-	Polygon flame;
+	
 
 public:
 	Player(sf::Vector2f pos, float rotation);

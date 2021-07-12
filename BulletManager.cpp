@@ -1,5 +1,3 @@
-#include <cmath>
-
 #include "BulletManager.h"
 
 BulletManager::BulletManager() :
@@ -120,10 +118,10 @@ void BulletManager::GenerateAsteroid(float deltaTime, float waitTime){
 }
 
 void BulletManager::SpawnSaucer(float deltaTime){
-	static Delay del(15.f);
+	static float passedTime;
 	static sf::Vector2f startPos;
 	if (!saucerSpawned) {
-		if(del.Wait(deltaTime) && actors.size() > 1) {
+		if((passedTime += deltaTime) > 15.f && actors.size() > 1) {
 			bool spawnBig = (score > 40'000 || RAND_BOOL(gen)) ? false : true;
 			startPos.x = RAND_BOOL(gen) ? (WIDTH) : 0.f;
 			startPos.y = RAND_Y(gen);

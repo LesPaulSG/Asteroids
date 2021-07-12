@@ -1,8 +1,6 @@
 #pragma once
 #include "Functions.h"
 
-const int NUM_OF_SPARKS = 20;
-
 class Explosion{
 private:
 	std::vector<sf::CircleShape> sparks;

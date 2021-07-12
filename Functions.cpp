@@ -1,5 +1,3 @@
-#include <SFML/Audio.hpp>
-
 #include "Functions.h"
 
 std::vector<sf::SoundBuffer> buffers;
@@ -9,7 +7,7 @@ sf::Music oddity;
 
 sf::Font font;
 
-void LoadSounds() {
+void LoadResources() {
 	font.loadFromFile("res/vector.ttf");
 	oddity.openFromFile("res/sounds/SpaceOddity320.wav");
 	oddity.setLoop(true);
@@ -49,19 +47,12 @@ bool isPointInRange(float x, float a, float b) {
 	if (x >= std::min(a, b)) return true;
 	if (x <= std::max(a, b)) return true;
 	return false;
-	//return (x >= std::min(a, b) && x <= std::max(a, b));
 }
 
 float VectorsModule(const sf::Vector2f& vec){
 	return std::sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
-/*void RotateVector(sf::Vector2f& vec, float angle){
-	float xNew = vec.x * cos(angle) - vec.y * sin(angle);
-	float yNew = vec.x * sin(angle) + vec.y * cos(angle);
-	vec.x = xNew;
-	vec.y = yNew;
-}*/
 
 void RotateVector(sf::Vector2f& vec, float angle, const sf::Vector2f& anchor) {
 	float xNew = (vec.x - anchor.x) * cos(angle) - (vec.y - anchor.y) * sin(angle) + anchor.x;
@@ -94,4 +85,15 @@ bool PassScreenBorder(sf::Vector2f& vec) {
 		passed = true;
 	}
 	return passed;
+}
+
+void FormatText(sf::Text& txt) {
+	txt.setOutlineColor(sf::Color::White);
+	txt.setOutlineThickness(0.5);
+	txt.setFillColor(sf::Color::White);
+}
+
+void TextToCenter(sf::Text& txt) {
+	txt.setPosition(WIDTH  / 2 - txt.getGlobalBounds().width  / 2,
+					HEIGHT / 2 - txt.getGlobalBounds().height / 2);
 }

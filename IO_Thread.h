@@ -6,23 +6,25 @@ enum GameState { START, IN_GAME, GAME_OVER, NEW_TOP_SCORE, LEADERBORD };
 
 class IoManager {
 private:
-	sf::RenderWindow* w;
-	BulletManager& bm;
-	bool& gameOver;
-	std::chrono::duration<float> deltaTime;
-	std::chrono::steady_clock::time_point clock;
-	GameState currentState;
-
 	sf::Text score;
 	sf::Text activeText;
 	sf::Text initials;
-	
-	//std::vector<Polygon> lives;
+
 	Polygon extraLive;
 	std::vector<Explosion> VFX;
 	std::vector<std::pair<int, std::string>> leaders;
-	bool playerDead;
+	
+	std::chrono::duration<float> deltaTime;
+	std::chrono::steady_clock::time_point clock;
+	
 	sf::Event evt;
+
+	sf::RenderWindow* w;
+	BulletManager& bm;
+	bool& gameOver;
+	
+	GameState currentState;
+	bool playerDead;
 	
 public:
 	IoManager(BulletManager& bm_, bool& gameOver_);
