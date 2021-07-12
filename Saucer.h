@@ -7,7 +7,7 @@ private:
 	bool big;
 public:
 	Saucer(sf::Vector2f p, bool b);
-	void Move(float time, std::vector<Actor*>& actors) override;
+	void Update(float time, std::vector<Actor*>& actors) override;
 	bool CanShoot();
 	void Destroy(bool playerDestroy = false) override;
 	bool isBig();

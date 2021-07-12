@@ -27,6 +27,7 @@ public:
 	Player& GetPlayer() const;
 	int GetScore() const;
 	int GetPlayerLives() const;
+	bool isPlayerHasLives() const;
 
 	void StartGame();
 	void Shoot();

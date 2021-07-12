@@ -11,7 +11,7 @@ Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>
 
 }
 
-void Actor::Move(float time, std::vector<Actor*>& actors) {
+void Actor::Update(float time, std::vector<Actor*>& actors) {
 	pos += dir * speed * time;
 	PassScreenBorder(pos);
 	body.Move(pos);

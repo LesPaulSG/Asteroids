@@ -49,4 +49,5 @@ public:
 	void KeyboardPressCheck();
 	void KeyboardReleaseCheck();
 	void UpdateLeaderbord(const std::string& newInitials);
+	void UpdateInitials(int pos, bool ink = false);
 };

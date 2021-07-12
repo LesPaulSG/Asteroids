@@ -17,6 +17,10 @@ int BulletManager::GetScore() const {return score;}
 
 int BulletManager::GetPlayerLives() const {return player->GetLives();}
 
+bool BulletManager::isPlayerHasLives() const {
+	return player->GetLives() > 0;
+}
+
 void BulletManager::StartGame(){
 	player->Reset();
 	score = 0;
@@ -75,11 +79,13 @@ void BulletManager::Update(float time) {
 	GenerateAsteroid(time, 3);
 	if(gameRunning) SpawnSaucer(time);
 	
-	if (saucerSpawned && saucer->CanShoot()) {
-		Fire(saucer->GetShoot(player->GetPos()), saucer->GetBodyRadius());
+	if (player->CanMove()) {
+		if (saucerSpawned && saucer->CanShoot()) {
+			Fire(saucer->GetShoot(player->GetPos()), saucer->GetBodyRadius());
+		}
 	}
 	for (auto iter : actors) {
-		iter->Move(time, actors);
+		iter->Update(time, actors);
 	}
 	for (auto& iter : bullets) {
 		iter.Update(time, actors);

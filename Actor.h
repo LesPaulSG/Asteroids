@@ -12,7 +12,7 @@ protected:
 public:
 	Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs);
 
-	virtual void Move(float time, std::vector<Actor*>& actors);
+	virtual void Update(float time, std::vector<Actor*>& actors);
 	virtual bool Collision(const std::vector<Actor*>& actors);
 	virtual void Draw(sf::RenderWindow& w) const;
 	virtual void Destroy(bool playerDestroy = false);

@@ -9,7 +9,8 @@ Player::Player(sf::Vector2f pos, float cRotation) :
 		lives(3),
 		rDir(RotateDir::STP),
 		canMove(true),
-		thrustOn(false)	
+		thrustOn(false),
+		moved(false)
 {
 	speed = 100.f;
 	RotateUnitVector(dir, cRotation);
@@ -37,28 +38,18 @@ void Player::HyperJump(){
 	pos.x = RAND_X(gen);
 	pos.y = RAND_Y(gen);
 	force = 0.f;
+	moved = true;
 	body.Move(pos);
 }
 
-void Player::Move(float time, std::vector<Actor*>& actors) {
+void Player::Update(float time, std::vector<Actor*>& actors) {
 	static float passedTime = 0.f;
 	if (canMove) {
-		if (force > 0.f) {
-			if (thrustOn) RotateUnitVector(dir, rotation);
-			pos += dir * force * speed * time;
-			if (!thrustOn) force -= 0.1f * time;
-			PassScreenBorder(pos);
-			Collision(actors);
-			body.Move(pos);
-			flame.Move(pos);
-		}
-		if (rDir != RotateDir::STP) {
-			rotation += rotSpeed * time * (int)rDir;
-			body.Rotate(rotation);
-			flame.Rotate(rotation);
-		}
+		Move(time);
+		Rotate(time);
+		if (moved) Collision(actors);
 	}
-	else if ((passedTime+=time) >= 1.5f) {
+	else if ((passedTime += time) >= 1.5f) {
 		passedTime = 0.f;
 		if (lives < 1) {
 			alive = false;
@@ -72,8 +63,28 @@ void Player::Move(float time, std::vector<Actor*>& actors) {
 	}
 }
 
+void Player::Move(float deltaTime){
+	if (force > 0.f) {
+		if (thrustOn) RotateUnitVector(dir, rotation);
+		else force -= 0.1f * deltaTime;
+		pos += dir * force * speed * deltaTime;
+		PassScreenBorder(pos);
+		body.Move(pos);
+		flame.Move(pos);
+		moved = true;
+	}
+}
+
+void Player::Rotate(float deltaTime){
+	if (rDir != RotateDir::STP) {
+		rotation += rotSpeed * deltaTime * (int)rDir;
+		body.Rotate(rotation);
+		flame.Rotate(rotation);
+		moved = true;
+	}
+}
+
 bool Player::Collision(const std::vector<Actor*>& actors) {
-	if (!canMove) return false;
 	static float radSum = 0, dist = 0;
 	for (auto iter : actors) {
 		if (iter != this) {
@@ -109,6 +120,7 @@ void Player::Refresh(){
 	RotateUnitVector(dir, 0.f);
 	canMove = true;
 	thrustOn = false;
+	moved = false;
 	rDir = RotateDir::STP;
 	rotation = 0.f;
 	force = 0.f;
@@ -130,7 +142,7 @@ void Player::Draw(sf::RenderWindow& w) const {
 }
 
 void Player::Destroy(bool playerDestroy){
-	//--lives;
+	--lives;
 	EndSoundLoop(Sound::THRUST);
-	//canMove = false;
+	canMove = false;
 }

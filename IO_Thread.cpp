@@ -83,7 +83,7 @@ void IoManager::Start() {
 }
 
 void IoManager::Game(){
-	if (!bm.GetPlayer().isAlive()) {
+	if (!bm.isPlayerHasLives()) {
 		ChangeOnOver();
 		LoadLeaderBoard();
 		return;
@@ -251,8 +251,6 @@ void IoManager::KeyboardPressCheck() {
 }
 
 void IoManager::KeyboardReleaseCheck() {
-	static std::string l_initials("___");
-	static char activeSymbol = 65;
 	static int activeSymPos = 0;
 	switch (currentState) {
 	case IN_GAME:
@@ -279,33 +277,21 @@ void IoManager::KeyboardReleaseCheck() {
 	case NEW_TOP_SCORE:
 		switch (evt.key.code) {
 		case sf::Keyboard::G:
-			l_initials.at(activeSymPos) = activeSymbol;
-			if (activeSymPos < 2) l_initials.at(activeSymPos + 1) = 'a';
 			++activeSymPos;
-			initials.setString(l_initials);
-			activeSymbol = 65;
+			UpdateInitials(activeSymPos);
 			break;
 		case sf::Keyboard::D:
-			if ((int)activeSymbol < 90) {
-				++activeSymbol;
-				l_initials.at(activeSymPos) = activeSymbol;
-				initials.setString(l_initials);
-			}
+			UpdateInitials(activeSymPos, true);
 			break;
 		case sf::Keyboard::A:			
-			if ((int)activeSymbol > 65) {
-				--activeSymbol;
-				l_initials.at(activeSymPos) = activeSymbol;
-				initials.setString(l_initials);
-			}
+			UpdateInitials(activeSymPos, false);
 			break;
 		}
 		if (activeSymPos > 2) {
-			UpdateLeaderbord(l_initials);
 			ChangeOnLeaderboard();
-			l_initials = "___";
 			activeSymPos = 0;
-			return;		}
+			return;		
+		}
 		break;
 	}
 }
@@ -318,4 +304,26 @@ void IoManager::UpdateLeaderbord(const std::string& newInitials){
 											{return f.first > s.first; });
 	if (leaders.size() > 10) leaders.pop_back();
 	SaveLeagerBoard();
+}
+
+void IoManager::UpdateInitials(int pos, bool ink){
+	static std::string l_initials("___");
+	static char activeSymbol = 65;
+	static int activePos = 0;
+	if (activePos != pos) {
+		if (activePos < 2) l_initials.at(activePos + 1) = 'a';
+		initials.setString(l_initials);
+		activePos = pos;
+		activeSymbol = 65;
+		if (pos > 2) {
+			UpdateLeaderbord(l_initials);
+			l_initials = "___";
+			activePos = 0;
+		}
+		return;
+	}
+		 if ( ink && (int)activeSymbol < 90) ++activeSymbol;
+	else if (!ink && (int)activeSymbol > 65) --activeSymbol;
+	l_initials.at(pos) = activeSymbol;
+	initials.setString(l_initials);
 }

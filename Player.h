@@ -13,6 +13,7 @@ private:
 	RotateDir rDir;
 	bool canMove;
 	bool thrustOn;
+	bool moved;
 
 public:
 	Player(sf::Vector2f pos, float rotation);
@@ -21,7 +22,9 @@ public:
 	int GetLives() const;
 	bool CanMove() const;
 
-	void Move(float time, std::vector<Actor*>& actors) override;
+	void Update(float time, std::vector<Actor*>& actors) override;
+	void Move(float deltaTime);
+	void Rotate(float deltaTime);
 	bool Collision(const std::vector<Actor*>& actors) override;
 	void SetRotateDir(RotateDir nDir);
 	void Thrust(bool on);
