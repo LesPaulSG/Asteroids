@@ -18,13 +18,11 @@ int main(){
 
 	//std::this_thread::sleep_for(std::chrono::seconds(3));
 	auto clock = std::chrono::high_resolution_clock::now();
-
 	while (!gameOver){
 		bulletManager.Update(time.count());
 
 		time  = std::chrono::high_resolution_clock::now() - clock;
 		clock = std::chrono::high_resolution_clock::now();
 	}
-
 	return 0;
 }

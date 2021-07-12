@@ -33,7 +33,7 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 }
 
 void IoManager::Update(){
-	w = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Asteroids");// , sf::Style::Fullscreen);
+	w = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Fullscreen);
 	w->setMouseCursorVisible(false);
 
 	while (w->isOpen()) {
