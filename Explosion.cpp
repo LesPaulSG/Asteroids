@@ -6,7 +6,7 @@ Explosion::Explosion(sf::Vector2f p) :
 	sparks.reserve(NUM_OF_SPARKS);
 	offsets.reserve(NUM_OF_SPARKS);
 
-	for (int i = 0; i < NUM_OF_SPARKS; ++i) {
+	for (unsigned i = 0; i < NUM_OF_SPARKS; ++i) {
 		sparks.push_back(sf::CircleShape(1.5f));
 		sparks.back().setFillColor(sf::Color::White);
 		sparks.back().setPosition(p);
@@ -15,7 +15,7 @@ Explosion::Explosion(sf::Vector2f p) :
 }
 
 void Explosion::Update(float deltaTime){
-	for (int i = 0; i < NUM_OF_SPARKS; ++i) {
+	for (unsigned i = 0; i < NUM_OF_SPARKS; ++i) {
 		sparks.at(i).setPosition(sparks.at(i).getPosition() + offsets.at(i) * deltaTime * 350.f);
 		sparks.at(i).setFillColor(sf::Color(255, 255, 255, 255 - lifeTime * 170));
 	}

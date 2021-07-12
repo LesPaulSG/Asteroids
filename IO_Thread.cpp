@@ -102,7 +102,7 @@ void IoManager::Game(){
 	for (auto& iter : VFX) {
 		iter.Draw(*w);
 	}
-	for (int i = 0; i < bm.GetPlayerLives(); ++i) {
+	for (unsigned i = 0; i < bm.GetPlayerLives(); ++i) {
 		extraLive.Move(sf::Vector2f(30.f * i + 30.f, 70.f));
 		extraLive.Draw(*w);
 	}
@@ -195,7 +195,7 @@ void IoManager::LoadLeaderBoard(){
 	std::string name;
 	fin >> size;
 	size = std::min(size, LEADERBOARD_MAX_SIZE);
-	for (int i = 0; i < size; ++i) {
+	for (unsigned i = 0; i < size; ++i) {
 		fin >> name >> score;
 		leaders.push_back(std::make_pair(score, name));
 	} 

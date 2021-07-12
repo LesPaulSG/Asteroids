@@ -63,7 +63,7 @@ void Polygon::Reset(const sf::Vector2f& pos_, const std::vector<VectorPair>& pai
 	pos = pos_;
 	rotation = 0.f;
 	if (pairs.size() != edges.size()) return;
-	for (int i = 0; i < pairs.size(); ++i) {
+	for (unsigned i = 0; i < pairs.size(); ++i) {
 		edges.at(i).ResetOffset(pairs.at(i));
 		edges.at(i).Move(pos);
 		edges.at(i).RotateAround(pos, rotation);

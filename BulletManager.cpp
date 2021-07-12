@@ -77,7 +77,7 @@ void BulletManager::Update(float time) {
 	}
 
 	GenerateAsteroid(time, 3);
-	//if(gameRunning) SpawnSaucer(time);
+	if(gameRunning) SpawnSaucer(time);
 	
 	if (player->CanMove()) {
 		if (saucerSpawned && saucer->CanShoot()) {
@@ -107,7 +107,7 @@ void BulletManager::GenerateAsteroid(float deltaTime, float waitTime){
 	if (actors.size() < 2) {
 		if ((passedTime +=deltaTime) >= waitTime) {
 			passedTime = 0.f;
-			for (int i = 0; i < quntuty; ++i) {
+			for (unsigned i = 0; i < quntuty; ++i) {
 				if (RAND_BOOL(gen)) {
 					pos.x = RAND_BOOL(gen) ? (WIDTH) : 0.f;
 					pos.y = RAND_Y(gen);
@@ -142,7 +142,7 @@ void BulletManager::SpawnSaucer(float deltaTime){
 
 void BulletManager::CrackAsteroid(const sf::Vector2f& pos, int stage) {
 	static sf::Vector2f dir;
-	for (int i = 0; i < 2; ++i) {
+	for (unsigned i = 0; i < 2; ++i) {
 		dir.x = RAND_DIR(gen);
 		dir.y = RAND_DIR(gen);
 		actors.push_back(new Asteroid(pos+dir*10.f, dir, stage)); //small offset 
