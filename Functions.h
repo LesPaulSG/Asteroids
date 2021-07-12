@@ -29,4 +29,4 @@ bool isPassingHorBrd(const sf::Vector2f& vec);
 void PassScreenBorder(sf::Vector2f& vec);
 
 void FormatText(sf::Text& txt);
-void TextToCenter(sf::Text& txt);
+void TextToCenter(sf::Text& txt, float offsetX = 0.5f, float offsetY = 0.5f);

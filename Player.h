@@ -25,7 +25,6 @@ public:
 	void Update(float time, std::vector<Actor*>& actors) override;
 	void Move(float deltaTime);
 	void Rotate(float deltaTime);
-	bool Collision(const std::vector<Actor*>& actors) override;
 	void SetRotateDir(RotateDir nDir);
 	void Thrust(bool on);
 	void HyperJump();

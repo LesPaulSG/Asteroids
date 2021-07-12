@@ -18,6 +18,6 @@ struct Line {
 	bool Intersection(const Line& rhs) const;
 	bool HasPoint(const sf::Vector2f& point) const;
 
-	static float Distance(sf::Vector2f lhs, sf::Vector2f rhs);
-	static float Rotation(sf::Vector2f lhs, sf::Vector2f rhs);
+	static float Distance(const sf::Vector2f& lhs, const sf::Vector2f& rhs);
+	static float Rotation(const sf::Vector2f& lhs, const sf::Vector2f& rhs);
 };

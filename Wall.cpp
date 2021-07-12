@@ -3,8 +3,8 @@
 Wall::Wall(sf::Vector2f A, sf::Vector2f B) :
 		body(sf::Vector2f(1.5f, Line::Distance(A, B))),
 		line(A, B),
-		offsetA(A),
-		offsetB(B)	
+		offsetA(std::move(A)),
+		offsetB(std::move(B))
 {
 	vector = line.midPoint;
 	RotateBody();
@@ -23,10 +23,8 @@ void Wall::AddOffset(float deltaTime){
 }
 
 void Wall::ResetOffset(const VectorPair& pair){
-	offsetA = pair.f;
-	offsetB = pair.s;
-	//line.CaLculateMidPoint();
-	//line.CalculateRotation();
+	offsetA = pair.first;
+	offsetB = pair.second;
 }
 
 void Wall::RotateBody() {

@@ -3,7 +3,7 @@
 
 Bullet::Bullet(Shot sho, bool playerShooted) :
 		body(1.5f),
-		pos(sho.from),
+		pos(std::move(sho.from)),
 		speed(600.f),
 		time(0.f),
 		lifeTime(1.f),
@@ -20,12 +20,13 @@ bool Bullet::isAlive() const {return alive;}
 
 bool Bullet::isPlayerOwned() const {return playerOwned;}
 
-void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos) {
+void Bullet::CheckCollision(std::vector<Actor*>& actors) {
+	sf::Vector2f oldPos = pos;	//position before update
 	static float dist = 0;
 	Line offset(oldPos, pos);
 	for (auto& iter : actors){
 		dist = Line::Distance(pos, iter->GetPos());
-		if (dist <= iter->GetBodyRadius()) {
+		if (dist <= iter->GetRadius()) {
 			if (iter->DeepCollision(offset)) {
 				iter->Destroy(playerOwned);
 				alive = false;
@@ -33,18 +34,17 @@ void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& old
 			}
 		}
 	}
+	oldPos = pos;
 }
 
 void Bullet::Update(float t, std::vector<Actor*>& actors) {
-	static sf::Vector2f oldPos = pos;	//position before update
-	pos += dir *speed* t;				//new position
+	pos += dir * speed * t;				//new position
 	if (isPassingHorBrd(pos) || isPassingVerBrd(pos)) {
 		alive = false;
 		return;
 	}
 	body.setPosition(pos);
-	CheckCollision(actors, oldPos);
-	oldPos = pos;
+	CheckCollision(actors);
 
 	speed -= t/30.f;					//braking over time
 	time  += t;

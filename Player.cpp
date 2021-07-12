@@ -2,7 +2,7 @@
 
 Player::Player(sf::Vector2f pos, float cRotation) :
 		Actor(pos, sf::Vector2f(0.f, 0.f), STARSHIP_PATTERN),
-		flame(pos, FLAME_PATTERN),
+		flame(std::move(pos), FLAME_PATTERN),
 		rotation(cRotation),
 		rotSpeed(5.f),
 		force(0.f),
@@ -47,7 +47,7 @@ void Player::Update(float time, std::vector<Actor*>& actors) {
 	if (canMove) {
 		Move(time);
 		Rotate(time);
-		if (moved) Collision(actors);
+		if (moved && Collision(actors)) Destroy();
 	}
 	else if ((passedTime += time) >= 1.5f) {
 		passedTime = 0.f;
@@ -82,26 +82,6 @@ void Player::Rotate(float deltaTime){
 		flame.Rotate(rotation);
 		moved = true;
 	}
-}
-
-bool Player::Collision(const std::vector<Actor*>& actors) {
-	static float radSum = 0, dist = 0;
-	for (auto iter : actors) {
-		if (iter != this) {
-			radSum = GetBodyRadius() + iter->GetBodyRadius();
-			dist = Line::Distance(pos, iter->GetPos());
-			if (radSum >= dist) {
-				for (auto& edge : body.GetEdges()) {
-					if (iter->DeepCollision(edge.GetLine())) {
-						iter->Destroy();
-						Destroy();
-						return true;
-					}
-				}
-			}
-		}
-	}
-	return false;
 }
 
 void Player::SetRotateDir(RotateDir nDir){

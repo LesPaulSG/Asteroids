@@ -1,7 +1,7 @@
 #include "Asteroid.h"
 
 Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_) : 
-		Actor(pos_, dir_, {}),
+		Actor(std::move(pos_), std::move(dir_), {}),
 		stage(stage_),
 		alive(true) 
 {

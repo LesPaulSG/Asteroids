@@ -2,8 +2,8 @@
 
 Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs) :
 		body(pos, pairs),
-		pos(pos_),
-		dir(dir_),
+		pos(std::move(pos_)),
+		dir(std::move(dir_)),
 		speed(900.f),
 		alive(true),
 		playerKiiled(false)	
@@ -17,14 +17,19 @@ void Actor::Update(float time, std::vector<Actor*>& actors) {
 	body.Move(pos);
 }
 
-bool Actor::Collision(const std::vector<Actor*>& actors) {
+bool Actor::Collision(const std::vector<Actor*>& actors) const {
 	static float radSum = 0, dist = 0;
 	for (auto iter : actors) {
 		if (iter != this) {			//check for dont collide with self
-			radSum = GetBodyRadius() + iter->GetBodyRadius();	//sum of radius
+			radSum = GetRadius() + iter->GetRadius();	//sum of radius
 			dist   = Line::Distance(pos, iter->GetPos());		//distance between actors
 			if (radSum >= dist) {								//kind of "bounding sphere" collision detection
-				return true;
+				for (auto& edge : body.GetEdges()) {
+					if (iter->DeepCollision(edge.GetLine())) {
+						iter->Destroy();
+						return true;
+					}
+				}
 			}
 		}
 	}
@@ -42,7 +47,7 @@ void Actor::Destroy(bool playerDestroy){
 
 const sf::Vector2f& Actor::GetPos() const {return pos;}
 
-float Actor::GetBodyRadius() const {return body.GetRadius();}
+float Actor::GetRadius() const {return body.Polygon::GetRadius();}
 
 bool Actor::isAlive() const {return alive;}
 

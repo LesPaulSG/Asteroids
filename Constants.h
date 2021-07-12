@@ -1,11 +1,12 @@
 #pragma once
 
 struct VectorPair {
-	sf::Vector2f f;
-	sf::Vector2f s;
-	VectorPair(sf::Vector2f f_, sf::Vector2f s_) : f(std::move(f_)), s(std::move(s_)) {}
+	sf::Vector2f first;
+	sf::Vector2f second;
+	VectorPair(sf::Vector2f f_, sf::Vector2f s_) : first(std::move(f_)), second(std::move(s_)) {}
 };
 
+const int LEADERBOARD_MAX_SIZE			= 10;
 const int NUM_OF_SPARKS					= 20;
 const int BULLETS_MAX_CAPACITY			= 50;
 const int ASTEROID_MAX_SIZE				= 8;

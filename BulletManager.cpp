@@ -41,7 +41,7 @@ void BulletManager::Update(float time) {
 	if (!shots.empty()) {
 		std::lock_guard lg(bmMutex);
 		while (!shots.empty()) {
-			Fire(shots.front(), player->GetBodyRadius(), true);
+			Fire(shots.front(), player->GetRadius(), true);
 			shots.pop();
 		}
 	}
@@ -77,11 +77,11 @@ void BulletManager::Update(float time) {
 	}
 
 	GenerateAsteroid(time, 3);
-	if(gameRunning) SpawnSaucer(time);
+	//if(gameRunning) SpawnSaucer(time);
 	
 	if (player->CanMove()) {
 		if (saucerSpawned && saucer->CanShoot()) {
-			Fire(saucer->GetShoot(player->GetPos()), saucer->GetBodyRadius());
+			Fire(saucer->GetShoot(player->GetPos()), saucer->GetRadius());
 		}
 	}
 	for (auto iter : actors) {
@@ -94,7 +94,7 @@ void BulletManager::Update(float time) {
 
 void BulletManager::Fire(Shot sho, float pushDist, bool playerShoot) {
 	if (bullets.size() < BULLETS_MAX_CAPACITY) {
-		bullets.push_back(Bullet(sho, playerShoot));
+ 		bullets.push_back(Bullet(sho, playerShoot));
 		bullets.back().PushForward(pushDist);
 		PlaySound(Sound::FIRE);
 	}
@@ -102,11 +102,11 @@ void BulletManager::Fire(Shot sho, float pushDist, bool playerShoot) {
 
 void BulletManager::GenerateAsteroid(float deltaTime, float waitTime){
 	static sf::Vector2f pos, dir;
-	static float timePassed = 0.f;
+	static float passedTime = 0.f;
 	int quntuty = (score > 40'000) ? 15 : 10;
 	if (actors.size() < 2) {
-		if ((timePassed+=deltaTime) >= waitTime) {
-			timePassed = 0.f;
+		if ((passedTime +=deltaTime) >= waitTime) {
+			passedTime = 0.f;
 			for (int i = 0; i < quntuty; ++i) {
 				if (RAND_BOOL(gen)) {
 					pos.x = RAND_BOOL(gen) ? (WIDTH) : 0.f;

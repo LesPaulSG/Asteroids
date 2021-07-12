@@ -42,8 +42,7 @@ const sf::Font& GetFont() {return font;}
 bool isPointInRange(float x, float a, float b) {
 	if (x == a) return true;
 	if (x == b) return true;
-	if (x >= std::min(a, b)) return true;
-	if (x <= std::max(a, b)) return true;
+	if ((x > std::min(a, b)) && (x < std::max(a, b))) return true;
 	return false;
 }
 
@@ -89,7 +88,7 @@ void FormatText(sf::Text& txt) {
 	txt.setFillColor(sf::Color::White);
 }
 
-void TextToCenter(sf::Text& txt) {
-	txt.setPosition(WIDTH  / 2 - txt.getGlobalBounds().width  / 2,
-					HEIGHT / 2 - txt.getGlobalBounds().height / 2);
+void TextToCenter(sf::Text& txt, float offsetX, float offsetY) {
+	txt.setPosition(WIDTH  * offsetX - txt.getGlobalBounds().width  / 2,
+					HEIGHT * offsetY - txt.getGlobalBounds().height / 2);
 }

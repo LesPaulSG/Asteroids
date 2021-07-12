@@ -19,7 +19,7 @@ public:
 
 	Bullet(Shot sho, bool playerShooted = false);
 
-	void CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos);
+	void CheckCollision(std::vector<Actor*>& actors);
 	void Update(float t, std::vector<Actor*>& actors);
 	void PushForward(float distance);
 	void LifeCheck();

@@ -13,12 +13,12 @@ public:
 	Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>& pairs);
 
 	virtual void Update(float time, std::vector<Actor*>& actors);
-	virtual bool Collision(const std::vector<Actor*>& actors);
+	bool Collision(const std::vector<Actor*>& actors) const;
 	virtual void Draw(sf::RenderWindow& w) const;
 	virtual void Destroy(bool playerDestroy = false);
 	
 	const sf::Vector2f& GetPos() const;
-	float GetBodyRadius() const;
+	float GetRadius() const;
 	virtual bool isAlive() const;
 	bool isPlayerDestoyed() const;
 

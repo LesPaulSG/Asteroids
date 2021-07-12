@@ -25,16 +25,15 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 	TextToCenter(activeText);
 
 	FormatText(initials);
-	TextToCenter(initials);
-	initials.setPosition(activeText.getPosition().x, HEIGHT * 0.7f);
 	initials.setLetterSpacing(5.f);
+	TextToCenter(initials, 0.5f, 0.7f);
 
-	leaders.reserve(10);
-	VFX.reserve(45);
+	leaders.reserve(LEADERBOARD_MAX_SIZE);
+	VFX.reserve(ASTEROIDS_MAX_QUANTITY);
 }
 
 void IoManager::Update(){
-	w = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Fullscreen);
+	w = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Asteroids");// , sf::Style::Fullscreen);
 	w->setMouseCursorVisible(false);
 
 	while (w->isOpen()) {
@@ -116,10 +115,10 @@ void IoManager::Game(){
 }
 
 void IoManager::GameOver() {
-	static float passed = 0;
-	passed += deltaTime.count();
-	if (passed > 3) {
-		passed = 0.f;
+	static float passedTime = 0;
+	passedTime += deltaTime.count();
+	if (passedTime > 2.f) {
+		passedTime = 0.f;
 		if (leaders.size() < 10) {
 			ChangeOnInitials();
 			bm.Clear();
@@ -195,6 +194,7 @@ void IoManager::LoadLeaderBoard(){
 	int size, score;
 	std::string name;
 	fin >> size;
+	size = std::min(size, LEADERBOARD_MAX_SIZE);
 	for (int i = 0; i < size; ++i) {
 		fin >> name >> score;
 		leaders.push_back(std::make_pair(score, name));
@@ -307,7 +307,7 @@ void IoManager::UpdateLeaderbord(const std::string& newInitials){
 }
 
 void IoManager::UpdateInitials(int pos, bool ink){
-	static std::string l_initials("___");
+	static std::string l_initials("a__");
 	static char activeSymbol = 65;
 	static int activePos = 0;
 	if (activePos != pos) {
@@ -317,7 +317,7 @@ void IoManager::UpdateInitials(int pos, bool ink){
 		activeSymbol = 65;
 		if (pos > 2) {
 			UpdateLeaderbord(l_initials);
-			l_initials = "___";
+			l_initials = "a__";
 			activePos = 0;
 		}
 		return;

@@ -10,11 +10,11 @@ Polygon::Polygon(const sf::Vector2f& pos_, const std::vector<VectorPair>& pairs)
 	edges.reserve(pairs.size());
 
 	for (auto pair : pairs) {
-		radius = std::max(radius, std::abs(pair.f.x));
-		radius = std::max(radius, std::abs(pair.f.y));
-		radius = std::max(radius, std::abs(pair.s.x));
-		radius = std::max(radius, std::abs(pair.s.y));
-		edges.push_back(Wall(pair.f, pair.s));
+		radius = std::max(radius, std::abs(pair.first.x));
+		radius = std::max(radius, std::abs(pair.first.y));
+		radius = std::max(radius, std::abs(pair.second.x));
+		radius = std::max(radius, std::abs(pair.second.y));
+		edges.push_back(Wall(pair.first, pair.second));
 	}
 
 	for (auto& edge : edges) {

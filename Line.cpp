@@ -1,8 +1,8 @@
 #include "Line.h"
 
 Line::Line(sf::Vector2f A, sf::Vector2f B) :
-		pointA(A),
-		pointB(B)
+		pointA(std::move(A)),
+		pointB(std::move(B))
 {
 	CaLculateMidPoint();
 	CalculateRotation();
@@ -56,13 +56,13 @@ bool Line::HasPoint(const sf::Vector2f& point) const {
 	return true;
 }
 
-float Line::Distance(sf::Vector2f lhs, sf::Vector2f rhs){
+float Line::Distance(const sf::Vector2f& lhs, const sf::Vector2f& rhs){
 	float midX = rhs.x - lhs.x;
 	float midY = rhs.y - lhs.y;
 	return sqrt(pow(midX, 2) + pow(midY, 2));
 }
 
-float Line::Rotation(sf::Vector2f lhs, sf::Vector2f rhs){
+float Line::Rotation(const sf::Vector2f& lhs, const sf::Vector2f& rhs){
 	float midX = rhs.x - lhs.x;
 	float midY = rhs.y - lhs.y;
 	return acos(midY / VectorsModule(sf::Vector2f(midX, midY)));
