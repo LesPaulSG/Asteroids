@@ -12,11 +12,11 @@ private:
 
 public:
 	Wall(sf::Vector2f A, sf::Vector2f B);
-	~Wall() = default;
 
 	const sf::RectangleShape& GetBody() const;
 	const Line& GetLine() const;
 	void AddOffset(float deltaTime);
+	void ResetOffset(const VectorPair& pair);
 
 	void RotateBody();
 	void Move(sf::Vector2f dest);

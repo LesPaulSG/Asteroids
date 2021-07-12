@@ -14,12 +14,11 @@ private:
 	mutable std::mutex bmMutex;
 
 	Player* player;
+	Saucer* saucer;
 
 	int score = 0;
 	bool saucerSpawned;
 	bool gameRunning;
-
-	Saucer* saucer;
 
 public:
 	BulletManager();
@@ -40,6 +39,6 @@ public:
 	void UpdateScore(Values val);
 	void Clear();
 
-	bool isExplosions();
+	bool isExplosions() const;
 	const sf::Vector2f& PopExplosion();
 };

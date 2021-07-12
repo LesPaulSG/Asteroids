@@ -37,9 +37,7 @@ void EndSoundLoop(Sound s){
 	sounds[(int)s].stop();
 }
 
-const sf::Font& GetFont() {
-	return font;
-}
+const sf::Font& GetFont() {return font;}
 
 bool isPointInRange(float x, float a, float b) {
 	if (x == a) return true;
@@ -66,25 +64,23 @@ void RotateUnitVector(sf::Vector2f& vec, float angle){
 	vec.y = -cos(angle);
 }
 
-bool PassScreenBorder(sf::Vector2f& vec) {
-	bool passed = false;
-	if (vec.x >= WIDTH) {
-		vec.x -= WIDTH;
-		passed = true;
-	}
-	if (vec.x <= 0) {
-		vec.x += WIDTH;
-		passed = true;
-	}
-	if (vec.y >= HEIGHT) {
-		vec.y -= HEIGHT;
-		passed = true;
-	}
-	if (vec.y <= 0) {
-		vec.y += HEIGHT;
-		passed = true;
-	}
-	return passed;
+bool isPassingVerBrd(const sf::Vector2f& vec){
+	if (vec.x >= WIDTH)  return true;
+	else if (vec.x <= 0) return true;
+	return false;
+}
+
+bool isPassingHorBrd(const sf::Vector2f& vec){
+	if (vec.y >= HEIGHT) return true;
+	else if (vec.y <= 0) return true;
+	return false;
+}
+
+void PassScreenBorder(sf::Vector2f& vec) {
+	if (vec.x >= WIDTH)  vec.x -= WIDTH;
+	else if (vec.x <= 0) vec.x += WIDTH;
+	if (vec.y >= HEIGHT) vec.y -= HEIGHT;
+	else if (vec.y <= 0) vec.y += HEIGHT;
 }
 
 void FormatText(sf::Text& txt) {

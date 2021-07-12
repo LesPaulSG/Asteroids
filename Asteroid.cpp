@@ -5,6 +5,7 @@ Asteroid::Asteroid(sf::Vector2f pos_, sf::Vector2f dir_, int stage_) :
 		stage(stage_),
 		alive(true) 
 {
+	speed *= 3.f / stage;
 	std::vector<sf::Vector2f> points;	//random ganarated points
 	points.reserve(ASTEROID_MAX_SIZE);
 

@@ -5,13 +5,10 @@ Saucer::Saucer(sf::Vector2f p, bool b) :
 		big(b),
 		cooldown(0.f)
 {
+	speed = big ? 150.f : 300.f;
 	dir = (pos.x > WIDTH / 2) ? sf::Vector2f(-1.f, 0.f) :
 								sf::Vector2f( 1.f, 0.f);
 	LoopSound(big ? Sound::SOUC_B : Sound::SOUC_S);
-}
-
-Saucer::~Saucer(){
-	EndSoundLoop(big ? Sound::SOUC_B : Sound::SOUC_S);
 }
 
 void Saucer::Move(float time, std::vector<Actor*>& actors){
@@ -22,6 +19,10 @@ void Saucer::Move(float time, std::vector<Actor*>& actors){
 			else dir.y = -1.f;
 		}
 		else dir.y = 0.f;
+	}
+	if (isPassingVerBrd(pos + dir)) {
+		dir.x *= -1.f;
+		pos.x += dir.x * 10.f;
 	}
 	Actor::Move(time, actors);
 	cooldown += time;
@@ -40,9 +41,7 @@ void Saucer::Destroy(bool playerDestroy){
 	Actor::Destroy(playerDestroy);
 }
 
-bool Saucer::isBig(){
-	return big;
-}
+bool Saucer::isBig(){return big;}
 
 Shot Saucer::GetShoot(sf::Vector2f playerPos){
 	if (big) {

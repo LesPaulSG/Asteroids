@@ -38,7 +38,7 @@ void Bullet::CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& old
 void Bullet::Update(float t, std::vector<Actor*>& actors) {
 	static sf::Vector2f oldPos = pos;	//position before update
 	pos += dir *speed* t;				//new position
-	if (PassScreenBorder(pos)) {
+	if (isPassingHorBrd(pos) || isPassingVerBrd(pos)) {
 		alive = false;
 		return;
 	}

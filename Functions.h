@@ -24,7 +24,9 @@ float VectorsModule(const sf::Vector2f& vec);
 void RotateVector(sf::Vector2f& vec, float angle, const sf::Vector2f& anchor = sf::Vector2f(0.f, 0.f));
 void RotateUnitVector(sf::Vector2f& vec, float angle);
 
-bool PassScreenBorder(sf::Vector2f& vec);
+bool isPassingVerBrd(const sf::Vector2f& vec);
+bool isPassingHorBrd(const sf::Vector2f& vec);
+void PassScreenBorder(sf::Vector2f& vec);
 
 void FormatText(sf::Text& txt);
 void TextToCenter(sf::Text& txt);

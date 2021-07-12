@@ -18,7 +18,6 @@ public:
 	bool isPlayerOwned() const;
 
 	Bullet(Shot sho, bool playerShooted = false);
-	~Bullet() = default;
 
 	void CheckCollision(std::vector<Actor*>& actors, const sf::Vector2f& oldPos);
 	void Update(float t, std::vector<Actor*>& actors);

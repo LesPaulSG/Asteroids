@@ -22,7 +22,13 @@ void Wall::AddOffset(float deltaTime){
 	offsetB *= 1.f + deltaTime * 0.3f;
 }
 
-//TODO use lines rotation
+void Wall::ResetOffset(const VectorPair& pair){
+	offsetA = pair.f;
+	offsetB = pair.s;
+	//line.CaLculateMidPoint();
+	//line.CalculateRotation();
+}
+
 void Wall::RotateBody() {
 	double angle = line.rotation;
 	angle *= -(180.f / 3.141528f);

@@ -31,8 +31,6 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 
 	leaders.reserve(10);
 	VFX.reserve(45);
-
-	clock = std::chrono::high_resolution_clock::now();
 }
 
 void IoManager::Update(){
@@ -238,10 +236,10 @@ void IoManager::KeyboardPressCheck() {
 				bm.GetPlayer().Thrust(true);
 				break;
 			case sf::Keyboard::D:
-				bm.GetPlayer().Rotate(RGH);
+				bm.GetPlayer().SetRotateDir(RotateDir::RGH);
 				break;
 			case sf::Keyboard::A:
-				bm.GetPlayer().Rotate(LFT);
+				bm.GetPlayer().SetRotateDir(RotateDir::LFT);
 				break;
 			}
 		}
@@ -264,10 +262,10 @@ void IoManager::KeyboardReleaseCheck() {
 				bm.GetPlayer().Thrust(false);
 				break;
 			case sf::Keyboard::D:
-				bm.GetPlayer().Rotate(STP);
+				bm.GetPlayer().SetRotateDir(RotateDir::STP);
 				break;
 			case sf::Keyboard::A:
-				bm.GetPlayer().Rotate(STP);
+				bm.GetPlayer().SetRotateDir(RotateDir::STP);
 				break;
 			case sf::Keyboard::G:
 				bm.GetPlayer().HyperJump();

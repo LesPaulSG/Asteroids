@@ -4,22 +4,22 @@ Actor::Actor(sf::Vector2f pos_, sf::Vector2f dir_, const std::vector<VectorPair>
 		body(pos, pairs),
 		pos(pos_),
 		dir(dir_),
-		speed(100.f),
+		speed(900.f),
 		alive(true),
 		playerKiiled(false)	
 {
 
 }
 
-void Actor::Move(float time, std::vector<Actor*>& asteroids) {
+void Actor::Move(float time, std::vector<Actor*>& actors) {
 	pos += dir * speed * time;
 	PassScreenBorder(pos);
 	body.Move(pos);
 }
 
-bool Actor::Collision(const std::vector<Actor*>& asteroids) {
+bool Actor::Collision(const std::vector<Actor*>& actors) {
 	static float radSum = 0, dist = 0;
-	for (auto iter : asteroids) {
+	for (auto iter : actors) {
 		if (iter != this) {			//check for dont collide with self
 			radSum = GetBodyRadius() + iter->GetBodyRadius();	//sum of radius
 			dist   = Line::Distance(pos, iter->GetPos());		//distance between actors

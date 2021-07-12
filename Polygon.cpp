@@ -2,10 +2,10 @@
 
 Polygon::Polygon() : pos(sf::Vector2f(0.f, 0.f)) {}
 
-Polygon::Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs) :
+Polygon::Polygon(const sf::Vector2f& pos_, const std::vector<VectorPair>& pairs) :
 		pos(pos_),
 		radius(0.f),
-		rotation(0.f)
+		rotation(0.f) 
 {
 	edges.reserve(pairs.size());
 
@@ -39,7 +39,7 @@ void Polygon::Move(sf::Vector2f dest){
 void Polygon::Rotate(float angle){
 	if (angle != rotation) {
 		for (auto& edge : edges) {
-			edge.RotateAround(pos, rotation - angle);
+			edge.RotateAround(pos, angle - rotation);
 		}
 		rotation = angle;
 	}
@@ -59,14 +59,19 @@ void Polygon::Explode(float deltaTime){
 	}
 }
 
-float Polygon::GetRot() const {
-	return rotation;
+void Polygon::Reset(const sf::Vector2f& pos_, const std::vector<VectorPair>& pairs){
+	pos = pos_;
+	rotation = 0.f;
+	if (pairs.size() != edges.size()) return;
+	for (int i = 0; i < pairs.size(); ++i) {
+		edges.at(i).ResetOffset(pairs.at(i));
+		edges.at(i).Move(pos);
+		edges.at(i).RotateAround(pos, rotation);
+	}
 }
 
-float Polygon::GetRadius() const {
-	return radius;
-}
+float Polygon::GetRot() const {return rotation;}
 
-const std::vector<Wall>& Polygon::GetEdges() const {
-	return edges;
-}
+float Polygon::GetRadius() const {return radius;}
+
+const std::vector<Wall>& Polygon::GetEdges() const {return edges;}

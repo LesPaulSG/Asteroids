@@ -9,12 +9,13 @@ private:
 	float rotation;
 public:
 	Polygon();
-	Polygon(sf::Vector2f pos_, const std::vector<VectorPair>& pairs);
+	Polygon(const sf::Vector2f& pos_, const std::vector<VectorPair>& pairs);
 	void Draw(sf::RenderWindow& w) const;
 	void Move(sf::Vector2f dest);
 	void Rotate(float angle);
 	bool isCollision(const Line& line) const;
 	void Explode(float deltaTime);
+	void Reset(const sf::Vector2f& pos_, const std::vector<VectorPair>& pairs);
 
 	float GetRot() const;
 	float GetRadius() const;
