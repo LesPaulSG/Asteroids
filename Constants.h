@@ -47,7 +47,6 @@ const std::vector<VectorPair> STARSHIP_PATTERN{
 };
 
 const std::vector<VectorPair> FLAME_PATTERN{
-	VectorPair(sf::Vector2f( -5.f,	 6.f), sf::Vector2f(  5.f,   6.f)),
 	VectorPair(sf::Vector2f(  5.f,   6.f), sf::Vector2f(  0.f,  15.f)),
 	VectorPair(sf::Vector2f(  0.f,  15.f), sf::Vector2f( -5.f,   6.f)) 
 };

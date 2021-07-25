@@ -28,7 +28,7 @@ private:
 	
 public:
 	IoManager(BulletManager& bm_, bool& gameOver_);
-	void Update();
+	void Run();
 
 	void Start();
 	void Game();

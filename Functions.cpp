@@ -5,10 +5,7 @@ std::vector<sf::Sound> sounds;
 
 sf::Music oddity;
 
-sf::Font font;
-
 void LoadResources() {
-	font.loadFromFile("res/vector.ttf");
 	oddity.openFromFile("res/sounds/SpaceOddity320.wav");
 	oddity.setLoop(true);
 	oddity.play();
@@ -37,7 +34,14 @@ void EndSoundLoop(Sound s){
 	sounds[(int)s].stop();
 }
 
-const sf::Font& GetFont() {return font;}
+const sf::Font& GetFont() {
+	bool loaded = false;
+	static sf::Font font;
+	if (!loaded) {
+		font.loadFromFile("res/vector.ttf");
+		loaded = true;
+	}
+	return font;}
 
 bool isPointInRange(float x, float a, float b) {
 	if (x == a) return true;

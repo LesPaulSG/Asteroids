@@ -32,7 +32,7 @@ IoManager::IoManager(BulletManager& bm_, bool& gameOver_) :
 	VFX.reserve(ASTEROIDS_MAX_QUANTITY);
 }
 
-void IoManager::Update(){
+void IoManager::Run(){
 	w = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Fullscreen);
 	w->setMouseCursorVisible(false);
 

@@ -3,7 +3,7 @@
 
 int main(){
 	HWND hWnd = GetConsoleWindow();
-	ShowWindow(hWnd, SW_SHOW);
+	ShowWindow(hWnd, SW_HIDE);
 	LoadResources();
 
 	BulletManager bulletManager;
@@ -13,7 +13,7 @@ int main(){
 
 	IoManager ioManager(bulletManager, gameOver);
 
-	std::thread IoThread(&IoManager::Update, ioManager);		//input output thread
+	std::thread IoThread(&IoManager::Run, ioManager);		//input output thread
 	IoThread.detach();
 
 	//std::this_thread::sleep_for(std::chrono::seconds(3));
